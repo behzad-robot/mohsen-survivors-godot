@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay/Projectile.cs" id="1"]
+[ext_resource type="SpriteFrames" path="res://resources/projectiles/player_bullet_frames.tres" id="2"]
+
+[node name="SmgBullet" type="Node2D"]
+script = ExtResource("1")
+HitRadius = 30.0
+
+[node name="Visual" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(0.25, 0.25)
+sprite_frames = ExtResource("2")
+autoplay = "default"

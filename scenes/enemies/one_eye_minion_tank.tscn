@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay/Enemy.cs" id="1"]
+[ext_resource type="Texture2D" path="res://assets/art/approved/enemies/one_eye_minion_tank.png" id="2"]
+[ext_resource type="Shader" path="res://shaders/enemy_hit_flash.gdshader" id="3"]
+
+[sub_resource type="ShaderMaterial" id="HitFlashMaterial"]
+shader = ExtResource("3")
+shader_parameter/flash_amount = 0.0
+shader_parameter/warning_amount = 0.0
+
+[node name="OneEyeMinionTank" type="Node2D"]
+script = ExtResource("1")
+BaseHealth = 9.0
+BaseSpeed = 130.0
+ContactRadius = 18.0
+VisualScale = 1.0
+
+[node name="Visual" type="Sprite2D" parent="."]
+material = SubResource("HitFlashMaterial")
+texture = ExtResource("2")

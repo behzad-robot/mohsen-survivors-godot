@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay/BossEnemy.cs" id="1"]
+[ext_resource type="Texture2D" path="res://assets/art/approved/enemies/orange_boss_tank.png" id="2"]
+[ext_resource type="Shader" path="res://shaders/enemy_hit_flash.gdshader" id="3"]
+
+[sub_resource type="ShaderMaterial" id="HitFlashMaterial"]
+shader = ExtResource("3")
+shader_parameter/flash_amount = 0.0
+shader_parameter/warning_amount = 0.0
+
+[node name="OrangeBossTank" type="Node2D"]
+script = ExtResource("1")
+BaseHealth = 240.0
+BaseSpeed = 210.0
+BaseKnockbackResistance = 0.7
+HurtboxHalfExtents = Vector2(118, 92)
+VisualScale = 1.0
+WalkSquash = 0.04
+
+[node name="Visual" type="Sprite2D" parent="."]
+material = SubResource("HitFlashMaterial")
+texture = ExtResource("2")

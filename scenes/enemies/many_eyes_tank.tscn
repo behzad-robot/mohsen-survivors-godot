@@ -1,0 +1,26 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay/ManyEyesEnemy.cs" id="1"]
+[ext_resource type="Texture2D" path="res://assets/art/approved/enemies/many_eyes_tank.png" id="2"]
+[ext_resource type="Shader" path="res://shaders/enemy_hit_flash.gdshader" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/one_eye_minion.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/enemy_bullet.tscn" id="5"]
+
+[sub_resource type="ShaderMaterial" id="HitFlashMaterial"]
+shader = ExtResource("3")
+shader_parameter/flash_amount = 0.0
+shader_parameter/warning_amount = 0.0
+
+[node name="ManyEyesTankEnemy" type="Node2D"]
+script = ExtResource("1")
+BaseHealth = 53.0
+BaseSpeed = 76.0
+BaseKnockbackResistance = 0.1
+ContactRadius = 32.0
+VisualScale = 1.0
+VolleyProjectileScene = ExtResource("5")
+OffspringScene = ExtResource("4")
+
+[node name="Visual" type="Sprite2D" parent="."]
+material = SubResource("HitFlashMaterial")
+texture = ExtResource("2")

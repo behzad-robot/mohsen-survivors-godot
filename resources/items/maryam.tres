@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="ShopItemDefinition" format=3 uid="uid://xj8iyeo56nyg"]
+
+[ext_resource type="Script" uid="uid://d14q1jdi7c3tg" path="res://scripts/data/ShopItemDefinition.cs" id="1"]
+[ext_resource type="Script" uid="uid://dntp2sqw2gh2l" path="res://scripts/data/StatModifier.cs" id="2"]
+[ext_resource type="Texture2D" uid="uid://bgjis3ihd6ft0" path="res://assets/art/approved/items/teammates/maryam.png" id="3"]
+
+[sub_resource type="Resource" id="modifier_0"]
+script = ExtResource("2")
+Stat = 0
+Amount = 9.0
+
+[sub_resource type="Resource" id="modifier_1"]
+script = ExtResource("2")
+Stat = 6
+Amount = 0.35
+
+[sub_resource type="Resource" id="modifier_2"]
+script = ExtResource("2")
+Stat = 1
+Amount = -35.0
+
+[resource]
+script = ExtResource("1")
+DisplayName = "Maryam"
+Description = "Agile manager."
+Icon = ExtResource("3")
+Price = 22
+Rarity = 2
+Modifiers = Array[ExtResource("2")]([SubResource("modifier_0"), SubResource("modifier_1"), SubResource("modifier_2")])

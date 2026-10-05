@@ -1,0 +1,18 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://dj6c86rnh58dd"]
+
+[ext_resource type="Texture2D" uid="uid://c5ryh6urqf1yb" path="res://assets/art/approved/projectiles/pistol_bullet.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://b6eq1pivsmdy7" path="res://assets/art/approved/projectiles/smg_bullet.png" id="2"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2")
+}],
+"loop": false,
+"name": &"default",
+"speed": 90.0
+}]

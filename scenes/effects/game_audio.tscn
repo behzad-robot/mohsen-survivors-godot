@@ -1,0 +1,28 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay/GameAudio.cs" id="1"]
+[ext_resource type="AudioStream" path="res://assets/placeholders/audio/knife_shot.wav" id="2"]
+[ext_resource type="AudioStream" path="res://assets/placeholders/audio/pistol_shot.wav" id="3"]
+[ext_resource type="AudioStream" path="res://assets/placeholders/audio/smg_shot.wav" id="4"]
+[ext_resource type="AudioStream" path="res://assets/placeholders/audio/shotgun_shot.wav" id="5"]
+[ext_resource type="AudioStream" path="res://assets/placeholders/audio/enemy_hit.wav" id="6"]
+[ext_resource type="AudioStream" path="res://assets/placeholders/audio/enemy_defeat.wav" id="7"]
+[ext_resource type="AudioStream" path="res://assets/placeholders/audio/coin_pickup.wav" id="8"]
+[ext_resource type="AudioStream" path="res://assets/placeholders/audio/shop_purchase.wav" id="9"]
+[ext_resource type="AudioStream" path="res://assets/placeholders/audio/wave_start.wav" id="10"]
+[ext_resource type="AudioStream" path="res://assets/placeholders/audio/mohsen_hit.wav" id="11"]
+[ext_resource type="AudioStream" path="res://assets/placeholders/audio/boss_warning.wav" id="12"]
+
+[node name="GameAudio" type="Node"]
+script = ExtResource("1")
+KnifeShot = ExtResource("2")
+PistolShot = ExtResource("3")
+SmgShot = ExtResource("4")
+ShotgunShot = ExtResource("5")
+EnemyHit = ExtResource("6")
+EnemyDefeat = ExtResource("7")
+CoinPickup = ExtResource("8")
+ShopPurchase = ExtResource("9")
+WaveStart = ExtResource("10")
+MohsenHit = ExtResource("11")
+BossWarning = ExtResource("12")

@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay/Weapon.cs" id="1"]
+[ext_resource type="Texture2D" path="res://assets/art/approved/weapons/pistol.png" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/effects/muzzle_flash.tscn" id="3"]
+
+[node name="Pistol" type="Node2D"]
+script = ExtResource("1")
+Kind = 1
+IdleRotationDegrees = -12.0
+ShotShakePixels = 3.0
+RecoilPixels = 7.0
+RecoilReturnSeconds = 0.14
+MuzzleFlashSeconds = 0.07
+
+[node name="Visual" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2")
+
+[node name="MuzzleFlash" parent="." instance=ExtResource("3")]
+position = Vector2(18, -5)
+scale = Vector2(0.75, 0.75)

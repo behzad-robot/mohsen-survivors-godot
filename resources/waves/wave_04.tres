@@ -1,0 +1,156 @@
+[gd_resource type="Resource" script_class="WaveDefinition" format=3 uid="uid://5xilxgtkc4e1"]
+
+[ext_resource type="Script" uid="uid://djjecvhcf2i6j" path="res://scripts/data/WaveDefinition.cs" id="1"]
+[ext_resource type="Script" uid="uid://yjh6hhequnxc" path="res://scripts/data/SpawnBurstDefinition.cs" id="2"]
+[ext_resource type="Script" uid="uid://crrsyd0maxlv" path="res://scripts/data/EnemySpawnGroupDefinition.cs" id="3"]
+[ext_resource type="PackedScene" uid="uid://s1wu55a6flee" path="res://scenes/enemies/melee.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://sjso7kf854eg" path="res://scenes/enemies/ranged.tscn" id="5"]
+[ext_resource type="PackedScene" uid="uid://b4hjn27a2p23i" path="res://scenes/enemies/melee_female.tscn" id="6"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/many_eyes.tscn" id="7"]
+
+[sub_resource type="Resource" id="g0_melee"]
+script = ExtResource("3")
+EnemyScene = ExtResource("4")
+AlternateEnemyScene = ExtResource("6")
+Count = 8
+HealthMultiplier = 1.3
+SpeedMultiplier = 1.15
+KnockbackResistanceAdjustment = 0.15000000000000002
+
+[sub_resource type="Resource" id="g0_ranged"]
+script = ExtResource("3")
+EnemyScene = ExtResource("5")
+Count = 2
+HealthMultiplier = 1.3
+SpeedMultiplier = 1.15
+KnockbackResistanceAdjustment = 0.15000000000000002
+
+[sub_resource type="Resource" id="b0"]
+script = ExtResource("2")
+Groups = Array[ExtResource("3")]([SubResource("g0_melee"), SubResource("g0_ranged")])
+
+[sub_resource type="Resource" id="g1_melee"]
+script = ExtResource("3")
+EnemyScene = ExtResource("4")
+AlternateEnemyScene = ExtResource("6")
+Count = 10
+HealthMultiplier = 1.35
+SpeedMultiplier = 1.15
+KnockbackResistanceAdjustment = 0.15000000000000002
+
+[sub_resource type="Resource" id="g1_ranged"]
+script = ExtResource("3")
+EnemyScene = ExtResource("5")
+Count = 3
+HealthMultiplier = 1.35
+SpeedMultiplier = 1.15
+KnockbackResistanceAdjustment = 0.15000000000000002
+
+[sub_resource type="Resource" id="b1"]
+script = ExtResource("2")
+TriggerTime = 6.0
+Groups = Array[ExtResource("3")]([SubResource("g1_melee"), SubResource("g1_ranged")])
+
+[sub_resource type="Resource" id="g2_melee"]
+script = ExtResource("3")
+EnemyScene = ExtResource("6")
+AlternateEnemyScene = ExtResource("4")
+Count = 11
+HealthMultiplier = 1.4
+SpeedMultiplier = 1.2
+KnockbackResistanceAdjustment = 0.15000000000000002
+
+[sub_resource type="Resource" id="g2_ranged"]
+script = ExtResource("3")
+EnemyScene = ExtResource("5")
+Count = 3
+HealthMultiplier = 1.4
+SpeedMultiplier = 1.2
+KnockbackResistanceAdjustment = 0.15000000000000002
+
+[sub_resource type="Resource" id="b2"]
+script = ExtResource("2")
+TriggerTime = 13.0
+Groups = Array[ExtResource("3")]([SubResource("g2_melee"), SubResource("g2_ranged")])
+
+[sub_resource type="Resource" id="g3_melee"]
+script = ExtResource("3")
+EnemyScene = ExtResource("4")
+AlternateEnemyScene = ExtResource("6")
+Count = 12
+HealthMultiplier = 1.4
+SpeedMultiplier = 1.2
+KnockbackResistanceAdjustment = 0.15000000000000002
+
+[sub_resource type="Resource" id="g3_ranged"]
+script = ExtResource("3")
+EnemyScene = ExtResource("5")
+Count = 4
+HealthMultiplier = 1.4
+SpeedMultiplier = 1.2
+KnockbackResistanceAdjustment = 0.15000000000000002
+
+[sub_resource type="Resource" id="g3_many_eyes"]
+script = ExtResource("3")
+EnemyScene = ExtResource("7")
+HealthMultiplier = 1.3
+SpeedMultiplier = 1.15
+
+[sub_resource type="Resource" id="b3"]
+script = ExtResource("2")
+TriggerTime = 20.0
+Groups = Array[ExtResource("3")]([SubResource("g3_melee"), SubResource("g3_ranged"), SubResource("g3_many_eyes")])
+
+[sub_resource type="Resource" id="g4_melee"]
+script = ExtResource("3")
+EnemyScene = ExtResource("4")
+AlternateEnemyScene = ExtResource("6")
+Count = 13
+HealthMultiplier = 1.45
+SpeedMultiplier = 1.25
+KnockbackResistanceAdjustment = 0.15000000000000002
+
+[sub_resource type="Resource" id="g4_ranged"]
+script = ExtResource("3")
+EnemyScene = ExtResource("5")
+Count = 4
+HealthMultiplier = 1.45
+SpeedMultiplier = 1.25
+KnockbackResistanceAdjustment = 0.15000000000000002
+
+[sub_resource type="Resource" id="b4"]
+script = ExtResource("2")
+TriggerTime = 28.0
+Groups = Array[ExtResource("3")]([SubResource("g4_melee"), SubResource("g4_ranged")])
+
+[sub_resource type="Resource" id="g5_melee"]
+script = ExtResource("3")
+EnemyScene = ExtResource("4")
+AlternateEnemyScene = ExtResource("6")
+Count = 14
+HealthMultiplier = 1.45
+SpeedMultiplier = 1.25
+KnockbackResistanceAdjustment = 0.15000000000000002
+
+[sub_resource type="Resource" id="g5_ranged"]
+script = ExtResource("3")
+EnemyScene = ExtResource("5")
+Count = 4
+HealthMultiplier = 1.45
+SpeedMultiplier = 1.25
+KnockbackResistanceAdjustment = 0.15000000000000002
+
+[sub_resource type="Resource" id="b5"]
+script = ExtResource("2")
+TriggerTime = 36.0
+Groups = Array[ExtResource("3")]([SubResource("g5_melee"), SubResource("g5_ranged")])
+
+[resource]
+script = ExtResource("1")
+WaveNumber = 4
+TankSpawnChance = 0.24
+BossSpawnChance = 0.6
+BossTankChance = 0.5
+BossSpawnTime = 24.0
+BossSpawnOffset = Vector2(-240, -220)
+Bursts = Array[ExtResource("2")]([SubResource("b0"), SubResource("b1"), SubResource("b2"), SubResource("b3"), SubResource("b4"), SubResource("b5")])

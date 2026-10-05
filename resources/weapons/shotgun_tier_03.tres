@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ShotgunTierDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/ShotgunTierDefinition.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+DamagePerPellet = 21.0
+AttackInterval = 1.3
+TargetRange = 220.0
+CritChance = 0.12
+CritMultiplier = 1.7
+KnockbackPerPellet = 10.0
+RangedDamageScaling = 1.0
+PelletCount = 7
+SpreadDegrees = 40.0
+PelletSpeed = 550.0
+PelletLifetimeSeconds = 0.36

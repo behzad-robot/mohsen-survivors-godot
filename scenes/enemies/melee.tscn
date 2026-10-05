@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://s1wu55a6flee"]
+
+[ext_resource type="Script" uid="uid://cb8t0yyvhouvf" path="res://scripts/gameplay/Enemy.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://d2vpttjh0t1w4" path="res://assets/art/approved/enemies/jira_ticket.png" id="2"]
+[ext_resource type="Shader" uid="uid://cn5re73bdknv8" path="res://shaders/enemy_hit_flash.gdshader" id="3"]
+
+[sub_resource type="ShaderMaterial" id="HitFlashMaterial"]
+shader = ExtResource("3")
+shader_parameter/flash_amount = 0.0
+
+[node name="MeleeEnemy" type="Node2D" unique_id=1657439757]
+script = ExtResource("1")
+BaseHealth = 10.0
+BaseSpeed = 105.0
+VisualScale = 0.7
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=790234133]
+material = SubResource("HitFlashMaterial")
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("2")

@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="ShopItemDefinition" format=3 uid="uid://dik4x46uqxcxy"]
+
+[ext_resource type="Script" uid="uid://d14q1jdi7c3tg" path="res://scripts/data/ShopItemDefinition.cs" id="1"]
+[ext_resource type="Script" uid="uid://dntp2sqw2gh2l" path="res://scripts/data/StatModifier.cs" id="2"]
+[ext_resource type="Texture2D" uid="uid://dfdr5cc2blagc" path="res://assets/art/approved/items/teammates/sara.png" id="3"]
+
+[sub_resource type="Resource" id="modifier_0"]
+script = ExtResource("2")
+Amount = 5.0
+
+[sub_resource type="Resource" id="modifier_1"]
+script = ExtResource("2")
+Stat = 2
+Amount = 1.0
+
+[resource]
+script = ExtResource("1")
+DisplayName = "Sara"
+Description = "Developer."
+Icon = ExtResource("3")
+Price = 7
+Modifiers = Array[ExtResource("2")]([SubResource("modifier_0"), SubResource("modifier_1")])

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/placeholders/spawn_warning.svg" id="1"]
+
+[node name="SpawnWarning" type="Sprite2D"]
+texture = ExtResource("1")
+modulate = Color(1, 1, 1, 0.85)

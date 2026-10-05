@@ -1,0 +1,183 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/approved/characters/hamidreza_shopkeeper.png" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/ui/shop_speech_bubble.tscn" id="2"]
+[ext_resource type="Texture2D" path="res://assets/placeholders/coin.svg" id="3"]
+
+[sub_resource type="StyleBoxFlat" id="StatsStyle"]
+bg_color = Color(0.105, 0.115, 0.135, 0.97)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.28, 0.32, 0.37, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+content_margin_left = 16.0
+content_margin_top = 12.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+
+[node name="Shop" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.16, 0.17, 0.19, 0.98)
+
+[node name="Header" type="ColorRect" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+offset_bottom = 74.0
+mouse_filter = 2
+color = Color(0.12, 0.13, 0.15, 1)
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 0
+offset_left = 22.0
+offset_top = 6.0
+offset_right = 522.0
+offset_bottom = 69.0
+theme_override_font_sizes/font_size = 25
+text = "Shop — Wave-2"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="CoinIcon" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 552.0
+offset_top = 22.0
+offset_right = 582.0
+offset_bottom = 52.0
+texture = ExtResource("3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Coins" type="Label" parent="."]
+layout_mode = 0
+offset_left = 590.0
+offset_top = 16.0
+offset_right = 770.0
+offset_bottom = 60.0
+theme_override_font_sizes/font_size = 25
+text = "Coins: 0"
+vertical_alignment = 1
+
+[node name="Reroll" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1040.0
+offset_top = 15.0
+offset_right = 1258.0
+offset_bottom = 58.0
+text = "Reroll (5 coins)"
+
+[node name="Offers" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 91.0
+offset_right = 946.0
+offset_bottom = 482.0
+theme_override_constants/separation = 8
+
+[node name="StatsPanel" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 961.0
+offset_top = 91.0
+offset_right = 1260.0
+offset_bottom = 482.0
+theme_override_styles/panel = SubResource("StatsStyle")
+
+[node name="Box" type="VBoxContainer" parent="StatsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="StatsPanel/Box"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Stats"
+horizontal_alignment = 1
+
+[node name="Stats" type="Label" parent="StatsPanel/Box"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+autowrap_mode = 3
+
+[node name="ItemsTitle" type="Label" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 506.0
+offset_right = 410.0
+offset_bottom = 537.0
+theme_override_font_sizes/font_size = 22
+text = "Items"
+
+[node name="ItemsScroll" type="ScrollContainer" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 540.0
+offset_right = 418.0
+offset_bottom = 701.0
+horizontal_scroll_mode = 0
+
+[node name="ItemsGrid" type="GridContainer" parent="ItemsScroll"]
+layout_mode = 2
+columns = 5
+theme_override_constants/h_separation = 7
+theme_override_constants/v_separation = 7
+
+[node name="WeaponsTitle" type="Label" parent="."]
+layout_mode = 0
+offset_left = 445.0
+offset_top = 506.0
+offset_right = 770.0
+offset_bottom = 537.0
+theme_override_font_sizes/font_size = 22
+text = "Weapons"
+
+[node name="WeaponsScroll" type="ScrollContainer" parent="."]
+layout_mode = 0
+offset_left = 445.0
+offset_top = 540.0
+offset_right = 765.0
+offset_bottom = 701.0
+horizontal_scroll_mode = 0
+
+[node name="WeaponsGrid" type="GridContainer" parent="WeaponsScroll"]
+layout_mode = 2
+columns = 4
+theme_override_constants/h_separation = 7
+theme_override_constants/v_separation = 7
+
+[node name="SpeechBubble" parent="." instance=ExtResource("2")]
+layout_mode = 0
+offset_left = 790.0
+offset_top = 512.0
+offset_right = 1030.0
+offset_bottom = 652.0
+
+[node name="Hamidreza" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 1048.0
+offset_top = 495.0
+offset_right = 1258.0
+offset_bottom = 657.0
+mouse_filter = 2
+texture = ExtResource("1")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Next" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1008.0
+offset_top = 664.0
+offset_right = 1258.0
+offset_bottom = 708.0
+text = "Start next wave"

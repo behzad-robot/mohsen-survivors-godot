@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="ShopItemDefinition" format=3 uid="uid://x0shyayl5upx"]
+
+[ext_resource type="Script" uid="uid://d14q1jdi7c3tg" path="res://scripts/data/ShopItemDefinition.cs" id="1"]
+[ext_resource type="Script" uid="uid://dntp2sqw2gh2l" path="res://scripts/data/StatModifier.cs" id="2"]
+[ext_resource type="Texture2D" uid="uid://dcev4ikb85ix3" path="res://assets/art/approved/items/hookah.png" id="3"]
+
+[sub_resource type="Resource" id="movement_speed"]
+script = ExtResource("2")
+Stat = 1
+Amount = 5.0
+
+[sub_resource type="Resource" id="max_health"]
+script = ExtResource("2")
+Stat = 0
+Amount = -5.0
+
+[sub_resource type="Resource" id="knockback"]
+script = ExtResource("2")
+Stat = 2
+Amount = 2.0
+
+[resource]
+script = ExtResource("1")
+DisplayName = "Hookah"
+Description = "Item."
+Icon = ExtResource("3")
+Price = 7
+Rarity = 2
+Modifiers = Array[ExtResource("2")]([SubResource("movement_speed"), SubResource("max_health"), SubResource("knockback")])
