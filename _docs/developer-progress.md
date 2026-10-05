@@ -6,9 +6,9 @@ The developer may mark **Code written** after files are created or changed and r
 
 ## Current state
 
-- **Last updated:** 2026-10-06, editor-only `P` now rerolls the shop to Product Manager offers.
-- **Current focus:** Designer verification of the new `P` shop shortcut, revised item stats, and shotgun tier-load rerun.
-- **Next recommended work:** Designer opens a shop from an editor run, presses `P` repeatedly, checks all four offers, then buys Arezoo and confirms replacement offers remain Product Managers.
+- **Last updated:** 2026-10-06, Hossein and Saeed marked unique in the active catalog and resources.
+- **Current focus:** Designer verification of unique Product Manager purchases, the `P` shop shortcut, and shotgun tier-load rerun.
+- **Next recommended work:** Designer buys Hossein and Saeed in a shop, then checks that visible duplicates and later normal or `P` rerolls exclude the owned item.
 - **Known blocker:** The stack trace proves a shotgun profile load returned null; its underlying Godot loader error was not included. Explicit scene references and a logged fallback are written, but require the designer's run to verify.
 - **Designer test result:** Designer reported a `NullReferenceException` in `WeaponData.Get` at the end of wave 3. DEV-65 is written but unverified. Developer has not run, built, compiled, launched, or tested code.
 
@@ -83,6 +83,7 @@ The developer may mark **Code written** after files are created or changed and r
 | DEV-65 | Prevent shotgun tier load failure from crashing a wave | [x] | [ ] | Four tier resources are explicit main-scene dependencies and cached; a failed load logs its exact path and uses matching provisional values. |
 | DEV-66 | Revise Hossein and Saeed; add bullet piercing | [x] | [ ] | Hossein +85 speed/+5 HP/−3 regen/−15% damage; Saeed +2 further enemy hits; both cost 40. Designer verifies purchases and piercing. |
 | DEV-67 | Repurpose editor `P` to reroll Product Manager shop offers | [x] | [ ] | Only in shop; all four slots become eligible Product Manager items for free, locks clear, and `P` no longer skips waves. |
+| DEV-68 | Make Hossein and Saeed unique items | [x] | [ ] | Both resources and catalog save unique=true; existing shop eligibility and purchase guards enforce one copy per run. |
 
 ## Update procedure
 
@@ -154,8 +155,9 @@ The developer may mark **Code written** after files are created or changed and r
 | 2026-10-06 | DEV-63 | `scripts/data/StatModifier.cs`; `scripts/gameplay/Player.cs`, `Enemy.cs`, `Projectile.cs`, `GameController.cs`; `resources/items/arezoo.tres`; `_docs/tech-features.md` | Spread +3 children use the same projectile scene and resolved stats, skip the original target for life, and never spread recursively. Signed movement and regeneration modifiers retain their full totals; effective movement and healing have safe floors. Next: designer manual run; verify prices and weights, unique replacement, pistol/SMG/shotgun spread, and HP regeneration. |
 | 2026-10-06 | DEV-64 | `scenes/main.tscn`; removed stale generated `.godot/uid_cache.bin`, `.godot/editor/filesystem_cache10`, `filesystem_update4`, and two old folding files | Designer reported missing renamed resources. Static inspection found old Arezoon/Mana paths in Godot's UID and filesystem caches. Removed `uid` hints for those two main-scene references so their existing new paths are authoritative; Godot regenerates deleted caches on next editor open. Static path check found both new resources present and no old active references. Next: designer reopens editor and reports any remaining import error. |
 | 2026-10-06 | DEV-65 | `scripts/gameplay/WeaponData.cs`, `GameController.cs`; `scenes/main.tscn`; `_docs/tech-features.md` | Designer's stack trace reaches `Shotgun(tier).Stats`, the sole nullable dereference in `WeaponData.Get`. Four existing tier files are now explicit scene resources configured once at startup. Profile lookup caches them; if a load still fails, it logs the exact path and uses the resource-matching provisional profile instead of throwing. Static file/path review only. Next: designer reruns a shotgun through wave 3. |
-| 2026-10-06 | DEV-66 | `resources/items/hossein.tres`, `saeed.tres`; `scripts/data/StatModifier.cs`; `scripts/gameplay/Player.cs`, `Projectile.cs`, `GameController.cs`; `_docs/items-db.md`, `_docs/prd.md`, `_docs/tech-features.md` | Hossein's four modifiers and Saeed's replacement pierce effect saved at 40 coins each. Player bullets and shotgun pellets now hit up to 1 + BulletPierce distinct enemies; repeated Saeed purchases add two hits, and spread children inherit pierce. Signed regeneration behavior retained. Static review only; next: designer checks grouped enemies and shop values. |
+| 2026-10-06 | DEV-66 | `resources/items/hossein.tres`, `saeed.tres`; `scripts/data/StatModifier.cs`; `scripts/gameplay/Player.cs`, `Projectile.cs`, `GameController.cs`; `_docs/items-db.md`, `_docs/prd.md`, `_docs/tech-features.md` | Hossein's four modifiers and Saeed's replacement pierce effect saved at 40 coins each. Player bullets and shotgun pellets now hit up to 1 + BulletPierce distinct enemies; spread children inherit pierce. Signed regeneration behavior retained. The original repeat-purchase rule was superseded by DEV-68. Static review only; next: designer checks grouped enemies and shop values. |
 | 2026-10-06 | DEV-67 | `scripts/gameplay/GameController.cs`; `_docs/prd.md`, `_docs/tech-features.md`, `_docs/developer-progress.md` | Editor-only `P` now works only in the shop. It clears locks, replaces all four offers with independently selected eligible Product Manager items, and charges no coins; normal paid reroll or the next shop restores ordinary odds. The old wave-skip path was removed. Next: designer checks repeated presses, Arezoo uniqueness, and export gating. |
+| 2026-10-06 | DEV-68 | `resources/items/hossein.tres`, `resources/items/saeed.tres`; `_docs/items-db.md`, `_docs/prd.md`, `_docs/tech-features.md`, `_docs/developer-progress.md` | Marked both Product Manager items unique. Existing eligibility checks remove purchased uniques from new draws and replace any other visible or locked copies; the buy path rejects stale copies. No gameplay script changes or balance changes. Static review only; next: designer verifies purchase and exclusion in the shop. |
 
 ## Designer feedback
 
@@ -170,7 +172,12 @@ The developer may mark **Code written** after files are created or changed and r
 
 1. Buy Hossein for 40 coins. The shop stats should change by +85 movement speed, +5 max HP, −3 regeneration/s, and −15% bonus damage. A negative regeneration total should cause neither healing nor HP drain.
 2. Buy Saeed for 40 coins with pistol, SMG, or shotgun equipped. Fire through grouped enemies: a bullet or pellet should damage at most three distinct enemies, showing a hit effect on each, then disappear. It must not damage the same enemy twice.
-3. Buy a second Saeed. A fresh bullet or pellet should reach at most five distinct enemies. If Arezoo is also owned, spread children should inherit the pierce count while ignoring the enemy that spawned them. Knife and hostile envelopes should remain unchanged.
+3. A second Saeed purchase should be unavailable. If Arezoo is also owned, spread children should inherit the +2 pierce count while ignoring the enemy that spawned them. Knife and hostile envelopes should remain unchanged.
+
+### Manual check for DEV-68
+
+1. In an editor run, reach the shop and use `C` for coins. Press `P` until Saeed or Hossein appears in more than one slot; buy one copy. All other visible copies should be replaced, and later `P` presses should never show the purchased item.
+2. Repeat for the other item. Neither should appear in later normal rerolls or shops, while Mania remains repeatable. The shop should show `Unique` beside Hossein and Saeed.
 
 ### Manual check for DEV-67
 

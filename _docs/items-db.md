@@ -19,8 +19,8 @@ This catalog contains teammate and themed passive items. Descriptions state each
 | Amir Hossein | Developer. | +7% bonus damage; +1 knockback | 11 | 2 | false |
 | Hojat | Developer. | +5% bonus damage; +1 knockback | 9 | 2 | false |
 | Omid | Developer. | +6% bonus damage | 8 | 1 | false |
-| Hossein | Product manager. | +85 movement speed; +5 max HP; −3 HP regeneration/s; −15% bonus damage | 40 | 3 | false |
-| Saeed | Product manager. | Bullet pierce +2 | 40 | 3 | false |
+| Hossein | Product manager. | +85 movement speed; +5 max HP; −3 HP regeneration/s; −15% bonus damage | 40 | 3 | true |
+| Saeed | Product manager. | Bullet pierce +2 | 40 | 3 | true |
 | Arezoo | Product manager. | +6 knockback; +2 max HP; Spread +3 | 45 | 3 | true |
 | Mania | Product manager. | +8 max HP; −1 knockback | 25 | 3 | false |
 | Sahar | QA. | +3 max HP; −8 movement speed | 9 | 1 | false |
@@ -39,7 +39,7 @@ This catalog contains teammate and themed passive items. Descriptions state each
 
 **Spread +3 behavior:** When a player bullet **or shotgun pellet** hits an enemy, spawn three additional bullets from the hit point in evenly spaced directions around a circle. Each spawned bullet inherits all projectile traits of the bullet or pellet that hit, including its type, damage, critical-hit result, knockback, speed, lifetime/range, collision behavior, and visual. The enemy struck by the original bullet or pellet must be immune to those three new bullets for their entire lifetime. **Spread bullets do not trigger further Spread** when they hit another enemy.
 
-**Bullet pierce +2 behavior:** Saeed replaces his previous movement and knockback modifiers. A pistol bullet, SMG bullet, or shotgun pellet hits its first enemy and continues through **two more distinct enemies** before it is destroyed. Each bullet damages a given enemy at most once. Repeated Saeed purchases add two more pierces each. Spread children inherit the player's pierce capacity; knives and hostile red envelopes do not gain this effect.
+**Bullet pierce +2 behavior:** Saeed replaces his previous movement and knockback modifiers and is unique, so only one copy can be purchased per run. A pistol bullet, SMG bullet, or shotgun pellet hits its first enemy and continues through **two more distinct enemies** before it is destroyed. Each bullet damages a given enemy at most once. Spread children inherit the player's pierce capacity; knives and hostile red envelopes do not gain this effect.
 
 **Negative HP regeneration:** Store the full signed regeneration stat, including negative values. When healing is calculated during a wave, use `max(0, stored HP regeneration)` so a negative value produces no healing and never drains HP. Later positive modifiers still offset the stored negative value.
 

@@ -38,12 +38,10 @@ script = ExtResource("3")
 EnemyScene = ExtResource("4")
 AlternateEnemyScene = ExtResource("6")
 Count = 9
-HealthMultiplier = 1.05
 
 [sub_resource type="Resource" id="g2_ranged"]
 script = ExtResource("3")
 EnemyScene = ExtResource("5")
-HealthMultiplier = 1.05
 
 [sub_resource type="Resource" id="g2_many_eyes"]
 script = ExtResource("3")
@@ -59,14 +57,12 @@ script = ExtResource("3")
 EnemyScene = ExtResource("4")
 AlternateEnemyScene = ExtResource("6")
 Count = 9
-HealthMultiplier = 1.05
 SpeedMultiplier = 1.05
 
 [sub_resource type="Resource" id="g3_ranged"]
 script = ExtResource("3")
 EnemyScene = ExtResource("5")
 Count = 2
-HealthMultiplier = 1.05
 SpeedMultiplier = 1.05
 
 [sub_resource type="Resource" id="b3"]

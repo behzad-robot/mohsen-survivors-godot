@@ -12,7 +12,7 @@ shader_parameter/warning_amount = 0.0
 [node name="RangedTankEnemy" type="Node2D"]
 script = ExtResource("1")
 Ranged = true
-BaseHealth = 33.0
+BaseHealth = 37.5
 BaseSpeed = 90.0
 BaseKnockbackResistance = 0.1
 VisualScale = 1.0

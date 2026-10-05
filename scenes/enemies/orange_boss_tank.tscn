@@ -11,7 +11,7 @@ shader_parameter/warning_amount = 0.0
 
 [node name="OrangeBossTank" type="Node2D"]
 script = ExtResource("1")
-BaseHealth = 240.0
+BaseHealth = 300.0
 BaseSpeed = 210.0
 BaseKnockbackResistance = 0.7
 HurtboxHalfExtents = Vector2(118, 92)

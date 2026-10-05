@@ -115,7 +115,7 @@ public partial class GameController : Node2D
             AddChild(_audio);
         }
         if (Waves.Count == 0)
-            for (int i = 1; i <= 5; i++)
+            for (int i = 1; i <= 10; i++)
             {
                 var wave = GD.Load<WaveDefinition>($"res://resources/waves/wave_{i:00}.tres");
                 if (wave != null) Waves.Add(wave);
@@ -277,7 +277,7 @@ public partial class GameController : Node2D
         var boss = BossScene.Instantiate<BossEnemy>();
         boss.Position = Mohsen.Position + WaveOneBossOffset;
         AddChild(boss);
-        boss.Configure(this, 1f, 1f, 0f);
+        boss.Configure(this, Waves[_waveIndex].EnemyHealthMultiplier, 1f, 0f);
         Enemies.Add(boss);
     }
 
@@ -391,7 +391,7 @@ public partial class GameController : Node2D
             if (entry.scene.Instantiate() is not Enemy enemy) continue;
             enemy.Position = entry.position;
             AddChild(enemy);
-            enemy.Configure(this, Mathf.Max(.1f, entry.hp), Mathf.Max(.1f, entry.speed), entry.resistance);
+            enemy.Configure(this, Mathf.Max(.1f, entry.hp * Waves[_waveIndex].EnemyHealthMultiplier), Mathf.Max(.1f, entry.speed), entry.resistance);
             Enemies.Add(enemy);
         }
     }
@@ -439,7 +439,7 @@ public partial class GameController : Node2D
             Mathf.Clamp(at.X, boundary, ArenaSize.X - boundary),
             Mathf.Clamp(at.Y, boundary, ArenaSize.Y - boundary));
         AddChild(offspring);
-        offspring.Configure(this, Mathf.Max(0.1f, healthMultiplier), Mathf.Max(0.1f, speedMultiplier), 0f);
+        offspring.Configure(this, Mathf.Max(0.1f, healthMultiplier * Waves[_waveIndex].EnemyHealthMultiplier), Mathf.Max(0.1f, speedMultiplier), 0f);
         Enemies.Add(offspring);
     }
 
@@ -1039,8 +1039,8 @@ public partial class GameController : Node2D
         WaveActive = false;
         _hudScreen.Visible = false;
         ShowScreen(FinishScene);
-        _screen.GetNode<Label>("Panel/Box/Title").Text = victory ? "FIRST FIVE WAVES CLEARED" : "DEFEAT";
-        _screen.GetNode<Label>("Panel/Box/Subtitle").Text = victory ? "End of the first playable slice." : "Mohsen was overwhelmed by office work.";
+        _screen.GetNode<Label>("Panel/Box/Title").Text = victory ? $"FIRST {Waves.Count} WAVES CLEARED" : "DEFEAT";
+        _screen.GetNode<Label>("Panel/Box/Subtitle").Text = victory ? "Current wave set cleared." : "Mohsen was overwhelmed by office work.";
         _screen.GetNode<TextureRect>("Panel/Box/Illustration").Texture = GD.Load<Texture2D>(victory ? "res://assets/placeholders/passive.svg" : "res://assets/placeholders/melee.svg");
         _screen.GetNode<Button>("Panel/Box/PlayAgain").Pressed += ShowMenu;
     }

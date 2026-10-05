@@ -13,14 +13,12 @@ script = ExtResource("3")
 EnemyScene = ExtResource("4")
 AlternateEnemyScene = ExtResource("6")
 Count = 9
-HealthMultiplier = 1.1
 SpeedMultiplier = 1.05
 KnockbackResistanceAdjustment = 0.05
 
 [sub_resource type="Resource" id="g0_ranged"]
 script = ExtResource("3")
 EnemyScene = ExtResource("5")
-HealthMultiplier = 1.1
 SpeedMultiplier = 1.05
 KnockbackResistanceAdjustment = 0.05
 
@@ -33,7 +31,6 @@ script = ExtResource("3")
 EnemyScene = ExtResource("6")
 AlternateEnemyScene = ExtResource("4")
 Count = 9
-HealthMultiplier = 1.1
 SpeedMultiplier = 1.05
 KnockbackResistanceAdjustment = 0.05
 
@@ -41,7 +38,6 @@ KnockbackResistanceAdjustment = 0.05
 script = ExtResource("3")
 EnemyScene = ExtResource("5")
 Count = 2
-HealthMultiplier = 1.1
 SpeedMultiplier = 1.05
 KnockbackResistanceAdjustment = 0.05
 
@@ -55,7 +51,6 @@ script = ExtResource("3")
 EnemyScene = ExtResource("4")
 AlternateEnemyScene = ExtResource("6")
 Count = 9
-HealthMultiplier = 1.15
 SpeedMultiplier = 1.1
 KnockbackResistanceAdjustment = 0.05
 
@@ -63,14 +58,12 @@ KnockbackResistanceAdjustment = 0.05
 script = ExtResource("3")
 EnemyScene = ExtResource("5")
 Count = 2
-HealthMultiplier = 1.15
 SpeedMultiplier = 1.1
 KnockbackResistanceAdjustment = 0.05
 
 [sub_resource type="Resource" id="g2_many_eyes"]
 script = ExtResource("3")
 EnemyScene = ExtResource("7")
-HealthMultiplier = 1.1
 SpeedMultiplier = 1.05
 
 [sub_resource type="Resource" id="b2"]
@@ -83,7 +76,6 @@ script = ExtResource("3")
 EnemyScene = ExtResource("4")
 AlternateEnemyScene = ExtResource("6")
 Count = 10
-HealthMultiplier = 1.2
 SpeedMultiplier = 1.1
 KnockbackResistanceAdjustment = 0.05
 
@@ -91,7 +83,6 @@ KnockbackResistanceAdjustment = 0.05
 script = ExtResource("3")
 EnemyScene = ExtResource("5")
 Count = 2
-HealthMultiplier = 1.2
 SpeedMultiplier = 1.1
 KnockbackResistanceAdjustment = 0.05
 
@@ -105,7 +96,6 @@ script = ExtResource("3")
 EnemyScene = ExtResource("4")
 AlternateEnemyScene = ExtResource("6")
 Count = 10
-HealthMultiplier = 1.2
 SpeedMultiplier = 1.1
 KnockbackResistanceAdjustment = 0.05
 
@@ -113,7 +103,6 @@ KnockbackResistanceAdjustment = 0.05
 script = ExtResource("3")
 EnemyScene = ExtResource("5")
 Count = 3
-HealthMultiplier = 1.2
 SpeedMultiplier = 1.1
 KnockbackResistanceAdjustment = 0.05
 

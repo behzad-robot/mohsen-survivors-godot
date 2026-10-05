@@ -16,4 +16,5 @@ Description = "Product manager."
 Icon = ExtResource("3")
 Price = 40
 Rarity = 3
+Unique = true
 Modifiers = Array[ExtResource("2")]([SubResource("modifier_0")])
