@@ -19,6 +19,6 @@ script = ExtResource("1")
 DisplayName = "Propranolol pills"
 Description = "Item."
 Icon = ExtResource("3")
-Price = 32
+Price = 56
 Rarity = 3
 Modifiers = Array[ExtResource("2")]([SubResource("movement_speed"), SubResource("hp_regeneration")])

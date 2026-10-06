@@ -72,4 +72,5 @@ Groups = Array[ExtResource("3")]([SubResource("g3_melee"), SubResource("g3_range
 
 [resource]
 script = ExtResource("1")
+WaveName = "Onboarding"
 Bursts = Array[ExtResource("2")]([SubResource("b0"), SubResource("b1"), SubResource("b2"), SubResource("b3")])

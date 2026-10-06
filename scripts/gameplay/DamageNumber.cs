@@ -6,6 +6,7 @@ public partial class DamageNumber : Node2D
     [Export] public float RiseDistance { get; set; } = 55f;
     [Export] public float SideDrift { get; set; } = 18f;
     [Export] public Vector2 SpawnJitter { get; set; } = new(8f, 6f);
+    [Export] public Color CriticalColor { get; set; } = new(1f, 0.85f, 0.2f);
 
     private Label _label;
     private Vector2 _origin;
@@ -22,9 +23,10 @@ public partial class DamageNumber : Node2D
         _drift = GD.Randf() * 2f * SideDrift - SideDrift;
     }
 
-    public void SetDamage(float amount)
+    public void SetDamage(float amount, bool criticalHit)
     {
         _label.Text = Mathf.RoundToInt(Mathf.Max(1f, amount)).ToString();
+        _label.AddThemeColorOverride("font_color", criticalHit ? CriticalColor : Colors.White);
     }
 
     public override void _Process(double delta)

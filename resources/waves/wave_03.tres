@@ -115,6 +115,8 @@ Groups = Array[ExtResource("3")]([SubResource("g4_melee"), SubResource("g4_range
 [resource]
 script = ExtResource("1")
 WaveNumber = 3
+WaveName = "Dakhl-Access"
+EnemyHealthMultiplier = 1.8225
 TankSpawnChance = 0.18
 BossSpawnChance = 0.55
 BossTankChance = 0.45

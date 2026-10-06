@@ -19,6 +19,6 @@ script = ExtResource("1")
 DisplayName = "Mania"
 Description = "Product manager."
 Icon = ExtResource("3")
-Price = 25
+Price = 44
 Rarity = 3
 Modifiers = Array[ExtResource("2")]([SubResource("modifier_0"), SubResource("modifier_1")])

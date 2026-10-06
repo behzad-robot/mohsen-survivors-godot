@@ -12,5 +12,6 @@ Amount = 5.0
 [resource]
 script = ExtResource("1")
 DisplayName = "+5% damage"
+Price = 9
 Icon = ExtResource("3")
 Modifiers = Array[ExtResource("2")]([SubResource("damage_bonus")])

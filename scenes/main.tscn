@@ -35,11 +35,11 @@
 [ext_resource type="Resource" uid="uid://x0shyayl5upx" path="res://resources/items/hookah.tres" id="34"]
 [ext_resource type="Resource" uid="uid://ceixuf8aqo3dg" path="res://resources/items/propranolol_pills.tres" id="35"]
 [ext_resource type="Resource" uid="uid://hrgajio8kprq" path="res://resources/items/heavy_smoker.tres" id="36"]
-[ext_resource type="Resource" path="res://resources/waves/wave_06.tres" id="37"]
-[ext_resource type="Resource" path="res://resources/waves/wave_07.tres" id="38"]
-[ext_resource type="Resource" path="res://resources/waves/wave_08.tres" id="39"]
-[ext_resource type="Resource" path="res://resources/waves/wave_09.tres" id="40"]
-[ext_resource type="Resource" path="res://resources/waves/wave_10.tres" id="41"]
+[ext_resource type="Resource" uid="uid://bsmpklqn1xkj4" path="res://resources/waves/wave_06.tres" id="37"]
+[ext_resource type="Resource" uid="uid://d0h0bkggilqcy" path="res://resources/waves/wave_07.tres" id="38"]
+[ext_resource type="Resource" uid="uid://dd2qmrxv6aifj" path="res://resources/waves/wave_08.tres" id="39"]
+[ext_resource type="Resource" uid="uid://c3m4i1cjerm0a" path="res://resources/waves/wave_09.tres" id="40"]
+[ext_resource type="Resource" uid="uid://cuiyalggbm2na" path="res://resources/waves/wave_10.tres" id="41"]
 
 [node name="Game" type="Node2D" unique_id=373263198]
 script = ExtResource("1")

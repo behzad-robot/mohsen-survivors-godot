@@ -87,7 +87,7 @@ public partial class Projectile : Node2D
                 if (!GodotObject.IsInstanceValid(enemy) || _hitEnemies.Contains(enemy.GetInstanceId())) continue;
                 if (EnemyHitTime(from, to, enemy, HitRadius) < 0f) continue;
                 _hitEnemies.Add(enemy.GetInstanceId());
-                enemy.TakeHit(Damage, Direction, Knockback);
+                enemy.TakeHit(Damage, Direction, Knockback, CriticalHit);
                 if (CriticalHit) Game.RequestKnifeCritPause();
             }
         }
@@ -108,7 +108,7 @@ public partial class Projectile : Node2D
                 ulong originalTargetId = hit.enemy.GetInstanceId();
                 if (!_hitEnemies.Add(originalTargetId)) continue;
                 Vector2 hitPosition = from.Lerp(to, hit.time);
-                hit.enemy.TakeHit(Damage, Direction, Knockback);
+                hit.enemy.TakeHit(Damage, Direction, Knockback, CriticalHit);
                 Game.SpawnPlayerBulletHit(hitPosition);
                 if (CanSpread && SourceScene != null && Game.Mohsen.Spread > 0)
                     Game.SpawnSpreadBullets(this, hitPosition, originalTargetId);

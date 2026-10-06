@@ -38,7 +38,8 @@ public partial class GameController : Node2D
     [Export] public Godot.Collections.Array<ShopItemDefinition> ItemPool { get; set; } = new();
     [Export] public float MinimumSpawnDistance { get; set; } = 390f;
     [Export(PropertyHint.Range, "0,32,1")] public float CoinDropScatterRadius { get; set; } = 12f;
-    [Export] public int TierOneWeaponPrice { get; set; } = 6;
+    [Export] public int TierOneWeaponPrice { get; set; } = 18;
+    [Export] public int WeaponTierPriceStep { get; set; } = 12;
     [Export(PropertyHint.Range, "0,0.2,0.005")] public float KnifeCritPauseSeconds { get; set; } = 0.055f;
     [Export(PropertyHint.Range, "0,0.2,0.005")] public float BossHitPauseSeconds { get; set; } = 0.045f;
     [Export(PropertyHint.Range, "0,0.2,0.005")] public float DefeatPauseSeconds { get; set; } = 0.04f;
@@ -471,13 +472,13 @@ public partial class GameController : Node2D
         _impactPauseFrame = false;
     }
 
-    public void SpawnDamageNumber(float amount, Vector2 at)
+    public void SpawnDamageNumber(float amount, Vector2 at, bool criticalHit)
     {
         if (DamageNumberScene == null) return;
         var number = DamageNumberScene.Instantiate<DamageNumber>();
         number.Position = at;
         AddChild(number);
-        number.SetDamage(amount);
+        number.SetDamage(amount, criticalHit);
     }
 
     public void SpawnPlayerBulletHit(Vector2 at)
@@ -535,7 +536,7 @@ public partial class GameController : Node2D
         }
 
         float damage = EffectiveWeaponDamage(weapon.Kind, stats);
-        bool critical = _rng.Randf() < stats.CritChance;
+        bool critical = _rng.Randf() < EffectiveCritChance(stats);
         if (critical) damage *= stats.CritMultiplier;
         bool knife = weapon.Kind == WeaponKind.Knife;
         PackedScene scene = weapon.Kind switch
@@ -581,7 +582,7 @@ public partial class GameController : Node2D
             pellet.RemainingDistance = travelRange;
             pellet.RangeAtSpawn = travelRange;
             pellet.Damage = EffectiveWeaponDamage(WeaponKind.Shotgun, stats);
-            pellet.CriticalHit = _rng.Randf() < stats.CritChance;
+            pellet.CriticalHit = _rng.Randf() < EffectiveCritChance(stats);
             if (pellet.CriticalHit) pellet.Damage *= stats.CritMultiplier;
             pellet.Knockback = stats.Knockback + Mohsen.Knockback;
             pellet.PierceCapacity = pellet.RemainingPierces = Mohsen.BulletPierce;
@@ -715,7 +716,7 @@ public partial class GameController : Node2D
         }
         if (eligibleWeapons.Count == 0) return null;
         var weapon = eligibleWeapons[_rng.RandiRange(0, eligibleWeapons.Count - 1)];
-        return new Offer { Kind = weapon.kind, Tier = weapon.tier, Price = TierOneWeaponPrice + (weapon.tier - 1) * 4 };
+        return new Offer { Kind = weapon.kind, Tier = weapon.tier, Price = TierOneWeaponPrice + (weapon.tier - 1) * WeaponTierPriceStep };
     }
 
     private ShopItemDefinition WeightedItem(ShopItemDefinition[] items)
@@ -838,6 +839,7 @@ public partial class GameController : Node2D
         $"Movement speed: {Mohsen.EffectiveMovementSpeed:0.#}\n" +
         $"Knockback: {Mohsen.Knockback:0.#}\n" +
         $"Bonus damage: {Mohsen.BonusDamagePercent:0.#}%\n" +
+        $"Critical chance bonus: {Mohsen.CriticalChancePercent:+0.#;-0.#;0}%\n" +
         $"Ranged damage: {Mohsen.RangedDamagePercent:0.#}%\n" +
         $"Melee damage: {Mohsen.MeleeDamagePercent:0.#}%\n" +
         $"Pickup radius: {Mohsen.CoinPickupRadius:0.#}\n" +
@@ -860,7 +862,7 @@ public partial class GameController : Node2D
                    $"Attack speed: {1f / stats.Interval:0.##}/s\n" +
                    $"Range: {stats.Range:0} px\n" +
                    $"Speed: {profile.PelletSpeed:0} px/s · Life: {profile.PelletLifetimeSeconds:0.##}s\n" +
-                   $"Knockback: {stats.Knockback + Mohsen.Knockback:0.#} · Crit: {stats.CritChance * 100f:0}%\n" +
+                   $"Knockback: {stats.Knockback + Mohsen.Knockback:0.#} · Crit: {EffectiveCritChance(stats) * 100f:0}%\n" +
                    (Mohsen.BulletPierce > 0 ? $"Each pellet can hit {Mohsen.BulletPierce + 1} enemies" : "Each pellet stops on hit");
         }
         string behavior = offer.Kind == WeaponKind.Knife ? "Piercing throw"
@@ -869,7 +871,7 @@ public partial class GameController : Node2D
                $"Attack speed: {1f / stats.Interval:0.##}/s\n" +
                $"Range: {stats.Range:0} px\n" +
                $"Knockback: {stats.Knockback + Mohsen.Knockback:0.#}\n" +
-               $"Crit: {stats.CritChance * 100f:0}% · ×{stats.CritMultiplier:0.#}\n" +
+               $"Crit: {EffectiveCritChance(stats) * 100f:0}% · ×{stats.CritMultiplier:0.#}\n" +
                behavior;
     }
 
@@ -886,9 +888,10 @@ public partial class GameController : Node2D
             PlayerStat.HealthRegenPerSecond => "HP regeneration/s",
             PlayerStat.Spread => "Spread bullets on hit",
             PlayerStat.BulletPierce => "bullet pierce",
+            PlayerStat.CriticalChancePercent => "critical chance",
             _ => modifier.Stat.ToString()
         };
-        bool percent = modifier.Stat == PlayerStat.BonusDamagePercent || modifier.Stat == PlayerStat.RangedDamagePercent || modifier.Stat == PlayerStat.MeleeDamagePercent;
+        bool percent = modifier.Stat == PlayerStat.BonusDamagePercent || modifier.Stat == PlayerStat.RangedDamagePercent || modifier.Stat == PlayerStat.MeleeDamagePercent || modifier.Stat == PlayerStat.CriticalChancePercent;
         return $"{modifier.Amount:+0.##;-0.##;0}{(percent ? "%" : "")} {name}";
     }
 
@@ -934,6 +937,9 @@ public partial class GameController : Node2D
         return stats.Damage * (1f + (Mohsen.BonusDamagePercent + stats.Scaling * typedBonus) / 100f);
     }
 
+    private float EffectiveCritChance(WeaponStats stats) =>
+        Mathf.Clamp(stats.CritChance + Mohsen.CriticalChancePercent / 100f, 0f, 1f);
+
     private string WeaponTooltip(Weapon weapon)
     {
         WeaponStats stats = WeaponData.Get(weapon.Kind, weapon.Tier);
@@ -945,7 +951,7 @@ public partial class GameController : Node2D
                    $"Pellets: {profile.PelletCount} in {profile.SpreadDegrees:0}° spread\n" +
                    $"Attack speed: {1f / stats.Interval:0.##}/s ({stats.Interval:0.##}s between blasts)\n" +
                    $"Range: {stats.Range:0} px · Pellet speed: {profile.PelletSpeed:0} px/s · Life: {profile.PelletLifetimeSeconds:0.##}s\n" +
-                   $"Knockback: {stats.Knockback + Mohsen.Knockback:0.#} per pellet · Crit: {stats.CritChance * 100f:0}% ×{stats.CritMultiplier:0.#}\n" +
+                   $"Knockback: {stats.Knockback + Mohsen.Knockback:0.#} per pellet · Crit: {EffectiveCritChance(stats) * 100f:0}% ×{stats.CritMultiplier:0.#}\n" +
                    (Mohsen.BulletPierce > 0 ? $"Each pellet can hit {Mohsen.BulletPierce + 1} enemies" : "Each pellet stops on its first enemy hit");
         }
         string behavior = weapon.Kind == WeaponKind.Knife
@@ -956,7 +962,7 @@ public partial class GameController : Node2D
                $"Damage: {EffectiveWeaponDamage(weapon.Kind, stats):0.#} (base {stats.Damage:0.#})\n" +
                $"Attack speed: {1f / stats.Interval:0.##}/s ({stats.Interval:0.##}s between attacks)\n" +
                $"Range: {stats.Range:0} px  •  Knockback: {stats.Knockback + Mohsen.Knockback:0.#}\n" +
-               $"Critical hit: {stats.CritChance * 100f:0}% chance, ×{stats.CritMultiplier:0.#} damage\n" +
+               $"Critical hit: {EffectiveCritChance(stats) * 100f:0}% chance, ×{stats.CritMultiplier:0.#} damage\n" +
                $"{behavior}";
     }
 
@@ -977,13 +983,15 @@ public partial class GameController : Node2D
                 PlayerStat.HealthRegenPerSecond => "HP regeneration / s",
                 PlayerStat.Spread => "Spread bullets on hit",
                 PlayerStat.BulletPierce => "Bullet pierce",
+                PlayerStat.CriticalChancePercent => "Critical chance",
                 _ => modifier.Stat.ToString()
             };
-            bool percent = modifier.Stat == PlayerStat.BonusDamagePercent || modifier.Stat == PlayerStat.RangedDamagePercent || modifier.Stat == PlayerStat.MeleeDamagePercent;
+            bool percent = modifier.Stat == PlayerStat.BonusDamagePercent || modifier.Stat == PlayerStat.RangedDamagePercent || modifier.Stat == PlayerStat.MeleeDamagePercent || modifier.Stat == PlayerStat.CriticalChancePercent;
             string suffix = percent ? "%" : "";
             lines.Add($"{name}: {modifier.Amount:+0.##;-0.##;0}{suffix} each, {modifier.Amount * count:+0.##;-0.##;0}{suffix} total");
         }
         lines.Add($"Current all-damage bonus: {Mohsen.BonusDamagePercent:0.#}%");
+        lines.Add($"Current critical chance bonus: {Mohsen.CriticalChancePercent:+0.#;-0.#;0}%");
         foreach (Weapon weapon in _weapons)
         {
             WeaponStats stats = WeaponData.Get(weapon.Kind, weapon.Tier);

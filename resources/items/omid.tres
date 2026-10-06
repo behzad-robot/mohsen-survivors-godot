@@ -13,5 +13,5 @@ script = ExtResource("1")
 DisplayName = "Omid"
 Description = "Developer."
 Icon = ExtResource("3")
-Price = 8
+Price = 14
 Modifiers = Array[ExtResource("2")]([SubResource("modifier_0")])

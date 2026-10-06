@@ -156,6 +156,8 @@ Groups = Array[ExtResource("3")]([SubResource("g6_melee"), SubResource("g6_range
 [resource]
 script = ExtResource("1")
 WaveNumber = 5
+WaveName = "Vendor Own Delivery"
+EnemyHealthMultiplier = 11.390625
 TankSpawnChance = 0.3
 BossSpawnChance = 0.65
 BossTankChance = 0.55

@@ -34,7 +34,7 @@ Create feature subfolders only when there is a feature task. Keep asset referenc
 | Enemies and spawning | Code written; designer verification pending | Reusable melee/ranged scenes; timed bursts begin red-cross warnings, then spawn after per-burst warning duration |
 | Weapons | Code written; designer verification pending | Initial knife/pistol/SMG choice, four slots, four tiers, nearest-target auto-fire; scaling formulas TBD |
 | Passive items | Code written for the 26-item `_docs/items-db.md` catalog; designer verification pending | Prices, rarity, uniqueness, and modifiers are editable; approved icons are used where available, placeholders for the rest |
-| Waves and progression | Code written for waves 1–5; designer verification pending | Developer authors provisional waves 1–5 × 45 seconds; full target 20 waves; weighted 0–3 coin drops and four-offer shop |
+| Waves and progression | Code written for waves 1–10; designer verification pending | Ten editable 45-second waves; 2.5× enemy HP per wave from wave 4, tank base HP 2.5× normal; full target 20 waves |
 | UI and art integration | Placeholder code written; designer verification pending | Play button, weapon selection, shop, shared finish-screen layout, 1280×720 design view; exact copy and window scaling TBD |
 
 ## Confirmed input and presentation requirements
@@ -56,11 +56,11 @@ Prefer inspector-editable C# custom `Resource` types saved as `.tres` files rath
 
 | Resource | Exported data | Purpose |
 | --- | --- | --- |
-| `WaveDefinition` | Wave number, optional wave name, duration (45 s by default), ordered list of `SpawnBurstDefinition` | One file per wave; create waves 1–5 initially, with capacity for 20 later |
+| `WaveDefinition` | Wave number, optional wave name, duration (45 s by default), enemy HP multiplier, ordered list of `SpawnBurstDefinition` | One file per wave; waves 1–10 currently authored, with capacity for 20 later |
 | `SpawnBurstDefinition` | Trigger time in seconds since wave start, warning duration (default 1 s), list of `EnemySpawnGroupDefinition` | At t=x, choose positions and show warnings; spawn after the duration |
 | `EnemySpawnGroupDefinition` | Enemy scene/variant, count, HP multiplier, speed multiplier, knockback resistance adjustment | Allows different enemy groups within one burst |
 
-Example: at t=0, one melee group with count 2 and one ranged group with count 3 begins warning; they spawn after that burst's warning duration. At t=1, two groups of count 5 each begin their own warning. Each enemy instance receives the resolved values at spawn so one burst cannot mutate shared scene defaults. The developer should validate nonnegative counts, sensible stat limits, and trigger time plus warning duration within the 45-second wave when authoring tools are implemented. The developer chooses provisional, editable schedules and enemy values for waves 1–5; the designer will later tune them and expand to waves 6–20.
+Example: at t=0, one melee group with count 2 and one ranged group with count 3 begins warning; they spawn after that burst's warning duration. At t=1, two groups of count 5 each begin their own warning. Each enemy instance receives the resolved values at spawn so one burst cannot mutate shared scene defaults. The developer should validate nonnegative counts, sensible stat limits, and trigger time plus warning duration within the 45-second wave when authoring tools are implemented. Provisional, editable schedules and enemy values now cover waves 1–10; the designer will later tune them and expand to waves 11–20.
 
 At each burst trigger, randomly choose legal positions for all enemies in that burst, show a red cross at each position, and hold those positions through the warning period. After the burst's Inspector-editable duration (default 1 second), remove the crosses and spawn the enemies at those same positions. Use a red-cross developer placeholder until ART-017 is approved. A t=0 burst begins warning at wave start and spawns at t=1 by default.
 
@@ -78,7 +78,7 @@ Use two reusable behavior scenes or scripts, melee and ranged, with inspector-ex
 
 ## Art integration and size
 
-The during-wave HUD is an editable `scenes/ui/hud.tscn` scene. `GameController` binds HP, coins, wave title, timer, and existing equipment summary to individual controls. The five wave names live in `resources/waves/wave_01.tres`–`wave_05.tres` through `WaveDefinition.WaveName`; an empty or whitespace-only name displays `Wave-{X}`. Timer color uses the displayed, upward-rounded seconds: white at 20 or more, yellow from 10 through 19, and red below 10. The HP bar uses editable flat styles, and the coin icon reuses the developer placeholder until approved art arrives. These layout and color values need a designer run for visual verification.
+The during-wave HUD is an editable `scenes/ui/hud.tscn` scene. `GameController` binds HP, coins, wave title, timer, and existing equipment summary to individual controls. Wave names live in `resources/waves/wave_01.tres`–`wave_10.tres` through `WaveDefinition.WaveName`; an empty or whitespace-only name displays `Wave-{X}`. Waves 6–10 have no approved names yet. Timer color uses the displayed, upward-rounded seconds: white at 20 or more, yellow from 10 through 19, and red below 10. The HP bar uses editable flat styles, and the coin icon reuses the developer placeholder until approved art arrives. These layout and color values need a designer run for visual verification.
 
 - Start with placeholders approximately matching the saved gameplay screenshots: Mohsen visual body about 55–65 display pixels tall and ordinary enemies about 45–60 at 1280×720. These are display targets, not fixed source-image dimensions or collider sizes. Keep sprite scale and collision geometry independently editable.
 - The approved no-shoes `assets/art/approved/characters/mohsen_idle.png` is a static 64×64 image with 60-pixel visible height. `mohsen_walk.png` is still pending; keep the approved idle visible during movement with the existing subtle code-driven bob.
@@ -117,14 +117,14 @@ The current knife is a finite-lifetime throw that can hit each enemy once. Pisto
 
 ## First playable readiness
 
-The developer can start when the designer assigns implementation in the developer conversation. The first playable version needs waves 1–5, which the developer authors with explicitly labeled provisional difficulty values. The current docs are sufficient to build the scene flow, configurable wave/burst resources, warning signs, two enemy behaviors, movement and auto-fire, coins, health, four weapon slots, and a shop offering weapons plus the +5% damage sample item using developer placeholders. Keep provisional values editable and do not present them as approved balance.
+The initial five-wave target has been expanded by the designer to ten waves. Difficulty values remain provisional and editable. The active shop uses the approved passive catalog in `_docs/items-db.md`; the earlier +5% damage sample is inactive.
 
-Completing the later 20-wave content and full shop balance still needs designer feedback on waves 1–5, the later wave schedules, a larger item catalog, final offer prices, and several edge-case rules listed below. These are follow-up inputs, not blockers to starting the five-wave build. The designer alone runs and tests the result.
+Completing the eventual 20-wave content and final shop balance still needs designer feedback on waves 1–10, later wave schedules, item tuning, and several edge-case rules listed below. The designer alone runs and tests the result.
 
 ## Open technical questions
 
 - What window scaling behavior should be used for the 1280×720 design view?
-- How should the designer tune the developer-authored first five waves after testing, and what should waves 6–20 contain later?
+- How should the designer tune provisional waves 1–10 after testing, and what should waves 11–20 contain later?
 - What are final shop offer prices and the later passive-item catalog? Does reroll cost reset each shop visit?
 - How should Brotato's flat melee/ranged damage scaling translate to this game's percentage-based bonuses?
 - What happens when buying duplicate weapons while slots remain, or when the matching weapon is already tier IV?
@@ -133,23 +133,23 @@ Completing the later 20-wave content and full shop balance still needs designer 
 
 ## Five-wave implementation decisions (developer provisional, 2026-10-03)
 
-The first playable is written in C# under `scripts/data/` and `scripts/gameplay/`. `scenes/main.tscn` is the entry scene and exposes the five wave resources and initial item pool in the Inspector. `scenes/enemies/melee.tscn` and `ranged.tscn` expose baseline values. Wave data is in `resources/waves/wave_01.tres` through `wave_05.tres`. Approved character, enemy, environment, weapon, and projectile visuals now load from `assets/art/approved/`; missing art still uses `assets/placeholders/`. No `_art/work/` file is referenced. The floor is tiled and the walls are assembled from the approved atlas in `Arena.cs`. The end of wave 5 uses a temporary **First Five Waves Cleared** screen, not final 20-wave victory copy.
+The first playable is written in C# under `scripts/data/` and `scripts/gameplay/`. `scenes/main.tscn` is the entry scene and exposes ten wave resources and the item pool in the Inspector. `scenes/enemies/melee.tscn` and `ranged.tscn` expose baseline values. Wave data is in `resources/waves/wave_01.tres` through `wave_10.tres`. Approved character, enemy, environment, weapon, and projectile visuals now load from `assets/art/approved/`; missing art still uses `assets/placeholders/`. No `_art/work/` file is referenced. The floor is tiled and the walls are assembled from the approved atlas in `Arena.cs`. Clearing wave 10 currently shows the temporary completion screen; the 20-wave victory copy is TBD.
 
-All five authored waves now last 45 seconds. Burst warning duration starts at 1 second in every wave file and can be edited per burst. Burst schedules below are `(time: Jira melee + mail ranged + many-eyes parent)`; the Jira count includes both visual variants. Multipliers are per group and editable in each `.tres` file. The wave-1 boss spawns directly at t=0 as an explicit testing exception to the ordinary burst warnings. Every enemy defeated, including spawned offspring, rolls for 0–3 coins at the probabilities documented in Minor updates 2 below. Enemies still alive and coins on the field disappear when a wave ends.
+All ten authored waves last 45 seconds. Burst warning duration starts at 1 second in every wave file and can be edited per burst. Burst schedules below are `(time: Jira melee + mail ranged + many-eyes parent)`; the Jira count includes both visual variants. Group speed and resistance values remain editable. The group HP multipliers in waves 1–10 now default to 1, with HP growth controlled by the wave-level multiplier described below. The wave-1 boss spawns directly at t=0 as an explicit testing exception to the ordinary burst warnings. Every enemy defeated, including spawned offspring, rolls for 0–3 coins at the probabilities documented in Minor updates 2 below. Enemies still alive and coins on the field disappear when a wave ends.
 
 | Wave | Burst schedule, seconds from wave start | HP multiplier range | Speed multiplier range | Knockback resistance adjustment |
 | --- | --- | ---: | ---: | ---: |
-| 1 | 0: 10+0; 10: 9+1; 20: 9+1+1; 31: 9+2; boss at t=0 | 1.00–1.05 | 1.00–1.05 | +0.00 |
-| 2 | 0: 9+1; 8: 9+2; 16: 9+2+1; 25: 10+2; 35: 10+3 | 1.10–1.20 | 1.05–1.10 | +0.05 |
-| 3 | 0: 8+2; 7: 9+2; 15: 10+3+1; 23: 11+3; 32: 12+3 | 1.20–1.30 | 1.10–1.20 | +0.10 |
-| 4 | 0: 8+2; 6: 10+3; 13: 11+3; 20: 12+4+1; 28: 13+4; 36: 14+4 | 1.30–1.45 | 1.15–1.25 | +0.15 |
-| 5 | 0: 10+3; 6: 11+3; 12: 12+4; 19: 13+4+2; 26: 14+5; 33: 15+5; 40: 16+5 | 1.45–1.70 | 1.20–1.35 | +0.20 |
+| 1 | 0: 10+0; 10: 9+1; 20: 9+1+1; 31: 9+2; boss at t=0 | 1.000000 | 1.00–1.05 | +0.00 |
+| 2 | 0: 9+1; 8: 9+2; 16: 9+2+1; 25: 10+2; 35: 10+3 | 1.350000 | 1.05–1.10 | +0.05 |
+| 3 | 0: 8+2; 7: 9+2; 15: 10+3+1; 23: 11+3; 32: 12+3 | 1.822500 | 1.10–1.20 | +0.10 |
+| 4 | 0: 8+2; 6: 10+3; 13: 11+3; 20: 12+4+1; 28: 13+4; 36: 14+4 | 4.55625 | 1.15–1.25 | +0.15 |
+| 5 | 0: 10+3; 6: 11+3; 12: 12+4; 19: 13+4+2; 26: 14+5; 33: 15+5; 40: 16+5 | 11.390625 | 1.20–1.35 | +0.20 |
 
-Additional provisional values: arena 1800×1100; Mohsen speed 240 px/s and pickup radius 78 px; Jira melee enemy 10 HP, 105 px/s; mail ranged enemy 15 HP, 90 px/s, 260 px firing range, 140 px retreat distance, 2.4 s shot interval, 230 px/s projectile speed. Wave 1 uses those bases and slight late-burst multipliers; later waves retain separate editable multipliers. Enemy touch and projectile each deal 1 HP subject to the same player invulnerability. No initial HP regeneration or other stat bonuses. Spawn positions are random within the walls, with a preferred minimum distance of 390 px from Mohsen and 42 px from other pending signs; a 40-attempt fallback may pick a closer legal point in a crowded burst.
+Additional provisional values: arena 1800×1100; Mohsen speed 240 px/s and pickup radius 78 px; Jira melee enemy 10 HP, 105 px/s; mail ranged enemy 15 HP, 90 px/s, 260 px firing range, 140 px retreat distance, 2.4 s shot interval, 230 px/s projectile speed. Wave 1 uses base HP, with slight late-burst speed increases; later waves use separate editable wave-level HP and group speed multipliers. Enemy touch and projectile each deal 1 HP subject to the same player invulnerability. No initial HP regeneration or other stat bonuses. Spawn positions are random within the walls, with a preferred minimum distance of 390 px from Mohsen and 42 px from other pending signs; a 40-attempt fallback may pick a closer legal point in a crowded burst.
 
 Weapon tier base damage, intervals, crit, and scaling coefficients use the selected wiki values; pistol and SMG ranges remain 400 while knife range is provisionally 280; knockback uses the later designer-requested tuning shown in the table above. Provisional damage formula is `base_damage × (1 + (general_bonus_percent + scaling_coefficient × matching_melee_or_ranged_bonus_percent) / 100)`. Projectiles travel at 580 px/s for pistol and 650 px/s for SMG; the thrown knife starts at 560 px/s, eases down during a 0.65-second lifetime, and has a 280-pixel tier range and can hit each enemy once. Gun bullets disappear on the first enemy hit by default; Saeed's Bullet pierce adds further distinct hits. Duplicate purchases merge immediately when a same-type/same-tier weapon below tier IV exists; chain merges are supported. Otherwise they occupy a free slot. Tier IV duplicates occupy a free slot only and are blocked at four occupied slots.
 
-The active shop rules are specified in the approved item catalog revision below. Weapon tiers in offers are I for shops after waves 1–2 and I–II after waves 3–4. Tier-I weapons cost 6 coins, with +4 per tier. Coins carry over between shops. Reroll cost resets to 5 each shop and rises by 5 per reroll there. A new shop refreshes each unlocked slot; locked offers retain their slot and price across shops unless a unique purchase makes them ineligible. Bought slots stay empty until reroll or the next shop.
+The active shop rules are specified in the approved item catalog revision below. Weapon tiers in offers are I for shops after waves 1–2 and I–II after waves 3–4. The later 3× weapon-price revision sets tier I–IV costs to 18/30/42/54 coins. `TierOneWeaponPrice` and `WeaponTierPriceStep` are exported as 18 and 12 for Inspector tuning. Coins carry over between shops. Reroll cost resets to 5 each shop and rises by 5 per reroll there. A new shop refreshes each unlocked slot; locked offers retain their slot and price across shops unless a unique purchase makes them ineligible. Bought slots stay empty until reroll or the next shop.
 
 The 1280×720 canvas scales with the window using `canvas_items` stretch. The Play Again button returns to the menu; the next Play begins a fresh run. Defeat occurs at 0 HP after the shrink animation. No code was run, built, compiled, launched, or tested by the developer; designer verification is pending.
 
@@ -206,7 +206,7 @@ The subsequent shop display request sets the `TextureRect` slots in `scenes/ui/s
 
 `GameController._Input` handles non-repeating `C`, `P`, and `R` presses only when `OS.HasFeature("editor")` is true. Godot 4.6 [documents the `editor` feature tag](https://docs.godotengine.org/en/4.6/classes/class_engine.html#class-engine-method-is-editor-hint) as present when running from the editor and absent in exports; `Engine.IsEditorHint()` would be false for ordinary game play launched by F5. `C` adds 100 coins and immediately refreshes the visible shop or HUD count. Coins granted on menu, weapon-choice, or finish screens are carried into the next started run. `P` is now active only while the shop is open: it freely clears all four offer locks and rerolls every slot from eligible items whose role description is `Product manager.`. It does not spend coins, increase the normal reroll price, offer weapons, or skip waves. The Product Manager-only filter stays active for any replacement after a purchase until the normal paid reroll or the next shop. `R` reloads the current scene, returning to the menu with fresh state. `P` presses outside the shop have no effect. No project code was run, built, compiled, launched, or tested by the developer.
 
-All new passive prices are provisionally 5 coins, with no tiers or per-item purchase limits. Existing equal-weight offer draws and additive repeat purchases still apply; this larger pool makes any one weapon less likely, so shop odds need a designer decision after playtest. Negative HP regeneration offsets positive regeneration, with effective regeneration floored at zero; it does not drain HP. Max-HP reductions cannot lower current HP below one at purchase time. These are provisional behaviors to make `Sahar-2` and negative-HP items safe and predictable; the designer still needs to decide final regeneration, prices, appearance rules, stacking limits, spellings, and whether all three numbered DevOps buddies stay in the pool. No agent run, build, compile, launch, or test was performed.
+The early five-coin passive price and equal-weight offer draw were superseded by `_docs/items-db.md` and later designer revisions. Current prices are 1.75× the prior catalog costs rounded up; the 40/60 offer split and rarity weights remain. Negative HP regeneration offsets positive regeneration, with effective regeneration floored at zero; it does not drain HP. Max-HP reductions cannot lower current HP below one at purchase time. No agent run, build, compile, launch, or test was performed.
 
 ## Coin, damage-number, and shop-inventory polish (designer request, 2026-10-03)
 
@@ -329,7 +329,7 @@ A static item-resource audit during this work found four earlier omitted modifie
 
 ## Approved tank enemies (designer handoff, 2026-10-06)
 
-Six new component scenes under `scenes/enemies/` use the approved `*_tank.png` sprites and the same C# behavior class and non-health attack/movement settings as their counterparts: male Jira, female Jira, mail slime, many-eyes, one-eye offspring, and orange boss. Tank durability is represented by editable base HP only; no new damage, speed, knockback resistance, attack pattern, or loot rule is introduced. Provisional base HP is 22/22/33/53/9/240 versus the corresponding 10/10/15/24/4/120. The tank boss's oval half-extents are 118×92 instead of 118×84 to cover its taller 288×208 art; other hit geometry retains counterpart values. Scene sprites retain counterpart `VisualScale` so the helmets add visible height at game scale. These are developer starting values for designer tuning.
+Six component scenes under `scenes/enemies/` use the approved `*_tank.png` sprites and the same C# behavior class and non-health attack/movement settings as their counterparts: male Jira, female Jira, mail slime, many-eyes, one-eye offspring, and orange boss. Tank durability is represented by editable base HP only; no new damage, speed, knockback resistance, attack pattern, or loot rule is introduced. Current tank base HP is 25/25/37.5/60/10/300 versus the corresponding 10/10/15/24/4/120, exactly 2.5×. The tank boss's oval half-extents are 118×92 instead of 118×84 to cover its taller 288×208 art; other hit geometry retains counterpart values. Scene sprites retain counterpart `VisualScale` so the helmets add visible height at game scale. These are developer starting values for designer tuning.
 
 `WaveDefinition` now exposes `TankSpawnChance`, `BossSpawnChance`, `BossTankChance`, `BossSpawnTime`, `BossSpawnOffset`, and `BossSpawnWarningSeconds`. `GameController.SelectTankScene` recognizes the six known base scene paths and maps them to Inspector-replaceable tank scenes. It refuses replacement before wave number 3 even if a chance is edited there. Each warned burst first chooses its normal male/female or other base scene, then independently rolls the per-wave tank chance before the red cross is shown; the chosen scene spawns at that cross. Many-eyes offspring use the same per-wave chance for one-eye tank selection. Wave-1's direct t=0 original boss remains unchanged, and wave 2 has no boss opportunity.
 
@@ -351,10 +351,45 @@ The reported `WeaponData.Get` null exception can occur only on its shotgun branc
 
 ## Hossein and Saeed item revision (designer request, 2026-10-06)
 
-`resources/items/hossein.tres` now costs 40 coins and grants +85 movement speed, +5 max HP, −3 signed HP regeneration/s, and −15 percentage points of all-weapon bonus damage. Negative regeneration still contributes to the stored total but never drains HP. `resources/items/saeed.tres` also costs 40 coins and replaces its former movement/knockback bonuses with Bullet pierce +2. Both retain rarity 3, roles, and icon paths; a later designer request made both unique. The active item database and PRD carry the same values.
+`resources/items/hossein.tres` originally changed to 40 coins with +85 movement speed, +5 max HP, −3 signed HP regeneration/s, and −15 percentage points of all-weapon bonus damage. Negative regeneration still contributes to the stored total but never drains HP. `resources/items/saeed.tres` originally changed to 40 coins with Bullet pierce +2. Both later became unique; the subsequent 1.75× item-price revision makes each cost 70 coins. Their rarity 3, roles, and icon paths remain unchanged.
 
 `PlayerStat.BulletPierce` was appended to the enum to preserve existing serialized stat numbers. A pistol bullet, SMG bullet, or shotgun pellet begins with the player's additive pierce count; zero retains one-hit destruction. Each successful hit is recorded by enemy instance ID, emits its existing hit effect, and consumes one pierce if the projectile continues. Saeed +2 permits three distinct enemy hits total and is limited to one purchase per run. Hits crossed in one frame are resolved in travel order. A spread child starts with the parent's configured pierce capacity and still ignores the original target for its full life; knife throws and hostile red envelopes are unaffected. Shop stats, offer text, and weapon tooltips show the current pierce count or hit capacity. Values and paths were reviewed statically only; the designer must verify behavior in game.
 
 ## Hossein and Saeed uniqueness (designer request, 2026-10-06)
 
 Both item resources now save `Unique = true`. The existing `GameController.IsEligibleItem` and `ReplaceIneligibleOffers` paths exclude an owned unique item from normal rolls, editor-only Product Manager `P` rolls, and duplicate visible or locked offers. The purchase guard rechecks eligibility before charging coins. No stat, price, rarity, or icon values changed. The designer must verify this in game.
+
+## Ten-wave HP and spawn escalation (designer request, 2026-10-06)
+
+`WaveDefinition.EnemyHealthMultiplier` is Inspector-editable and multiplies each enemy scene's base HP at spawn. It also applies to the wave-1 test boss, later warned bosses, and many-eyes offspring. The per-group HP multipliers remain available for later tuning but are reset to their default 1.0 throughout waves 1–10. Waves 1–3 use 1, 1.35, and 1.8225. Beginning at wave 4, each wave's multiplier is exactly 2.5× the preceding value in the saved resources. The Inspector range was widened to 0.1–2000 to cover wave 10. Earlier five-wave HP ranges are superseded.
+
+| Wave | HP multiplier | Approx. normal Jira HP | Provisional burst count | Tank chance | Boss chance / tank-boss chance |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1 | 1.000000 | 10 | 4 | 0% | direct test boss |
+| 2 | 1.350000 | 13.5 | 5 | 0% | 0% |
+| 3 | 1.822500 | 18.225 | 5 | 18% | 55% / 45% |
+| 4 | 4.55625 | 45.563 | 6 | 24% | 60% / 50% |
+| 5 | 11.390625 | 113.906 | 7 | 30% | 65% / 55% |
+| 6 | 28.4765625 | 284.766 | 7 | 35% | 70% / 60% |
+| 7 | 71.19140625 | 711.914 | 7 | 40% | 75% / 65% |
+| 8 | 177.978515625 | 1779.785 | 7 | 45% | 80% / 70% |
+| 9 | 444.9462890625 | 4449.463 | 7 | 50% | 85% / 75% |
+| 10 | 1112.36572265625 | 11123.657 | 7 | 55% | 90% / 80% |
+
+Waves 6–10 reuse wave 5's 0/6/12/19/26/33/40-second warning schedule and existing male/female Jira, ranged slime, and many-eyes groups. Each later wave adds one Jira to every burst, roughly one ranged slime every second wave, and one many-eyes parent every other wave at the 19-second burst; exact counts remain editable in each resource. Speed and knockback resistance retain wave 5's values in waves 6–10. New wave names are blank pending designer naming. This spawn-density, tank-chance, and boss-chance progression is provisional.
+
+Tank scene base HP is now exactly 2.5 times its normal counterpart: Jira 25/10, mail 37.5/15, many-eyes 60/24, one-eye offspring 10/4, and orange boss 300/120. Both Jira visual variants share the same values. Since normal and tank scenes receive the same wave multiplier, that 2.5× ratio holds in every wave where tanks are eligible. `scenes/main.tscn` lists all ten waves, the empty-array fallback loads 1–10, and the temporary finish copy uses the configured wave count. The developer reviewed files only; the designer must verify balance and progression in game.
+
+## Item-price increase (designer request, 2026-10-06)
+
+The 1.75× revision set item prices to `ceil(previous price × 1.75)` because shop prices are whole coins. Later explicit designer revisions set Behzad to 80 and Arsalan to 95; the other 24 active items retain their rounded 1.75× prices. The inactive +5% sample resource changed from its default 5 to 9, but remains outside the offer pool. `ShopItemDefinition.Price` defaults to 9 for future resources that omit an explicit price. Every active resource saves its price explicitly, including Narges, which previously inherited the five-coin default. `_docs/items-db.md` lists current costs. Weapon prices were tripled in a separate revision; reroll costs remain unchanged. The developer compared the saved item prices against the updated catalog without running project code.
+
+## Weapon-price increase (designer request, 2026-10-06)
+
+All weapon types use the same offer-price calculation. Tier I–IV costs changed from 6/10/14/18 to 18/30/42/54 coins, exactly 3× each prior value. `GameController.TierOneWeaponPrice` is exported at 18 and the new `WeaponTierPriceStep` is exported at 12, keeping the tier difference editable. Item prices, reroll costs, offer probabilities, and starting weapon selection are unaffected. The developer reviewed the price path statically; designer verification is pending.
+
+## Behzad and Arsalan revision (designer request, 2026-10-06)
+
+Behzad now costs 80 coins and grants +100 percentage points general bonus damage with −10 max HP. Arsalan costs 95 coins and replaces his former general damage bonus with +25 percentage points critical chance, retaining a revised −10 max HP tradeoff. Both remain rarity 3 and repeatable. The existing shop health-safety filter suppresses either offer when its −10 max HP would leave Mohsen with zero or less current or maximum HP; at the starting 10 HP, a max-HP gain is needed before either can be offered.
+
+`PlayerStat.CriticalChancePercent` was appended to the enum to preserve existing serialized stat numbers; Arsalan saves `Stat = 9`. The player's bonus stacks additively with each weapon tier's base critical chance, and the resolved probability is clamped to 0–100%. Knife, pistol, SMG, and each shotgun pellet use that same resolved chance; the weapon's existing critical damage multiplier is unchanged. A projectile carries its rolled `CriticalHit` result through hits and Arezoo spread children. Enemy hit processing sends that result to the existing damage-number scene, which shows normal numbers white and critical numbers yellow while keeping the black outline and current animation. Shop stats, offer text, inventory item tooltips, and weapon tooltips display the new values. These changes were reviewed from files only; designer verification is pending.

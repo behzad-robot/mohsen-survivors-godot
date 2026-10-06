@@ -114,4 +114,6 @@ Groups = Array[ExtResource("3")]([SubResource("g4_melee"), SubResource("g4_range
 [resource]
 script = ExtResource("1")
 WaveNumber = 2
+WaveName = "Vendor-Automation-Nightmare"
+EnemyHealthMultiplier = 1.35
 Bursts = Array[ExtResource("2")]([SubResource("b0"), SubResource("b1"), SubResource("b2"), SubResource("b3"), SubResource("b4")])

@@ -19,5 +19,5 @@ script = ExtResource("1")
 DisplayName = "Sahar-2"
 Description = "QA."
 Icon = ExtResource("3")
-Price = 16
+Price = 28
 Modifiers = Array[ExtResource("2")]([SubResource("modifier_0"), SubResource("modifier_1")])

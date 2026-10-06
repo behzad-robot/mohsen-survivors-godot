@@ -1,7 +1,7 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene format=3 uid="uid://khpnxecx8yfi"]
 
-[ext_resource type="Script" path="res://scripts/gameplay/Player.cs" id="1"]
-[ext_resource type="Texture2D" path="res://assets/art/approved/characters/mohsen_idle.png" id="2"]
+[ext_resource type="Script" uid="uid://ch3ggycii6mc8" path="res://scripts/gameplay/Player.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://c66c12mwi6a2e" path="res://assets/art/approved/characters/mohsen_idle.png" id="2"]
 
 [sub_resource type="StyleBoxFlat" id="HpBarBackground"]
 bg_color = Color(0.04, 0.04, 0.04, 1)
@@ -14,15 +14,16 @@ border_color = Color(0, 0, 0, 1)
 [sub_resource type="StyleBoxFlat" id="HpBarFill"]
 bg_color = Color(0.85, 0.08, 0.1, 1)
 
-[node name="Mohsen" type="Node2D"]
+[node name="Mohsen" type="Node2D" unique_id=977909151]
 script = ExtResource("1")
+InvulnerabilitySeconds = 0.4
 
-[node name="Visual" type="Sprite2D" parent="."]
+[node name="Visual" type="Sprite2D" parent="." unique_id=1917974772]
 texture = ExtResource("2")
 
-[node name="WeaponMount" type="Node2D" parent="."]
+[node name="WeaponMount" type="Node2D" parent="." unique_id=1128600883]
 
-[node name="HeadHpBar" type="ProgressBar" parent="."]
+[node name="HeadHpBar" type="ProgressBar" parent="." unique_id=116322744]
 visible = false
 z_index = 10
 offset_left = -28.0
@@ -34,5 +35,4 @@ theme_override_styles/background = SubResource("HpBarBackground")
 theme_override_styles/fill = SubResource("HpBarFill")
 show_percentage = false
 
-[node name="Camera" type="Camera2D" parent="."]
-enabled = true
+[node name="Camera" type="Camera2D" parent="." unique_id=1073989447]

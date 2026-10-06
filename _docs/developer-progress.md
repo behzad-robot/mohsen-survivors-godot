@@ -6,9 +6,9 @@ The developer may mark **Code written** after files are created or changed and r
 
 ## Current state
 
-- **Last updated:** 2026-10-06, Hossein and Saeed marked unique in the active catalog and resources.
-- **Current focus:** Designer verification of unique Product Manager purchases, the `P` shop shortcut, and shotgun tier-load rerun.
-- **Next recommended work:** Designer buys Hossein and Saeed in a shop, then checks that visible duplicates and later normal or `P` rerolls exclude the owned item.
+- **Last updated:** 2026-10-06, Behzad and Arsalan revised; critical chance and yellow critical damage numbers written.
+- **Current focus:** Designer verification of revised items and critical-hit feedback, alongside price and wave balance checks.
+- **Next recommended work:** Designer gains max HP, buys Behzad and Arsalan, checks stats and yellow critical numbers, then reports any problems.
 - **Known blocker:** The stack trace proves a shotgun profile load returned null; its underlying Godot loader error was not included. Explicit scene references and a logged fallback are written, but require the designer's run to verify.
 - **Designer test result:** Designer reported a `NullReferenceException` in `WeaponData.Get` at the end of wave 3. DEV-65 is written but unverified. Developer has not run, built, compiled, launched, or tested code.
 
@@ -81,9 +81,13 @@ The developer may mark **Code written** after files are created or changed and r
 | DEV-63 | Implement Arezoo Spread +3 and preserve signed regeneration | [x] | [ ] | Player bullet/pellet children inherit traits, ignore original target, and cannot spread again; negative regeneration never damages. |
 | DEV-64 | Repair stale resource lookup after Arezoon/Mania file renames | [x] | [ ] | Scene uses path-only references for Arezoo/Mania; stale generated Godot UID/filesystem caches were removed for regeneration. |
 | DEV-65 | Prevent shotgun tier load failure from crashing a wave | [x] | [ ] | Four tier resources are explicit main-scene dependencies and cached; a failed load logs its exact path and uses matching provisional values. |
-| DEV-66 | Revise Hossein and Saeed; add bullet piercing | [x] | [ ] | Hossein +85 speed/+5 HP/−3 regen/−15% damage; Saeed +2 further enemy hits; both cost 40. Designer verifies purchases and piercing. |
+| DEV-66 | Revise Hossein and Saeed; add bullet piercing | [x] | [ ] | Hossein +85 speed/+5 HP/−3 regen/−15% damage; Saeed +2 further enemy hits. Original 40-coin prices became 70 in DEV-70. |
 | DEV-67 | Repurpose editor `P` to reroll Product Manager shop offers | [x] | [ ] | Only in shop; all four slots become eligible Product Manager items for free, locks clear, and `P` no longer skips waves. |
 | DEV-68 | Make Hossein and Saeed unique items | [x] | [ ] | Both resources and catalog save unique=true; existing shop eligibility and purchase guards enforce one copy per run. |
+| DEV-69 | Increase wave HP, make tank HP 2.5×, and add waves 6–10 | [x] | [ ] | Ten wave resources wired into the main scene; tank HP stays 2.5× normal. The original 1.35× late-wave curve was superseded by DEV-70. |
+| DEV-70 | Raise wave-4-plus HP growth and all item prices | [x] | [ ] | Waves 4–10 each have 2.5× previous-wave HP; item costs rose 1.75× with rounding. Weapon prices changed in DEV-71; Behzad/Arsalan prices changed again in DEV-72. |
+| DEV-71 | Triple all weapon offer prices | [x] | [ ] | All four weapon types share tier I–IV prices 18/30/42/54; starting choice and reroll prices unchanged. |
+| DEV-72 | Revise Behzad and Arsalan; add item-based critical chance and yellow crit numbers | [x] | [ ] | Behzad +100% damage/−10 HP at 80; Arsalan +25% crit chance/−10 HP at 95. Existing safe-HP filter applies. |
 
 ## Update procedure
 
@@ -155,29 +159,55 @@ The developer may mark **Code written** after files are created or changed and r
 | 2026-10-06 | DEV-63 | `scripts/data/StatModifier.cs`; `scripts/gameplay/Player.cs`, `Enemy.cs`, `Projectile.cs`, `GameController.cs`; `resources/items/arezoo.tres`; `_docs/tech-features.md` | Spread +3 children use the same projectile scene and resolved stats, skip the original target for life, and never spread recursively. Signed movement and regeneration modifiers retain their full totals; effective movement and healing have safe floors. Next: designer manual run; verify prices and weights, unique replacement, pistol/SMG/shotgun spread, and HP regeneration. |
 | 2026-10-06 | DEV-64 | `scenes/main.tscn`; removed stale generated `.godot/uid_cache.bin`, `.godot/editor/filesystem_cache10`, `filesystem_update4`, and two old folding files | Designer reported missing renamed resources. Static inspection found old Arezoon/Mana paths in Godot's UID and filesystem caches. Removed `uid` hints for those two main-scene references so their existing new paths are authoritative; Godot regenerates deleted caches on next editor open. Static path check found both new resources present and no old active references. Next: designer reopens editor and reports any remaining import error. |
 | 2026-10-06 | DEV-65 | `scripts/gameplay/WeaponData.cs`, `GameController.cs`; `scenes/main.tscn`; `_docs/tech-features.md` | Designer's stack trace reaches `Shotgun(tier).Stats`, the sole nullable dereference in `WeaponData.Get`. Four existing tier files are now explicit scene resources configured once at startup. Profile lookup caches them; if a load still fails, it logs the exact path and uses the resource-matching provisional profile instead of throwing. Static file/path review only. Next: designer reruns a shotgun through wave 3. |
-| 2026-10-06 | DEV-66 | `resources/items/hossein.tres`, `saeed.tres`; `scripts/data/StatModifier.cs`; `scripts/gameplay/Player.cs`, `Projectile.cs`, `GameController.cs`; `_docs/items-db.md`, `_docs/prd.md`, `_docs/tech-features.md` | Hossein's four modifiers and Saeed's replacement pierce effect saved at 40 coins each. Player bullets and shotgun pellets now hit up to 1 + BulletPierce distinct enemies; spread children inherit pierce. Signed regeneration behavior retained. The original repeat-purchase rule was superseded by DEV-68. Static review only; next: designer checks grouped enemies and shop values. |
+| 2026-10-06 | DEV-66 | `resources/items/hossein.tres`, `saeed.tres`; `scripts/data/StatModifier.cs`; `scripts/gameplay/Player.cs`, `Projectile.cs`, `GameController.cs`; `_docs/items-db.md`, `_docs/prd.md`, `_docs/tech-features.md` | Hossein's four modifiers and Saeed's replacement pierce effect originally saved at 40 coins each; DEV-70 later raised each to 70. Player bullets and shotgun pellets now hit up to 1 + BulletPierce distinct enemies; spread children inherit pierce. Signed regeneration behavior retained. The original repeat-purchase rule was superseded by DEV-68. Static review only; next: designer checks grouped enemies and shop values. |
 | 2026-10-06 | DEV-67 | `scripts/gameplay/GameController.cs`; `_docs/prd.md`, `_docs/tech-features.md`, `_docs/developer-progress.md` | Editor-only `P` now works only in the shop. It clears locks, replaces all four offers with independently selected eligible Product Manager items, and charges no coins; normal paid reroll or the next shop restores ordinary odds. The old wave-skip path was removed. Next: designer checks repeated presses, Arezoo uniqueness, and export gating. |
 | 2026-10-06 | DEV-68 | `resources/items/hossein.tres`, `resources/items/saeed.tres`; `_docs/items-db.md`, `_docs/prd.md`, `_docs/tech-features.md`, `_docs/developer-progress.md` | Marked both Product Manager items unique. Existing eligibility checks remove purchased uniques from new draws and replace any other visible or locked copies; the buy path rejects stale copies. No gameplay script changes or balance changes. Static review only; next: designer verifies purchase and exclusion in the shop. |
+| 2026-10-06 | DEV-69 | `scripts/data/WaveDefinition.cs`, `scripts/gameplay/GameController.cs`; `resources/waves/wave_01.tres`–`wave_10.tres`; six tank scenes; `scenes/main.tscn`; `_docs/prd.md`, `_docs/tech-features.md`, `_docs/developer-progress.md` | Added editable wave HP multipliers and applied them to warned enemies, bosses, and offspring. The original 1.35^(wave−1) curve was superseded from wave 4 onward by DEV-70. Reset group HP multipliers to 1 so equivalent enemies have consistent per-wave HP. Tank base HP is exactly 2.5× normal. Added five 45-second waves with increasing counts/tank and boss chances, saved approved wave 1–5 names, and changed the temporary finish point to wave 10. No project code run; next: designer checks wave flow and balance. |
+| 2026-10-06 | DEV-70 | `resources/waves/wave_04.tres`–`wave_10.tres`; `resources/items/*.tres`; `scripts/data/WaveDefinition.cs`, `ShopItemDefinition.cs`; `_docs/items-db.md`, `_docs/prd.md`, `_docs/tech-features.md`, `_docs/developer-progress.md` | Waves 1–3 retain 1/1.35/1.8225 HP; waves 4–10 multiply previous-wave HP by 2.5 each step. Widened Inspector multiplier range to 2000. Raised all 26 active item prices with ceiling(1.75× previous), and the inactive sample from 5 to 9; weapon/reroll prices unchanged. Static resource/catalog audit only; next: designer tests balance and displayed prices. |
+| 2026-10-06 | DEV-71 | `scripts/gameplay/GameController.cs`; `_docs/prd.md`, `_docs/tech-features.md`, `_docs/developer-progress.md` | Tripled weapon offer prices from 6/10/14/18 to 18/30/42/54 by updating the exported base and adding an exported tier-price step. All weapon kinds use the shared offer creation path; item and reroll prices were untouched. Static code review only; next: designer checks shop price labels and purchase deductions. |
+| 2026-10-06 | DEV-72 | `resources/items/behzad.tres`, `arsalan.tres`; `scripts/data/StatModifier.cs`; `scripts/gameplay/Player.cs`, `GameController.cs`, `Projectile.cs`, `Enemy.cs`, `DamageNumber.cs`; `_docs/items-db.md`, `_docs/prd.md`, `_docs/tech-features.md`, `_docs/developer-progress.md` | Saved requested item modifiers and prices. Added additive player critical-chance stat, used it for every weapon's crit roll with 0–100% clamp, and passed the projectile's crit result to yellow damage-number text. Updated shop stats/descriptions/tooltips. Existing unsafe-HP offer guard remains; both −10 HP items require a prior HP gain from the 10 HP start. No project run/build/test; next: designer verifies in game. |
 
 ## Designer feedback
 
 ### Manual check for DEV-61–63
 
-1. In an editor run, use `C` for coins and `P` to reach the shop. Check item names, role text, rarity, price, icons, and red/green modifiers against `_docs/items-db.md`; the sample +5% item should never appear.
+1. In an editor run, use `C` for coins and reach the shop normally (`P` only rerolls an open shop). Check item names, role text, rarity, price, icons, and red/green modifiers against `_docs/items-db.md`; the sample +5% item should never appear.
 2. Reroll several shops: weapons should not be guaranteed, all three item rarities can appear after wave 1, and rarer items should become more likely later. Buy a repeatable item twice and confirm its stack and stats.
-3. Buy Arezoo (45 coins). Confirm any other visible or locked Arezoo offer disappears and later shops cannot offer it again. With pistol, SMG, and shotgun, check three radial child bullets per hit, original-target immunity, and no child-to-child spread. Knife and enemy red envelopes should not spread.
+3. Buy Arezoo (79 coins). Confirm any other visible or locked Arezoo offer disappears and later shops cannot offer it again. With pistol, SMG, and shotgun, check three radial child bullets per hit, original-target immunity, and no child-to-child spread. Knife and enemy red envelopes should not spread.
 4. Buy Sahar-2 and inspect the signed regeneration value. At a negative total Mohsen should receive no healing or HP drain; a later positive regeneration purchase should offset the negative total.
 
 ### Manual check for DEV-66
 
-1. Buy Hossein for 40 coins. The shop stats should change by +85 movement speed, +5 max HP, −3 regeneration/s, and −15% bonus damage. A negative regeneration total should cause neither healing nor HP drain.
-2. Buy Saeed for 40 coins with pistol, SMG, or shotgun equipped. Fire through grouped enemies: a bullet or pellet should damage at most three distinct enemies, showing a hit effect on each, then disappear. It must not damage the same enemy twice.
+1. Buy Hossein for 70 coins. The shop stats should change by +85 movement speed, +5 max HP, −3 regeneration/s, and −15% bonus damage. A negative regeneration total should cause neither healing nor HP drain.
+2. Buy Saeed for 70 coins with pistol, SMG, or shotgun equipped. Fire through grouped enemies: a bullet or pellet should damage at most three distinct enemies, showing a hit effect on each, then disappear. It must not damage the same enemy twice.
 3. A second Saeed purchase should be unavailable. If Arezoo is also owned, spread children should inherit the +2 pierce count while ignoring the enemy that spawned them. Knife and hostile envelopes should remain unchanged.
 
 ### Manual check for DEV-68
 
 1. In an editor run, reach the shop and use `C` for coins. Press `P` until Saeed or Hossein appears in more than one slot; buy one copy. All other visible copies should be replaced, and later `P` presses should never show the purchased item.
 2. Repeat for the other item. Neither should appear in later normal rerolls or shops, while Mania remains repeatable. The shop should show `Unique` beside Hossein and Saeed.
+
+### Manual check for DEV-69
+
+1. Play through waves 4 and 5; both should feel substantially tougher than wave 3, with the next shop leading to wave 6 instead of ending the run.
+2. Continue to wave 10. Each wave should last 45 seconds, display `Wave-6` through `Wave-10` until names are approved, and return to the shop between waves. The temporary completion screen should appear after wave 10.
+3. Compare the same enemy type in adjacent waves: waves 2–3 rise about 35%; waves 4–10 rise 2.5× per wave. A tank of that type should take 2.5× as much damage to defeat as its normal counterpart in the same wave. Check a boss and one-eye offspring as well as Jira/mail enemies.
+
+### Manual check for DEV-70
+
+1. In wave 4, compare a normal Jira's durability with wave 3; it should have roughly 2.5× the HP. Repeat from wave 4 to 5 and into later waves. Wave 10's multiplier is about 1112.37× wave-1 base HP, so report if the curve is too steep.
+2. At a shop, compare item prices to `_docs/items-db.md`: Narges 9, Hossein/Saeed 70, Arezoo 79. Behzad and Arsalan have later explicit prices in DEV-72. Paid reroll prices should remain as before; weapon prices are covered by DEV-71.
+
+### Manual check for DEV-71
+
+1. In an editor run, reach the shop and use `C` for coins. A tier-I knife, pistol, SMG, or shotgun should cost 18 coins, and buying one should deduct 18.
+2. In later shops, verify tier-II/III/IV weapon offers cost 30/42/54 coins when they become available. Passive-item and paid reroll prices should remain unchanged.
+
+### Manual check for DEV-72
+
+1. Start with 10 max HP: Behzad and Arsalan should be excluded as unsafe. Buy a max-HP item first (for example Sahar +3 max HP), then find their normal shop offers. Behzad should cost 80 and show +100% bonus damage/−10 max HP; Arsalan should cost 95 and show +25% critical chance/−10 max HP.
+2. Buy Arsalan with any weapon equipped. The shop stats and weapon tooltip should show the added chance; critical hit damage numbers should be yellow with a black outline, while noncritical numbers remain white. Check knife, pistol/SMG, and shotgun pellets. Buying another Arsalan should add another 25 percentage points, with actual crit probability capped at 100%.
+3. Buy Behzad and confirm general bonus damage increases by 100 percentage points, max HP decreases by 10, and weapon damage previews rise accordingly. Check that the two prices match `_docs/items-db.md`.
 
 ### Manual check for DEV-67
 

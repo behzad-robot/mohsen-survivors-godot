@@ -12,6 +12,7 @@ public partial class Player : Node2D
     [Export] public float BonusDamagePercent { get; set; }
     [Export] public float RangedDamagePercent { get; set; }
     [Export] public float MeleeDamagePercent { get; set; }
+    [Export] public float CriticalChancePercent { get; set; }
     [Export] public float HealthRegenPerSecond { get; set; }
     [Export] public int Spread { get; set; }
     [Export] public int BulletPierce { get; set; }
@@ -113,6 +114,7 @@ public partial class Player : Node2D
             case PlayerStat.BonusDamagePercent: BonusDamagePercent += modifier.Amount; break;
             case PlayerStat.RangedDamagePercent: RangedDamagePercent += modifier.Amount; break;
             case PlayerStat.MeleeDamagePercent: MeleeDamagePercent += modifier.Amount; break;
+            case PlayerStat.CriticalChancePercent: CriticalChancePercent += modifier.Amount; break;
             case PlayerStat.HealthRegenPerSecond: HealthRegenPerSecond += modifier.Amount; break;
             case PlayerStat.Spread: Spread = Mathf.Max(0, Spread + Mathf.RoundToInt(modifier.Amount)); break;
             case PlayerStat.BulletPierce: BulletPierce = Mathf.Max(0, BulletPierce + Mathf.RoundToInt(modifier.Amount)); break;

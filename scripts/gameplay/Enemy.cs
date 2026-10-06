@@ -107,14 +107,14 @@ public partial class Enemy : Node2D
         Position = new Vector2(Mathf.Clamp(Position.X, boundary, Game.ArenaSize.X - boundary), Mathf.Clamp(Position.Y, boundary, Game.ArenaSize.Y - boundary));
     }
 
-    public void TakeHit(float damage, Vector2 direction, float knockback)
+    public void TakeHit(float damage, Vector2 direction, float knockback, bool criticalHit = false)
     {
         if (Health <= 0f) return;
         Game.PlaySound(GameSound.EnemyHit);
         if (this is BossEnemy) Game.RequestBossHitPause();
         float appliedDamage = Mathf.Max(1f, damage);
         Health -= appliedDamage;
-        Game.SpawnDamageNumber(appliedDamage, Position + new Vector2(0f, -32f));
+        Game.SpawnDamageNumber(appliedDamage, Position + new Vector2(0f, -32f), criticalHit);
         _flashTime = HitFlashSeconds;
         _flashMaterial?.SetShaderParameter("flash_amount", 1f);
         Position += direction.Normalized() * Mathf.Max(0f, knockback) * (1f - _resistance);

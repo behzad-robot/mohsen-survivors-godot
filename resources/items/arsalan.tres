@@ -6,18 +6,19 @@
 
 [sub_resource type="Resource" id="modifier_0"]
 script = ExtResource("2")
-Amount = 13.0
+Stat = 9
+Amount = 25.0
 
 [sub_resource type="Resource" id="modifier_1"]
 script = ExtResource("2")
 Stat = 0
-Amount = -3.0
+Amount = -10.0
 
 [resource]
 script = ExtResource("1")
 DisplayName = "Arsalan"
 Description = "Developer."
 Icon = ExtResource("3")
-Price = 14
+Price = 95
 Rarity = 3
 Modifiers = Array[ExtResource("2")]([SubResource("modifier_0"), SubResource("modifier_1")])

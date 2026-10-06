@@ -14,5 +14,5 @@ script = ExtResource("1")
 DisplayName = "devops-buddy-1"
 Description = "DevOps teammate."
 Icon = ExtResource("3")
-Price = 8
+Price = 14
 Modifiers = Array[ExtResource("2")]([SubResource("modifier_0")])
