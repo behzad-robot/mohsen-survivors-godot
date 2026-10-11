@@ -6,7 +6,9 @@ public partial class WaveDefinition : Resource
     [Export(PropertyHint.Range, "1,20,1")] public int WaveNumber { get; set; } = 1;
     [Export] public string WaveName { get; set; } = "";
     [Export(PropertyHint.Range, "1,180,1")] public float Duration { get; set; } = 45f;
-    [Export(PropertyHint.Range, "0.1,2000,0.01")] public float EnemyHealthMultiplier { get; set; } = 1f;
+    [Export(PropertyHint.Range, "0.1,5,0.05")] public float WaveDangerLevelHealthMultiplier { get; set; } = 1f;
+    [Export(PropertyHint.Range, "0.1,10,0.05")] public float EnemySpeedMultiplier { get; set; } = 1f;
+    [Export(PropertyHint.Range, "0.1,10,0.05")] public float EnemyDamageMultiplier { get; set; } = 1f;
     [Export(PropertyHint.Range, "0,1,0.01")] public float TankSpawnChance { get; set; }
     [Export(PropertyHint.Range, "0,1,0.01")] public float BossSpawnChance { get; set; }
     [Export(PropertyHint.Range, "0,1,0.01")] public float BossTankChance { get; set; }

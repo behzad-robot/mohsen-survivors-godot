@@ -1,6 +1,6 @@
 using Godot;
 
-public enum PlayerStat { MaxHealth, MovementSpeed, Knockback, BonusDamagePercent, RangedDamagePercent, MeleeDamagePercent, HealthRegenPerSecond, Spread, BulletPierce, CriticalChancePercent }
+public enum PlayerStat { MaxHealth, MovementSpeed, Knockback, BonusDamagePercent, RangedDamagePercent, MeleeDamagePercent, HealthRegenPerSecond, Spread, BulletPierce, CriticalChancePercent, ProjectileSizePercent, BlockFiringWhileMoving }
 
 [GlobalClass]
 public partial class StatModifier : Resource

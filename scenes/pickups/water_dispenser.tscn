@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay/WaterDispenser.cs" id="1"]
+[ext_resource type="Texture2D" path="res://assets/art/approved/objects/water_dispenser.png" id="2"]
+
+[node name="WaterDispenser" type="Node2D"]
+z_index = 1
+script = ExtResource("1")
+
+[node name="GroundShadow" type="Polygon2D" parent="."]
+z_index = -1
+position = Vector2(0, 44)
+color = Color(0.03, 0.03, 0.04, 0.27)
+polygon = PackedVector2Array(-24, 0, -20, -5, -12, -8, 0, -9, 12, -8, 20, -5, 24, 0, 20, 5, 12, 8, 0, 9, -12, 8, -20, 5)
+
+[node name="Visual" type="Sprite2D" parent="."]
+texture = ExtResource("2")

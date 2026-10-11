@@ -12,6 +12,7 @@ shader_parameter/warning_amount = 0.0
 [node name="FemaleJiraTankEnemy" type="Node2D"]
 script = ExtResource("1")
 BaseHealth = 25.0
+HealthGainPerWave = 12.5
 BaseSpeed = 105.0
 VisualScale = 0.8
 

@@ -7,6 +7,8 @@ public partial class DamageNumber : Node2D
     [Export] public float SideDrift { get; set; } = 18f;
     [Export] public Vector2 SpawnJitter { get; set; } = new(8f, 6f);
     [Export] public Color CriticalColor { get; set; } = new(1f, 0.85f, 0.2f);
+    [Export] public Color HealingColor { get; set; } = new(0.3f, 1f, 0.4f);
+    [Export] public Color PlayerDamageColor { get; set; } = new(1f, 0.24f, 0.24f);
 
     private Label _label;
     private Vector2 _origin;
@@ -27,6 +29,18 @@ public partial class DamageNumber : Node2D
     {
         _label.Text = Mathf.RoundToInt(Mathf.Max(1f, amount)).ToString();
         _label.AddThemeColorOverride("font_color", criticalHit ? CriticalColor : Colors.White);
+    }
+
+    public void SetHealing(float amount)
+    {
+        _label.Text = $"+{Mathf.Max(0f, amount):0.#}";
+        _label.AddThemeColorOverride("font_color", HealingColor);
+    }
+
+    public void SetPlayerDamage(float amount)
+    {
+        _label.Text = $"-{Mathf.Max(0f, amount):0.##}";
+        _label.AddThemeColorOverride("font_color", PlayerDamageColor);
     }
 
     public override void _Process(double delta)

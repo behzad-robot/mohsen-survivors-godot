@@ -12,6 +12,7 @@ shader_parameter/warning_amount = 0.0
 [node name="FemaleJiraEnemy" type="Node2D" unique_id=1777073874]
 script = ExtResource("1")
 BaseHealth = 10.0
+HealthGainPerWave = 5.0
 BaseSpeed = 105.0
 VisualScale = 0.8
 

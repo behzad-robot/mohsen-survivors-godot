@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay/ChargeEnemy.cs" id="1"]
+[ext_resource type="Texture2D" path="res://assets/art/approved/enemies/charge_enemy.png" id="2"]
+[ext_resource type="Shader" path="res://shaders/enemy_hit_flash.gdshader" id="3"]
+
+[sub_resource type="ShaderMaterial" id="HitFlashMaterial"]
+shader = ExtResource("3")
+shader_parameter/flash_amount = 0.0
+shader_parameter/warning_amount = 0.0
+
+[node name="ChargeEnemy" type="Node2D"]
+script = ExtResource("1")
+BaseHealth = 16.0
+HealthGainPerWave = 10.0
+BaseSpeed = 200.0
+BaseKnockbackResistance = 0.15
+ContactRadius = 38.0
+HurtboxHalfExtents = Vector2(43, 34)
+VisualScale = 0.75
+ChargeRadius = 525.0
+
+[node name="Visual" type="Sprite2D" parent="."]
+material = SubResource("HitFlashMaterial")
+texture = ExtResource("2")

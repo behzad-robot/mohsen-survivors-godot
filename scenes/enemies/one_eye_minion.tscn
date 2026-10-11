@@ -11,6 +11,7 @@ shader_parameter/flash_amount = 0.0
 [node name="OneEyeMinion" type="Node2D"]
 script = ExtResource("1")
 BaseHealth = 4.0
+HealthGainPerWave = 2.5
 BaseSpeed = 130.0
 ContactRadius = 18.0
 VisualScale = 1.0

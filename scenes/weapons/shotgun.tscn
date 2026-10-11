@@ -8,7 +8,6 @@
 script = ExtResource("1")
 Kind = 3
 IdleRotationDegrees = -10.0
-AttackPoseSeconds = 0.12
 ShotShakePixels = 4.5
 RecoilPixels = 10.0
 RecoilReturnSeconds = 0.19

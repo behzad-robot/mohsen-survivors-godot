@@ -2,23 +2,28 @@
 
 [ext_resource type="Script" uid="uid://d14q1jdi7c3tg" path="res://scripts/data/ShopItemDefinition.cs" id="1"]
 [ext_resource type="Script" uid="uid://dntp2sqw2gh2l" path="res://scripts/data/StatModifier.cs" id="2"]
-[ext_resource type="Texture2D" uid="uid://bwd42i0fc41tv" path="res://assets/placeholders/passive.svg" id="3"]
+[ext_resource type="Texture2D" uid="uid://dysauvtfp7as4" path="res://assets/art/approved/items/teammates/mania.png" id="3"]
 
 [sub_resource type="Resource" id="modifier_0"]
 script = ExtResource("2")
-Stat = 0
-Amount = 8.0
+Stat = 10
+Amount = 100.0
 
 [sub_resource type="Resource" id="modifier_1"]
 script = ExtResource("2")
 Stat = 2
-Amount = -1.0
+Amount = 100.0
+
+[sub_resource type="Resource" id="modifier_2"]
+script = ExtResource("2")
+Stat = 11
+Amount = 1.0
 
 [resource]
 script = ExtResource("1")
 DisplayName = "Mania"
 Description = "Product manager."
 Icon = ExtResource("3")
-Price = 44
+Price = 75
 Rarity = 3
-Modifiers = Array[ExtResource("2")]([SubResource("modifier_0"), SubResource("modifier_1")])
+Modifiers = Array[ExtResource("2")]([SubResource("modifier_0"), SubResource("modifier_1"), SubResource("modifier_2")])

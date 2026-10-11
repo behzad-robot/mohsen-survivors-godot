@@ -17,6 +17,15 @@ public partial class GameController : Node2D
     [Export] public Godot.Collections.Array<WaveDefinition> Waves { get; set; } = new();
     [Export] public PackedScene WarningScene { get; set; } = GD.Load<PackedScene>("res://scenes/effects/spawn_warning.tscn");
     [Export] public PackedScene CoinScene { get; set; } = GD.Load<PackedScene>("res://scenes/pickups/coin.tscn");
+    [Export] public PackedScene WaterDispenserScene { get; set; } = GD.Load<PackedScene>("res://scenes/pickups/water_dispenser.tscn");
+    [Export] public PackedScene WaterPickupScene { get; set; } = GD.Load<PackedScene>("res://scenes/pickups/glass_of_water.tscn");
+    [Export] public PackedScene CoffeePickupScene { get; set; } = GD.Load<PackedScene>("res://scenes/pickups/coffee_cup.tscn");
+    [Export(PropertyHint.Range, "0,1,0.01")] public float CoffeeDropChance { get; set; } = 0.1f;
+    [Export(PropertyHint.Range, "1,10,1")] public int MinimumWaterDispensers { get; set; } = 1;
+    [Export(PropertyHint.Range, "1,10,1")] public int MaximumWaterDispensers { get; set; } = 3;
+    [Export(PropertyHint.Range, "0,300,1")] public float WaterDropMinimumDistance { get; set; } = 45f;
+    [Export(PropertyHint.Range, "0,300,1")] public float WaterDropMaximumDistance { get; set; } = 105f;
+    [Export(PropertyHint.Range, "0,100,0.5")] public float WaterHealing { get; set; } = 3f;
     [Export] public PackedScene DamageNumberScene { get; set; } = GD.Load<PackedScene>("res://scenes/effects/damage_number.tscn");
     [Export] public PackedScene EnemyDeathTextScene { get; set; } = GD.Load<PackedScene>("res://scenes/effects/enemy_death_text.tscn");
     [Export] public PackedScene PlayerBulletHitScene { get; set; } = GD.Load<PackedScene>("res://scenes/effects/player_bullet_hit.tscn");
@@ -44,12 +53,19 @@ public partial class GameController : Node2D
     [Export(PropertyHint.Range, "0,0.2,0.005")] public float BossHitPauseSeconds { get; set; } = 0.045f;
     [Export(PropertyHint.Range, "0,0.2,0.005")] public float DefeatPauseSeconds { get; set; } = 0.04f;
     [Export(PropertyHint.Range, "0,0.5,0.01")] public float ImpactPauseMinGapSeconds { get; set; } = 0.11f;
+    [Export(PropertyHint.Range, "0,0.5,0.01")] public float HudDamagePunchSeconds { get; set; } = 0.22f;
+    [Export(PropertyHint.Range, "0,0.3,0.01")] public float HudDamagePunchScale { get; set; } = 0.12f;
+    [Export(PropertyHint.Range, "0,2,0.05")] public float WaveOpeningBeatSeconds { get; set; } = 0.75f;
+    [Export(PropertyHint.Range, "0,2,0.05")] public float WaveClearBeatSeconds { get; set; } = 0.65f;
+    [Export(PropertyHint.Range, "0,0.5,0.01")] public float HudCoinBounceSeconds { get; set; } = 0.18f;
+    [Export(PropertyHint.Range, "0,0.3,0.01")] public float HudCoinBounceScale { get; set; } = 0.16f;
     [Export] public PackedScene MenuScene { get; set; } = GD.Load<PackedScene>("res://scenes/ui/menu.tscn");
     [Export] public PackedScene ChoiceScene { get; set; } = GD.Load<PackedScene>("res://scenes/ui/weapon_choice.tscn");
     [Export] public PackedScene ShopScene { get; set; } = GD.Load<PackedScene>("res://scenes/ui/shop.tscn");
     [Export] public PackedScene ShopOfferScene { get; set; } = GD.Load<PackedScene>("res://scenes/ui/shop_offer.tscn");
     [Export] public PackedScene ShopInventoryEntryScene { get; set; } = GD.Load<PackedScene>("res://scenes/ui/shop_inventory_entry.tscn");
     [Export] public PackedScene FinishScene { get; set; } = GD.Load<PackedScene>("res://scenes/ui/finish.tscn");
+    [Export] public PackedScene DefeatScene { get; set; } = GD.Load<PackedScene>("res://scenes/ui/defeat.tscn");
     [Export] public PackedScene HudScene { get; set; } = GD.Load<PackedScene>("res://scenes/ui/hud.tscn");
     [Export] public PackedScene GameAudioScene { get; set; } = GD.Load<PackedScene>("res://scenes/effects/game_audio.tscn");
 
@@ -58,6 +74,8 @@ public partial class GameController : Node2D
     public bool IsImpactPaused => WaveActive && (_impactPauseRemaining > 0f || _impactPauseFrame);
     public readonly List<Enemy> Enemies = new();
     private readonly List<Coin> _coins = new();
+    private readonly List<WaterDispenser> _waterDispensers = new();
+    private readonly List<ConsumablePickup> _consumables = new();
     private readonly List<Projectile> _projectiles = new();
     private readonly List<Weapon> _weapons = new();
     private readonly Dictionary<ShopItemDefinition, int> _purchasedItems = new();
@@ -71,9 +89,12 @@ public partial class GameController : Node2D
     private GameAudio _audio;
     private ProgressBar _hudHpBar;
     private Label _hudHpText;
+    private HudDamageEdges _hudDamageEdges;
     private Label _hudCoinText;
+    private TextureRect _hudCoinIcon;
     private Label _hudWaveName;
     private Label _hudTimer;
+    private Label _hudWaveBeat;
     private Label _hudEquipment;
     private int _waveIndex;
     private int _coinsHeld;
@@ -84,17 +105,26 @@ public partial class GameController : Node2D
     private int _currentBurst;
     private bool _bossOpportunityPending;
     private string _message = "";
+    private int _messageVersion;
+    private int _lastShownMessageVersion = -1;
     private bool _hasEnteredShop;
     private bool _productManagerDebugOffers;
     private float _finishDelay;
+    private float _waveBeatRemaining;
+    private float _waveBeatDuration;
+    private float _waveClearRemaining;
+    private bool _waveClearForceShop;
     private float _impactPauseRemaining;
+    private float _hudDamagePunchRemaining;
+    private float _hudCoinBounceRemaining;
     private float _impactPauseCooldown;
     private bool _impactPauseFrame;
 
     private sealed class PendingSpawn
     {
         public float Due;
-        public readonly List<(PackedScene scene, Vector2 position, float hp, float speed, float resistance, Sprite2D warning)> Entries = new();
+        public float WarningDuration;
+        public readonly List<(PackedScene scene, Vector2 position, float hp, float speed, float resistance, float damage, SpawnWarning warning)> Entries = new();
     }
     private sealed class Offer
     {
@@ -123,7 +153,7 @@ public partial class GameController : Node2D
             }
         if (ItemPool.Count == 0)
         {
-            string[] itemPaths = { "pooria", "narges", "behzad", "sara", "milad", "saman", "arsalan", "mohammad-hossein", "amir-hossein", "hojat", "omid", "hossein", "saeed", "arezoo", "mania", "sahar", "sahel", "sepideh", "sahar-2", "maryam", "devops-buddy-1", "devops-buddy-2", "devops-buddy-3", "hookah", "propranolol_pills", "heavy_smoker" };
+            string[] itemPaths = { "pooria", "narges", "behzad", "sara", "milad", "saman", "arsalan", "mohammad-hossein", "amir-hossein", "hojat", "omid", "hossein", "saeed", "arezoo", "mania", "sahar", "sahel", "sepideh", "sahar-2", "maryam", "devops-buddy-1", "devops-buddy-2", "devops-buddy-3", "hookah", "propranolol_pills", "heavy_smoker", "strawberry_milkshake", "bluetooth_headset" };
             foreach (string path in itemPaths)
             {
                 var item = GD.Load<ShopItemDefinition>($"res://resources/items/{path}.tres");
@@ -136,9 +166,12 @@ public partial class GameController : Node2D
         _canvas.AddChild(_hudScreen);
         _hudHpBar = _hudScreen.GetNode<ProgressBar>("HpBar");
         _hudHpText = _hudScreen.GetNode<Label>("HpText");
+        _hudDamageEdges = _hudScreen.GetNode<HudDamageEdges>("DamageEdges");
         _hudCoinText = _hudScreen.GetNode<Label>("CoinText");
+        _hudCoinIcon = _hudScreen.GetNode<TextureRect>("CoinIcon");
         _hudWaveName = _hudScreen.GetNode<Label>("WaveName");
         _hudTimer = _hudScreen.GetNode<Label>("Timer");
+        _hudWaveBeat = _hudScreen.GetNode<Label>("WaveBeat");
         _hudEquipment = _hudScreen.GetNode<Label>("Equipment");
         _hudScreen.Visible = false;
         ShowMenu();
@@ -147,6 +180,15 @@ public partial class GameController : Node2D
     public override void _Process(double delta)
     {
         float dt = (float)delta;
+        UpdateHudDamagePunch(dt);
+        UpdateHudCoinBounce(dt);
+        UpdateWaveBeat(dt);
+        if (_waveClearRemaining > 0f)
+        {
+            _waveClearRemaining = Mathf.Max(0f, _waveClearRemaining - dt);
+            if (_waveClearRemaining <= 0f) CompleteWaveTransition();
+            return;
+        }
         if (_finishDelay > 0f)
         {
             _finishDelay -= dt;
@@ -171,11 +213,16 @@ public partial class GameController : Node2D
             BeginBossOpportunity(wave);
         }
         for (int i = _pending.Count - 1; i >= 0; i--)
+        {
+            foreach (var entry in _pending[i].Entries)
+                if (GodotObject.IsInstanceValid(entry.warning))
+                    entry.warning.SetTiming(_pending[i].WarningDuration, _pending[i].Due - _waveClock);
             if (_pending[i].Due <= _waveClock)
             {
                 SpawnPending(_pending[i]);
                 _pending.RemoveAt(i);
             }
+        }
         Enemies.RemoveAll(e => !GodotObject.IsInstanceValid(e));
         foreach (var weapon in _weapons) weapon.Tick(dt);
         UpdateHud();
@@ -202,6 +249,10 @@ public partial class GameController : Node2D
                 DebugProductManagerReroll();
                 GetViewport().SetInputAsHandled();
                 break;
+            case Key.O when WaveActive:
+                EndWave(forceShop: true);
+                GetViewport().SetInputAsHandled();
+                break;
             case Key.R:
                 GetViewport().SetInputAsHandled();
                 GetTree().ReloadCurrentScene();
@@ -214,7 +265,7 @@ public partial class GameController : Node2D
         WaveActive = false;
         _hudScreen.Visible = false;
         ShowScreen(MenuScene);
-        _screen.GetNode<Button>("Panel/Box/Play").Pressed += ShowStartingChoice;
+        _screen.GetNode<Button>("Play").Pressed += ShowStartingChoice;
     }
 
     private void ShowStartingChoice()
@@ -238,6 +289,8 @@ public partial class GameController : Node2D
         _pendingCheatCoins = 0;
         _rerollCount = 0;
         _message = "";
+        _messageVersion = 0;
+        _lastShownMessageVersion = -1;
         _hasEnteredShop = false;
         _productManagerDebugOffers = false;
         Mohsen = PlayerScene.Instantiate<Player>();
@@ -245,6 +298,8 @@ public partial class GameController : Node2D
         Mohsen.Game = this;
         AddChild(Mohsen);
         Mohsen.Died += OnPlayerDied;
+        Mohsen.Healed += OnPlayerHealed;
+        Mohsen.Damaged += OnPlayerDamaged;
         AddWeapon(startingWeapon, 1);
         StartWave();
     }
@@ -252,9 +307,12 @@ public partial class GameController : Node2D
     private void StartWave()
     {
         if (_waveIndex >= Waves.Count) { ShowFinish(true); return; }
+        _waveClearRemaining = 0f;
         ClearScreen();
         foreach (var coin in _coins) if (GodotObject.IsInstanceValid(coin)) coin.QueueFree();
         _coins.Clear();
+        ClearWaterAndCoffee();
+        Mohsen.ClearTemporaryEffects();
         _waveClock = 0f;
         _currentBurst = 0;
         WaveDefinition wave = Waves[_waveIndex];
@@ -264,21 +322,26 @@ public partial class GameController : Node2D
         ResetImpactPause();
         Mohsen.Refill();
         Mohsen.Active = true;
-        foreach (var weapon in _weapons) weapon.ReturnToIdle();
+        foreach (var weapon in _weapons) weapon.ResetTransientEffects();
         WaveActive = true;
+        if (wave.WaveNumber > 1) SpawnWaterDispensers();
         PlaySound(GameSound.WaveStart);
         if (_waveIndex == 0) SpawnWaveOneBoss();
         _hudScreen.Visible = true;
         UpdateHud();
+        BeginWaveBeat($"WAVE {wave.WaveNumber} START", WaveOpeningBeatSeconds);
     }
 
     private void SpawnWaveOneBoss()
     {
         if (BossScene == null) return;
+        WaveDefinition wave = Waves[_waveIndex];
         var boss = BossScene.Instantiate<BossEnemy>();
         boss.Position = Mohsen.Position + WaveOneBossOffset;
         AddChild(boss);
-        boss.Configure(this, Waves[_waveIndex].EnemyHealthMultiplier, 1f, 0f);
+        boss.Configure(this, wave.WaveNumber, wave.WaveDangerLevelHealthMultiplier, 1f,
+            wave.EnemySpeedMultiplier, 0f, wave.EnemyDamageMultiplier);
+        boss.SetWaveName(wave.WaveName, wave.WaveNumber);
         Enemies.Add(boss);
     }
 
@@ -293,27 +356,42 @@ public partial class GameController : Node2D
             Mathf.Clamp(desired.X, margin, ArenaSize.X - margin),
             Mathf.Clamp(desired.Y, margin, ArenaSize.Y - margin));
         PackedScene scene = SelectTankScene(BossScene, wave.BossTankChance);
-        var warning = WarningScene.Instantiate<Sprite2D>();
+        var warning = WarningScene.Instantiate<SpawnWarning>();
         warning.Position = position;
         AddChild(warning);
-        var pending = new PendingSpawn { Due = _waveClock + warningSeconds };
-        pending.Entries.Add((scene, position, 1f, 1f, 0f, warning));
+        warning.SetTiming(warningSeconds, warningSeconds);
+        var pending = new PendingSpawn { Due = _waveClock + warningSeconds, WarningDuration = warningSeconds };
+        pending.Entries.Add((scene, position, 1f, 1f, 0f, 1f, warning));
         _pending.Add(pending);
     }
 
-    private void EndWave()
+    private void EndWave(bool forceShop = false)
     {
         ResetImpactPause();
         _bossOpportunityPending = false;
         WaveActive = false;
         Mohsen.Active = false;
-        foreach (var weapon in _weapons) weapon.ReturnToIdle();
+        Mohsen.ClearTemporaryEffects();
+        foreach (var weapon in _weapons) weapon.ResetTransientEffects();
         ClearWaveObjects();
+        _waveClearForceShop = forceShop;
+        BeginWaveBeat("WAVE CLEARED", WaveClearBeatSeconds);
+        _waveClearRemaining = WaveClearBeatSeconds;
+        if (_waveClearRemaining <= 0f) CompleteWaveTransition();
+    }
+
+    private void CompleteWaveTransition()
+    {
+        _waveClearRemaining = 0f;
+        _waveBeatRemaining = 0f;
+        _hudWaveBeat.Visible = false;
         _hudScreen.Visible = false;
-        if (_waveIndex == Waves.Count - 1) { ShowFinish(true); return; }
+        bool forceShop = _waveClearForceShop;
+        _waveClearForceShop = false;
+        if (_waveIndex == Waves.Count - 1 && !forceShop) { ShowFinish(true); return; }
         _productManagerDebugOffers = false;
         _rerollCount = 0;
-        _message = _hasEnteredShop ? "" : ShopGreeting;
+        SetShopMessage(_hasEnteredShop ? "" : ShopGreeting);
         _hasEnteredShop = true;
         GenerateOffers();
         ShowShop();
@@ -324,16 +402,20 @@ public partial class GameController : Node2D
         ResetImpactPause();
         _bossOpportunityPending = false;
         WaveActive = false;
-        foreach (var weapon in _weapons) weapon.ReturnToIdle();
+        Mohsen.ClearTemporaryEffects();
+        foreach (var weapon in _weapons) weapon.ResetTransientEffects();
         ClearWaveObjects();
-        _hudScreen.Visible = false;
+        _waveBeatRemaining = 0f;
+        _waveClearRemaining = 0f;
+        _hudWaveBeat.Visible = false;
+        UpdateHud();
         _finishDelay = 0.7f;
     }
 
     private void BeginBurst(SpawnBurstDefinition burst)
     {
         if (burst == null || burst.WarningDuration < 0f || burst.TriggerTime + burst.WarningDuration > Waves[_waveIndex].Duration) return;
-        var pending = new PendingSpawn { Due = _waveClock + burst.WarningDuration };
+        var pending = new PendingSpawn { Due = _waveClock + burst.WarningDuration, WarningDuration = burst.WarningDuration };
         foreach (var group in burst.Groups)
         {
             if (group == null || group.EnemyScene == null || group.Count < 0) continue;
@@ -341,13 +423,15 @@ public partial class GameController : Node2D
             for (int n = 0; n < Mathf.Min(group.Count, 100); n++)
             {
                 Vector2 position = ChooseSpawnPosition();
-                var warning = WarningScene.Instantiate<Sprite2D>();
+                var warning = WarningScene.Instantiate<SpawnWarning>();
                 warning.Position = position;
                 AddChild(warning);
+                warning.SetTiming(burst.WarningDuration, burst.WarningDuration);
                 PackedScene scene = group.AlternateEnemyScene != null && (n + alternatePhase) % 2 == 0
                     ? group.AlternateEnemyScene : group.EnemyScene;
                 scene = SelectTankScene(scene, Waves[_waveIndex].TankSpawnChance);
-                pending.Entries.Add((scene, position, group.HealthMultiplier, group.SpeedMultiplier, group.KnockbackResistanceAdjustment, warning));
+                pending.Entries.Add((scene, position, group.HealthMultiplier, group.SpeedMultiplier,
+                    group.KnockbackResistanceAdjustment, burst.DamageMultiplier, warning));
             }
         }
         _pending.Add(pending);
@@ -392,7 +476,11 @@ public partial class GameController : Node2D
             if (entry.scene.Instantiate() is not Enemy enemy) continue;
             enemy.Position = entry.position;
             AddChild(enemy);
-            enemy.Configure(this, Mathf.Max(.1f, entry.hp * Waves[_waveIndex].EnemyHealthMultiplier), Mathf.Max(.1f, entry.speed), entry.resistance);
+            WaveDefinition wave = Waves[_waveIndex];
+            enemy.Configure(this, wave.WaveNumber, wave.WaveDangerLevelHealthMultiplier, entry.hp,
+                Mathf.Max(.1f, entry.speed * wave.EnemySpeedMultiplier), entry.resistance,
+                Mathf.Max(.1f, entry.damage * wave.EnemyDamageMultiplier));
+            if (enemy is BossEnemy boss) boss.SetWaveName(Waves[_waveIndex].WaveName, Waves[_waveIndex].WaveNumber);
             Enemies.Add(enemy);
         }
     }
@@ -428,9 +516,137 @@ public partial class GameController : Node2D
             AddChild(coin);
             _coins.Add(coin);
         }
+        if (CoffeePickupScene != null && _rng.Randf() < Mathf.Clamp(CoffeeDropChance, 0f, 1f))
+        {
+            var coffee = CoffeePickupScene.Instantiate<ConsumablePickup>();
+            coffee.Game = this;
+            coffee.Position = enemy.Position + Vector2.Right.Rotated(_rng.RandfRange(0f, Mathf.Tau)) * _rng.RandfRange(0f, CoinDropScatterRadius);
+            AddChild(coffee);
+            _consumables.Add(coffee);
+        }
     }
 
-    public void SpawnEnemyOffspring(PackedScene scene, Vector2 at, float healthMultiplier, float speedMultiplier)
+    private void SpawnWaterDispensers()
+    {
+        if (WaterDispenserScene == null) return;
+        int minimum = Mathf.Max(1, MinimumWaterDispensers);
+        int count = _rng.RandiRange(minimum, Mathf.Max(minimum, MaximumWaterDispensers));
+        float margin = WallThickness + 72f;
+        for (int i = 0; i < count; i++)
+        {
+            Vector2 position = Vector2.Zero;
+            for (int attempt = 0; attempt < 20; attempt++)
+            {
+                position = new Vector2(_rng.RandfRange(margin, ArenaSize.X - margin), _rng.RandfRange(margin, ArenaSize.Y - margin));
+                if (position.DistanceTo(Mohsen.Position) < 180f) continue;
+                if (_waterDispensers.Any(dispenser => dispenser.Position.DistanceTo(position) < 130f)) continue;
+                break;
+            }
+            var dispenser = WaterDispenserScene.Instantiate<WaterDispenser>();
+            dispenser.Game = this;
+            dispenser.Position = position;
+            AddChild(dispenser);
+            _waterDispensers.Add(dispenser);
+        }
+    }
+
+    public void SpawnWater(WaterDispenser dispenser)
+    {
+        if (!WaveActive || WaterPickupScene == null || !GodotObject.IsInstanceValid(dispenser)) return;
+        float angle = _rng.RandfRange(0f, Mathf.Tau);
+        float distance = _rng.RandfRange(Mathf.Min(WaterDropMinimumDistance, WaterDropMaximumDistance), Mathf.Max(WaterDropMinimumDistance, WaterDropMaximumDistance));
+        float margin = WallThickness + 25f;
+        Vector2 destination = dispenser.Position + Vector2.Right.Rotated(angle) * distance;
+        destination = new Vector2(Mathf.Clamp(destination.X, margin, ArenaSize.X - margin), Mathf.Clamp(destination.Y, margin, ArenaSize.Y - margin));
+        var water = WaterPickupScene.Instantiate<ConsumablePickup>();
+        water.Game = this;
+        AddChild(water);
+        water.Launch(dispenser.Position, destination);
+        _consumables.Add(water);
+    }
+
+    public void CollectConsumable(ConsumablePickup pickup)
+    {
+        _consumables.Remove(pickup);
+        if (!WaveActive || Mohsen == null) return;
+        if (pickup.Kind == ConsumablePickup.PickupKind.Water) Mohsen.Heal(WaterHealing);
+        else Mohsen.ApplyCoffeeBoost(pickup.CoffeeSpeedBonusPercent, pickup.CoffeeDurationSeconds);
+        PlaySound(GameSound.CoinPickup);
+        UpdateHud();
+    }
+
+    private void OnPlayerHealed(float amount)
+    {
+        if (amount <= 0f || DamageNumberScene == null) return;
+        var number = DamageNumberScene.Instantiate<DamageNumber>();
+        number.Position = Mohsen.Position + new Vector2(0f, -42f);
+        AddChild(number);
+        number.SetHealing(amount);
+    }
+
+    private void OnPlayerDamaged(float amount)
+    {
+        if (amount <= 0f) return;
+        if (DamageNumberScene != null)
+        {
+            var number = DamageNumberScene.Instantiate<DamageNumber>();
+            number.Position = Mohsen.Position + new Vector2(0f, -42f);
+            AddChild(number);
+            number.SetPlayerDamage(amount);
+        }
+        if (!_hudScreen.Visible) return;
+        _hudDamagePunchRemaining = HudDamagePunchSeconds;
+        _hudDamageEdges.Pulse();
+    }
+
+    private void UpdateHudDamagePunch(float delta)
+    {
+        _hudDamagePunchRemaining = Mathf.Max(0f, _hudDamagePunchRemaining - delta);
+        float progress = HudDamagePunchSeconds <= 0f ? 0f : _hudDamagePunchRemaining / HudDamagePunchSeconds;
+        Vector2 scale = Vector2.One * (1f + HudDamagePunchScale * progress * progress);
+        if (_hudHpBar != null) _hudHpBar.Scale = scale;
+        if (_hudHpText != null) _hudHpText.Scale = scale;
+    }
+
+    private void UpdateHudCoinBounce(float delta)
+    {
+        _hudCoinBounceRemaining = Mathf.Max(0f, _hudCoinBounceRemaining - delta);
+        float progress = HudCoinBounceSeconds <= 0f ? 0f : _hudCoinBounceRemaining / HudCoinBounceSeconds;
+        Vector2 scale = Vector2.One * (1f + HudCoinBounceScale * progress * progress);
+        if (_hudCoinText != null) _hudCoinText.Scale = scale;
+        if (_hudCoinIcon != null) _hudCoinIcon.Scale = scale;
+    }
+
+    private void BeginWaveBeat(string text, float seconds)
+    {
+        _waveBeatDuration = Mathf.Max(0f, seconds);
+        _waveBeatRemaining = _waveBeatDuration;
+        _hudWaveBeat.Text = text;
+        _hudWaveBeat.Visible = seconds > 0f;
+        _hudWaveBeat.PivotOffset = new Vector2(450f, 34f);
+        _hudWaveBeat.Scale = Vector2.One * 1.12f;
+        _hudWaveBeat.Modulate = Colors.White;
+    }
+
+    private void UpdateWaveBeat(float delta)
+    {
+        if (_waveBeatRemaining <= 0f) return;
+        _waveBeatRemaining = Mathf.Max(0f, _waveBeatRemaining - delta);
+        float progress = _waveBeatDuration <= 0f ? 0f : _waveBeatRemaining / _waveBeatDuration;
+        _hudWaveBeat.Scale = Vector2.One * (1f + 0.12f * progress);
+        _hudWaveBeat.Modulate = new Color(1f, 1f, 1f, Mathf.Min(1f, progress * 3f));
+        if (_waveBeatRemaining <= 0f) _hudWaveBeat.Visible = false;
+    }
+
+    private void ClearWaterAndCoffee()
+    {
+        foreach (var dispenser in _waterDispensers) if (GodotObject.IsInstanceValid(dispenser)) dispenser.QueueFree();
+        _waterDispensers.Clear();
+        foreach (var pickup in _consumables) if (GodotObject.IsInstanceValid(pickup)) pickup.QueueFree();
+        _consumables.Clear();
+    }
+
+    public void SpawnEnemyOffspring(PackedScene scene, Vector2 at, float healthMultiplier, float speedMultiplier, float damageMultiplier)
     {
         if (!WaveActive || scene == null) return;
         PackedScene chosenScene = SelectTankScene(scene, Waves[_waveIndex].TankSpawnChance);
@@ -440,7 +656,9 @@ public partial class GameController : Node2D
             Mathf.Clamp(at.X, boundary, ArenaSize.X - boundary),
             Mathf.Clamp(at.Y, boundary, ArenaSize.Y - boundary));
         AddChild(offspring);
-        offspring.Configure(this, Mathf.Max(0.1f, healthMultiplier * Waves[_waveIndex].EnemyHealthMultiplier), Mathf.Max(0.1f, speedMultiplier), 0f);
+        WaveDefinition wave = Waves[_waveIndex];
+        offspring.Configure(this, wave.WaveNumber, wave.WaveDangerLevelHealthMultiplier,
+            healthMultiplier, Mathf.Max(0.1f, speedMultiplier), 0f, damageMultiplier);
         Enemies.Add(offspring);
     }
 
@@ -448,7 +666,8 @@ public partial class GameController : Node2D
     {
         _coins.Remove(coin);
         _coinsHeld++;
-        PlaySound(GameSound.CoinPickup);
+        _hudCoinBounceRemaining = HudCoinBounceSeconds;
+        _audio?.PlayCoinCollected();
         UpdateHud();
     }
 
@@ -489,22 +708,22 @@ public partial class GameController : Node2D
         AddChild(effect);
     }
 
-    public void SpawnEnemyProjectile(Vector2 from, Vector2 direction, float speed)
+    public void SpawnEnemyProjectile(Vector2 from, Vector2 direction, float speed, float damage)
     {
-        SpawnHostileProjectile(EnemyBulletScene, from, direction, speed);
+        SpawnHostileProjectile(EnemyBulletScene, from, direction, speed, damage);
     }
 
-    public void SpawnBossProjectile(Vector2 from, Vector2 direction, float speed)
+    public void SpawnBossProjectile(Vector2 from, Vector2 direction, float speed, float damage)
     {
-        SpawnHostileProjectile(EnemyBulletScene, from, direction, speed);
+        SpawnHostileProjectile(EnemyBulletScene, from, direction, speed, damage);
     }
 
-    public void SpawnManyEyesProjectile(PackedScene scene, Vector2 from, Vector2 direction, float speed)
+    public void SpawnManyEyesProjectile(PackedScene scene, Vector2 from, Vector2 direction, float speed, float damage)
     {
-        SpawnHostileProjectile(scene, from, direction, speed);
+        SpawnHostileProjectile(scene, from, direction, speed, damage);
     }
 
-    private void SpawnHostileProjectile(PackedScene scene, Vector2 from, Vector2 direction, float speed)
+    private void SpawnHostileProjectile(PackedScene scene, Vector2 from, Vector2 direction, float speed, float damage)
     {
         if (scene == null) return;
         var projectile = scene.Instantiate<Projectile>();
@@ -513,7 +732,7 @@ public partial class GameController : Node2D
         projectile.Direction = direction;
         projectile.Speed = speed;
         projectile.RemainingDistance = 3000f;
-        projectile.Damage = 1f;
+        projectile.Damage = Mathf.Max(0.1f, damage);
         AddChild(projectile);
         _projectiles.Add(projectile);
     }
@@ -554,6 +773,7 @@ public partial class GameController : Node2D
         shot.RemainingDistance = Mathf.Max(20f, stats.Range - weapon.Position.Length());
         shot.RangeAtSpawn = shot.RemainingDistance;
         shot.Damage = damage;
+        shot.SizeMultiplier = Mohsen.ProjectileSizeMultiplier;
         shot.CriticalHit = critical;
         shot.Knockback = stats.Knockback + Mohsen.Knockback;
         if (!knife) shot.PierceCapacity = shot.RemainingPierces = Mohsen.BulletPierce;
@@ -582,6 +802,7 @@ public partial class GameController : Node2D
             pellet.RemainingDistance = travelRange;
             pellet.RangeAtSpawn = travelRange;
             pellet.Damage = EffectiveWeaponDamage(WeaponKind.Shotgun, stats);
+            pellet.SizeMultiplier = Mohsen.ProjectileSizeMultiplier;
             pellet.CriticalHit = _rng.Randf() < EffectiveCritChance(stats);
             if (pellet.CriticalHit) pellet.Damage *= stats.CritMultiplier;
             pellet.Knockback = stats.Knockback + Mohsen.Knockback;
@@ -610,6 +831,7 @@ public partial class GameController : Node2D
             child.RemainingDistance = source.RangeAtSpawn;
             child.RangeAtSpawn = source.RangeAtSpawn;
             child.HitRadius = source.HitRadius;
+            child.SizeMultiplier = source.SizeMultiplier;
             child.EaseSpeed = source.EaseSpeed;
             child.EndSpeedMultiplier = source.EndSpeedMultiplier;
             child.EaseExponent = source.EaseExponent;
@@ -625,7 +847,7 @@ public partial class GameController : Node2D
         }
     }
 
-    private void AddWeapon(WeaponKind kind, int tier)
+    private Weapon AddWeapon(WeaponKind kind, int tier)
     {
         PackedScene scene = kind switch
         {
@@ -640,6 +862,7 @@ public partial class GameController : Node2D
         Mohsen.WeaponMount.AddChild(weapon);
         _weapons.Add(weapon);
         RefreshWeaponSlots();
+        return weapon;
     }
 
     private void RefreshWeaponSlots()
@@ -650,10 +873,11 @@ public partial class GameController : Node2D
 
     private bool CanBuyWeapon(WeaponKind kind, int tier) => _weapons.Any(w => w.Kind == kind && w.Tier == tier && tier < 4) || _weapons.Count < 4;
 
-    private void GiveWeapon(WeaponKind kind, int tier)
+    private Weapon GiveWeapon(WeaponKind kind, int tier, out bool merged)
     {
         var matching = _weapons.FirstOrDefault(w => w.Kind == kind && w.Tier == tier && tier < 4);
-        if (matching == null) { AddWeapon(kind, tier); return; }
+        merged = matching != null;
+        if (matching == null) return AddWeapon(kind, tier);
         matching.Tier++;
         // Chain merges can occur after a purchase upgrades an existing weapon.
         while (matching.Tier < 4)
@@ -665,6 +889,7 @@ public partial class GameController : Node2D
             matching.Tier++;
         }
         RefreshWeaponSlots();
+        return matching;
     }
 
     private void GenerateOffers()
@@ -682,9 +907,9 @@ public partial class GameController : Node2D
         Array.Clear(_locks, 0, _locks.Length);
         for (int i = 0; i < _offers.Length; i++)
             _offers[i] = RandomProductManagerOffer();
-        _message = _offers.All(offer => offer == null)
+        SetShopMessage(_offers.All(offer => offer == null)
             ? "No eligible Product Manager items."
-            : "Debug: Product Manager items only.";
+            : "Debug: Product Manager items only.");
         ShowShop();
     }
 
@@ -739,7 +964,7 @@ public partial class GameController : Node2D
     }
 
     private bool IsEligibleItem(ShopItemDefinition item) =>
-        IsSafeHealthOffer(item) && (!item.Unique || !_purchasedItems.ContainsKey(item));
+        item != null && (!item.Unique || !_purchasedItems.ContainsKey(item));
 
     private bool IsSafeHealthOffer(ShopItemDefinition item)
     {
@@ -767,9 +992,9 @@ public partial class GameController : Node2D
         _screen.GetNode<Label>("Title").Text = ShopTitleText();
         _screen.GetNode<Label>("Coins").Text = ShopCoinsText();
         _screen.GetNode<Label>("StatsPanel/Box/Stats").Text = ShopStatsText();
-        var bubble = _screen.GetNode<PanelContainer>("SpeechBubble");
-        bubble.Visible = !string.IsNullOrEmpty(_message);
-        bubble.GetNode<Label>("Text").Text = _message;
+        var bubble = _screen.GetNode<ShopSpeechBubble>("SpeechBubble");
+        bubble.ShowMessage(_message, _lastShownMessageVersion != _messageVersion);
+        _lastShownMessageVersion = _messageVersion;
         var rows = _screen.GetNode<HBoxContainer>("Offers");
         for (int i = 0; i < 4; i++)
         {
@@ -781,7 +1006,8 @@ public partial class GameController : Node2D
             var name = row.GetNode<Label>("Content/Header/Heading/Name");
             var kind = row.GetNode<Label>("Content/Header/Heading/Kind");
             var description = row.GetNode<RichTextLabel>("Content/Description");
-            var buy = row.GetNode<Button>("Content/Buy");
+            var buy = row.GetNode<Button>("Content/BuyRow/Buy");
+            var buyCoin = row.GetNode<TextureRect>("Content/BuyRow/CoinIcon");
             var lockButton = row.GetNode<Button>("Content/Lock");
             if (offer == null)
             {
@@ -790,10 +1016,12 @@ public partial class GameController : Node2D
                 kind.Text = "Slot " + (i + 1);
                 description.Text = "Empty. Reroll or continue to refill this slot.";
                 buy.Visible = false;
+                buyCoin.Visible = false;
                 lockButton.Visible = false;
             }
             else
             {
+                if (offer.Item != null) ApplyItemRarityFrame(row, offer.Item.Rarity);
                 icon.Texture = offer.Item != null ? offer.Item.Icon : GD.Load<Texture2D>(WeaponData.Icon(offer.Kind));
                 name.Text = offer.Title;
                 kind.Text = offer.Item != null
@@ -807,14 +1035,15 @@ public partial class GameController : Node2D
                     icon.TooltipText = tooltip;
                     description.TooltipText = tooltip;
                 }
-                buy.Text = $"Buy · {offer.Price} coins";
+                buy.Text = $"Buy · {offer.Price}";
                 buy.Pressed += () => Buy(slot);
                 lockButton.Text = _locks[i] ? "Unlock" : "Lock";
                 lockButton.Pressed += () => { _locks[slot] = !_locks[slot]; ShowShop(); };
             }
         }
-        _screen.GetNode<Button>("Reroll").Text = $"Reroll · {5 * (_rerollCount + 1)} coins";
+        _screen.GetNode<Button>("Reroll").Text = $"Reroll · {5 * (_rerollCount + 1)}";
         _screen.GetNode<Button>("Reroll").Pressed += Reroll;
+        _screen.GetNode<Button>("RerollCoinButton").Pressed += Reroll;
         _screen.GetNode<Button>("Next").Text = _waveIndex == Waves.Count - 1 ? "Finish" : $"Start Wave {_waveIndex + 2}";
         _screen.GetNode<Button>("Next").Pressed += () => { _waveIndex++; StartWave(); };
         PopulateShopInventory();
@@ -840,6 +1069,7 @@ public partial class GameController : Node2D
         $"Knockback: {Mohsen.Knockback:0.#}\n" +
         $"Bonus damage: {Mohsen.BonusDamagePercent:0.#}%\n" +
         $"Critical chance bonus: {Mohsen.CriticalChancePercent:+0.#;-0.#;0}%\n" +
+        $"Size: {Mohsen.ProjectileSizeMultiplier * 100f:0}% · {(Mohsen.CannotShootWhileMoving ? "No moving shots" : "Moving shots OK")}\n" +
         $"Ranged damage: {Mohsen.RangedDamagePercent:0.#}%\n" +
         $"Melee damage: {Mohsen.MeleeDamagePercent:0.#}%\n" +
         $"Pickup radius: {Mohsen.CoinPickupRadius:0.#}\n" +
@@ -889,14 +1119,17 @@ public partial class GameController : Node2D
             PlayerStat.Spread => "Spread bullets on hit",
             PlayerStat.BulletPierce => "bullet pierce",
             PlayerStat.CriticalChancePercent => "critical chance",
+            PlayerStat.ProjectileSizePercent => "bigger projectiles",
             _ => modifier.Stat.ToString()
         };
-        bool percent = modifier.Stat == PlayerStat.BonusDamagePercent || modifier.Stat == PlayerStat.RangedDamagePercent || modifier.Stat == PlayerStat.MeleeDamagePercent || modifier.Stat == PlayerStat.CriticalChancePercent;
+        bool percent = modifier.Stat == PlayerStat.BonusDamagePercent || modifier.Stat == PlayerStat.RangedDamagePercent || modifier.Stat == PlayerStat.MeleeDamagePercent || modifier.Stat == PlayerStat.CriticalChancePercent || modifier.Stat == PlayerStat.ProjectileSizePercent;
         return $"{modifier.Amount:+0.##;-0.##;0}{(percent ? "%" : "")} {name}";
     }
 
     private static string ColoredModifierSummary(StatModifier modifier)
     {
+        if (modifier.Stat == PlayerStat.BlockFiringWhileMoving)
+            return "[color=#ff7676]You cant shoot while moving.[/color]";
         string color = modifier.Amount > 0f ? "#76df80" : modifier.Amount < 0f ? "#ff7676" : "#dddddd";
         return $"[color={color}]{ModifierSummary(modifier)}[/color]";
     }
@@ -918,6 +1151,7 @@ public partial class GameController : Node2D
         {
             var entry = ShopInventoryEntryScene.Instantiate<Panel>();
             bought.AddChild(entry);
+            ApplyItemRarityFrame(entry, pair.Key.Rarity);
             entry.GetNode<TextureRect>("Icon").Texture = pair.Key.Icon;
             entry.GetNode<Label>("Count").Text = pair.Value > 1 ? $"×{pair.Value}" : "";
             entry.TooltipText = ItemTooltip(pair.Key, pair.Value);
@@ -929,6 +1163,21 @@ public partial class GameController : Node2D
         }
         _screen.GetNode<Label>("WeaponsTitle").Text = $"Weapons ({_weapons.Count}/4)";
         _screen.GetNode<Label>("ItemsTitle").Text = $"Items ({_purchasedItems.Values.Sum()})";
+    }
+
+    private static void ApplyItemRarityFrame(Control frame, int rarity)
+    {
+        if (rarity < 2 || rarity > 3 || frame.GetThemeStylebox("panel") is not StyleBoxFlat original) return;
+        Color background = rarity == 2 ? new Color("#173b55") : new Color("#38244f");
+        Color border = rarity == 2 ? new Color("#5c9fc4") : new Color("#aa83d2");
+        var tinted = (StyleBoxFlat)original.Duplicate();
+        tinted.BgColor = background;
+        tinted.BorderColor = border;
+        tinted.BorderWidthLeft = 3;
+        tinted.BorderWidthTop = 3;
+        tinted.BorderWidthRight = 3;
+        tinted.BorderWidthBottom = 3;
+        frame.AddThemeStyleboxOverride("panel", tinted);
     }
 
     private float EffectiveWeaponDamage(WeaponKind kind, WeaponStats stats)
@@ -972,6 +1221,11 @@ public partial class GameController : Node2D
         foreach (StatModifier modifier in item.Modifiers)
         {
             if (modifier == null) continue;
+            if (modifier.Stat == PlayerStat.BlockFiringWhileMoving)
+            {
+                lines.Add("You cant shoot while moving.");
+                continue;
+            }
             string name = modifier.Stat switch
             {
                 PlayerStat.MaxHealth => "Max HP",
@@ -984,14 +1238,16 @@ public partial class GameController : Node2D
                 PlayerStat.Spread => "Spread bullets on hit",
                 PlayerStat.BulletPierce => "Bullet pierce",
                 PlayerStat.CriticalChancePercent => "Critical chance",
+                PlayerStat.ProjectileSizePercent => "Projectile size",
                 _ => modifier.Stat.ToString()
             };
-            bool percent = modifier.Stat == PlayerStat.BonusDamagePercent || modifier.Stat == PlayerStat.RangedDamagePercent || modifier.Stat == PlayerStat.MeleeDamagePercent || modifier.Stat == PlayerStat.CriticalChancePercent;
+            bool percent = modifier.Stat == PlayerStat.BonusDamagePercent || modifier.Stat == PlayerStat.RangedDamagePercent || modifier.Stat == PlayerStat.MeleeDamagePercent || modifier.Stat == PlayerStat.CriticalChancePercent || modifier.Stat == PlayerStat.ProjectileSizePercent;
             string suffix = percent ? "%" : "";
             lines.Add($"{name}: {modifier.Amount:+0.##;-0.##;0}{suffix} each, {modifier.Amount * count:+0.##;-0.##;0}{suffix} total");
         }
         lines.Add($"Current all-damage bonus: {Mohsen.BonusDamagePercent:0.#}%");
         lines.Add($"Current critical chance bonus: {Mohsen.CriticalChancePercent:+0.#;-0.#;0}%");
+        lines.Add($"Current projectile size: {Mohsen.ProjectileSizeMultiplier * 100f:0}%");
         foreach (Weapon weapon in _weapons)
         {
             WeaponStats stats = WeaponData.Get(weapon.Kind, weapon.Tier);
@@ -1009,47 +1265,102 @@ public partial class GameController : Node2D
         {
             _locks[slot] = false;
             _offers[slot] = RandomOfferForCurrentShop();
-            _message = "That item is no longer eligible.";
+            SetShopMessage("That item is no longer eligible.");
             ShowShop();
             return;
         }
-        if (_coinsHeld < offer.Price) { _message = "Not enough coins."; ShowShop(); return; }
-        if (offer.Item == null && !CanBuyWeapon(offer.Kind, offer.Tier)) { _message = "Four weapons equipped; this offer cannot merge."; ShowShop(); return; }
+        if (offer.Item != null && !IsSafeHealthOffer(offer.Item))
+        {
+            SetShopMessage("You can't buy that item. It would drop your HP to 0 or below.");
+            ShowShop();
+            return;
+        }
+        if (_coinsHeld < offer.Price) { SetShopMessage("Not enough coins."); ShowShop(); return; }
+        if (offer.Item == null && !CanBuyWeapon(offer.Kind, offer.Tier)) { SetShopMessage("Four weapons equipped; this offer cannot merge."); ShowShop(); return; }
         _coinsHeld -= offer.Price;
         PlaySound(GameSound.ShopPurchase);
+        Weapon upgradedWeapon = null;
+        bool merged = false;
         if (offer.Item != null)
         {
             foreach (var modifier in offer.Item.Modifiers) Mohsen.ApplyModifier(modifier);
             _purchasedItems.TryGetValue(offer.Item, out int copies);
             _purchasedItems[offer.Item] = copies + 1;
         }
-        else GiveWeapon(offer.Kind, offer.Tier);
+        else upgradedWeapon = GiveWeapon(offer.Kind, offer.Tier, out merged);
         _offers[slot] = null;
         _locks[slot] = false;
-        _message = offer.Item != null ? $"Bought {offer.Item.DisplayName}." : "Weapon equipped or merged.";
+        SetShopMessage(offer.Item != null ? $"Bought {offer.Item.DisplayName}."
+            : merged ? $"{WeaponData.Name(offer.Kind)} upgraded to tier {Roman(upgradedWeapon.Tier)}!"
+            : "Weapon equipped.");
         ShowShop();
+        if (merged) ShowMergeFeedback(slot, upgradedWeapon);
+    }
+
+    private void ShowMergeFeedback(int offerSlot, Weapon upgradedWeapon)
+    {
+        var offers = _screen.GetNode<HBoxContainer>("Offers");
+        if (offerSlot < 0 || offerSlot >= offers.GetChildCount()) return;
+        var card = (PanelContainer)offers.GetChild(offerSlot);
+        var icon = card.GetNode<TextureRect>("Content/Header/Icon");
+        icon.Texture = GD.Load<Texture2D>(WeaponData.Icon(upgradedWeapon.Kind));
+        icon.Visible = true;
+        card.GetNode<Label>("Content/Header/Heading/Name").Text = "TIER UP!";
+        card.GetNode<Label>("Content/Header/Heading/Kind").Text = $"{WeaponData.Name(upgradedWeapon.Kind)} · Tier {Roman(upgradedWeapon.Tier)}";
+        card.GetNode<RichTextLabel>("Content/Description").Text = "Weapon merged successfully.";
+
+        var grid = _screen.GetNode<GridContainer>("WeaponsScroll/WeaponsGrid");
+        int weaponSlot = _weapons.IndexOf(upgradedWeapon);
+        if (weaponSlot < 0 || weaponSlot >= grid.GetChildCount()) return;
+        var entry = (Panel)grid.GetChild(weaponSlot);
+        entry.GetNode<Label>("Count").Text = Roman(upgradedWeapon.Tier);
+
+        AnimateTierUp(card, new Vector2(112f, 195f), 1.04f);
+        AnimateTierUp(entry, new Vector2(36f, 36f), 1.28f);
+    }
+
+    private static void AnimateTierUp(Control control, Vector2 pivot, float peakScale)
+    {
+        control.PivotOffset = pivot;
+        control.Scale = Vector2.One * peakScale;
+        control.Modulate = new Color(1f, 0.83f, 0.36f);
+        var tween = control.CreateTween();
+        tween.TweenProperty(control, "scale", Vector2.One, 0.36f).SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.Out);
+        tween.Parallel().TweenProperty(control, "modulate", Colors.White, 0.48f);
     }
 
     private void Reroll()
     {
         int cost = 5 * (_rerollCount + 1);
-        if (_coinsHeld < cost) { _message = "Not enough coins to reroll."; ShowShop(); return; }
+        if (_coinsHeld < cost) { SetShopMessage("Not enough coins to reroll."); ShowShop(); return; }
         _coinsHeld -= cost;
         _rerollCount++;
         _productManagerDebugOffers = false;
         GenerateOffers();
-        _message = "Unlocked slots rerolled.";
+        SetShopMessage("Unlocked slots rerolled.");
         ShowShop();
+    }
+
+    private void SetShopMessage(string message)
+    {
+        _message = message;
+        _messageVersion++;
     }
 
     private void ShowFinish(bool victory)
     {
         WaveActive = false;
         _hudScreen.Visible = false;
+        if (!victory)
+        {
+            ShowScreen(DefeatScene);
+            _screen.GetNode<Button>("PlayAgain").Pressed += ShowMenu;
+            return;
+        }
         ShowScreen(FinishScene);
-        _screen.GetNode<Label>("Panel/Box/Title").Text = victory ? $"FIRST {Waves.Count} WAVES CLEARED" : "DEFEAT";
-        _screen.GetNode<Label>("Panel/Box/Subtitle").Text = victory ? "Current wave set cleared." : "Mohsen was overwhelmed by office work.";
-        _screen.GetNode<TextureRect>("Panel/Box/Illustration").Texture = GD.Load<Texture2D>(victory ? "res://assets/placeholders/passive.svg" : "res://assets/placeholders/melee.svg");
+        _screen.GetNode<Label>("Panel/Box/Title").Text = $"FIRST {Waves.Count} WAVES CLEARED";
+        _screen.GetNode<Label>("Panel/Box/Subtitle").Text = "Current wave set cleared.";
+        _screen.GetNode<TextureRect>("Panel/Box/Illustration").Texture = GD.Load<Texture2D>("res://assets/placeholders/passive.svg");
         _screen.GetNode<Button>("Panel/Box/PlayAgain").Pressed += ShowMenu;
     }
 
@@ -1059,6 +1370,7 @@ public partial class GameController : Node2D
         Enemies.Clear();
         foreach (var coin in _coins) if (GodotObject.IsInstanceValid(coin)) coin.QueueFree();
         _coins.Clear();
+        ClearWaterAndCoffee();
         foreach (var shot in _projectiles) if (GodotObject.IsInstanceValid(shot)) shot.QueueFree();
         _projectiles.Clear();
         foreach (var pending in _pending)

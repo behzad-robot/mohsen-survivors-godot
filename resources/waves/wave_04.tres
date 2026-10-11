@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://sjso7kf854eg" path="res://scenes/enemies/ranged.tscn" id="5"]
 [ext_resource type="PackedScene" uid="uid://b4hjn27a2p23i" path="res://scenes/enemies/melee_female.tscn" id="6"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/many_eyes.tscn" id="7"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/charge_enemy.tscn" id="8"]
 
 [sub_resource type="Resource" id="g0_melee"]
 script = ExtResource("3")
@@ -23,9 +24,13 @@ Count = 2
 SpeedMultiplier = 1.15
 KnockbackResistanceAdjustment = 0.15000000000000002
 
+[sub_resource type="Resource" id="g0_charge"]
+script = ExtResource("3")
+EnemyScene = ExtResource("8")
+
 [sub_resource type="Resource" id="b0"]
 script = ExtResource("2")
-Groups = Array[ExtResource("3")]([SubResource("g0_melee"), SubResource("g0_ranged")])
+Groups = Array[ExtResource("3")]([SubResource("g0_melee"), SubResource("g0_ranged"), SubResource("g0_charge")])
 
 [sub_resource type="Resource" id="g1_melee"]
 script = ExtResource("3")
@@ -136,7 +141,6 @@ Groups = Array[ExtResource("3")]([SubResource("g5_melee"), SubResource("g5_range
 script = ExtResource("1")
 WaveNumber = 4
 WaveName = "Vendor-Automation-Decomposition"
-EnemyHealthMultiplier = 4.55625
 TankSpawnChance = 0.24
 BossSpawnChance = 0.6
 BossTankChance = 0.5

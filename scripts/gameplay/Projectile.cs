@@ -16,6 +16,7 @@ public partial class Projectile : Node2D
     public Vector2 Direction { get; set; }
     [Export(PropertyHint.Range, "0,1000,10")] public float Speed { get; set; }
     public float Damage { get; set; }
+    public float SizeMultiplier { get; set; } = 1f;
     public bool CriticalHit { get; set; }
     public float Knockback { get; set; }
     public float RemainingDistance { get; set; }
@@ -30,6 +31,7 @@ public partial class Projectile : Node2D
     private float _remainingLife;
     private float _trailClock;
     private Line2D _trail;
+    private float EffectiveHitRadius => HitRadius * Mathf.Max(0.1f, SizeMultiplier);
 
     public void IgnoreEnemyForLife(ulong enemyId) => _hitEnemies.Add(enemyId);
 
@@ -37,10 +39,14 @@ public partial class Projectile : Node2D
     {
         _remainingLife = LifetimeSeconds;
         Rotation = Direction.Angle();
+        float size = Mathf.Max(0.1f, SizeMultiplier);
+        Node2D visual = GetNodeOrNull<Node2D>("Visual");
+        if (visual != null) visual.Scale *= size;
         GetNodeOrNull<AnimatedSprite2D>("Visual")?.Play("default");
         _trail = GetNodeOrNull<Line2D>("Trail");
         if (_trail != null)
         {
+            _trail.Width *= size;
             _trail.TopLevel = true;
             _trail.GlobalPosition = Vector2.Zero;
             var gradient = new Gradient();
@@ -72,9 +78,9 @@ public partial class Projectile : Node2D
 
         if (Hostile)
         {
-            if (SegmentHitTime(from, to, Game.Mohsen.Position, HitRadius + 1f) >= 0f)
+            if (SegmentHitTime(from, to, Game.Mohsen.Position, EffectiveHitRadius + 1f) >= 0f)
             {
-                Game.Mohsen.Hurt();
+                Game.Mohsen.Hurt(Damage);
                 QueueFree();
                 return;
             }
@@ -85,7 +91,7 @@ public partial class Projectile : Node2D
             foreach (Enemy enemy in Game.Enemies.ToArray())
             {
                 if (!GodotObject.IsInstanceValid(enemy) || _hitEnemies.Contains(enemy.GetInstanceId())) continue;
-                if (EnemyHitTime(from, to, enemy, HitRadius) < 0f) continue;
+                if (EnemyHitTime(from, to, enemy, EffectiveHitRadius) < 0f) continue;
                 _hitEnemies.Add(enemy.GetInstanceId());
                 enemy.TakeHit(Damage, Direction, Knockback, CriticalHit);
                 if (CriticalHit) Game.RequestKnifeCritPause();
@@ -98,7 +104,7 @@ public partial class Projectile : Node2D
             foreach (Enemy enemy in Game.Enemies.ToArray())
             {
                 if (!GodotObject.IsInstanceValid(enemy) || enemy.Health <= 0f || _hitEnemies.Contains(enemy.GetInstanceId())) continue;
-                float hitTime = EnemyHitTime(from, to, enemy, HitRadius);
+                float hitTime = EnemyHitTime(from, to, enemy, EffectiveHitRadius);
                 if (hitTime >= 0f) hits.Add((enemy, hitTime));
             }
             hits.Sort((a, b) => a.time.CompareTo(b.time));

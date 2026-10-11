@@ -11,6 +11,7 @@ shader_parameter/flash_amount = 0.0
 [node name="MeleeEnemy" type="Node2D" unique_id=1657439757]
 script = ExtResource("1")
 BaseHealth = 10.0
+HealthGainPerWave = 5.0
 BaseSpeed = 105.0
 VisualScale = 0.7
 

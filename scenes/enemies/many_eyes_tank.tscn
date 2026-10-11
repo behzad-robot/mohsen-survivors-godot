@@ -14,6 +14,7 @@ shader_parameter/warning_amount = 0.0
 [node name="ManyEyesTankEnemy" type="Node2D"]
 script = ExtResource("1")
 BaseHealth = 60.0
+HealthGainPerWave = 32.5
 BaseSpeed = 76.0
 BaseKnockbackResistance = 0.1
 ContactRadius = 32.0

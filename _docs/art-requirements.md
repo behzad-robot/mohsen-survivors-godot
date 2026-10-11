@@ -29,7 +29,7 @@ Use transparent PNG for characters, weapons, enemies, pickups, and icons unless 
 | ART-012 | Ranged enemy mail-envelope projectile | `_art/work/projectiles/enemy_projectile.png` | `assets/art/approved/projectiles/enemy_projectile.png` | **Approved** | ART-018 shoots it from its mouth |
 | ART-013 | Rectangular arena boundary wall | `_art/work/environment/arena_wall.png` | `assets/art/approved/environment/arena_wall.png` | **Approved** | — |
 | ART-014 | Victory-screen illustration | `_art/work/ui/victory.png` | `assets/art/approved/ui/victory.png` | Deferred | Designer will specify after player and enemy art |
-| ART-015 | Defeat-screen illustration | `_art/work/ui/defeat.png` | `assets/art/approved/ui/defeat.png` | Deferred | Designer will specify after player and enemy art |
+| ART-015 | Game-over illustration: Mohsen buried in Jira tickets; Maryam announcing more tracking boards | `_art/work/ui/defeat_v2.png` | `assets/art/approved/ui/defeat.png` | **Approved V2 2026-10-10; developer handoff requested** | Final title/copy TBD; centered Play Again added in Godot |
 | ART-016 | Shop lock-state icon | `_art/work/ui/shop_lock.png` | `assets/art/approved/ui/shop_lock.png` | Deferred | Default Godot UI suffices now |
 | ART-017 | Red cross warning shown at each upcoming enemy spawn position | `_art/work/effects/spawn_warning.png` | `assets/art/approved/effects/spawn_warning.png` | Deferred | Final size, opacity, pulse/animation |
 | ART-018 | Ranged mail slime enemy sprite | `_art/work/enemies/mail_slime_2x.png` | `assets/art/approved/enemies/mail_slime.png` | **Approved; 2× export 2026-10-04** | — |
@@ -64,16 +64,68 @@ Use transparent PNG for characters, weapons, enemies, pickups, and icons unless 
 | ART-047 | Helmeted many-eyes slime variant | `_art/work/enemies/tank_variants/many_eyes_tank.png` | `assets/art/approved/enemies/many_eyes_tank.png` | **Approved V1 2026-10-06** | Chance to appear from wave 3; tank tuning provisional |
 | ART-048 | Helmeted one-eye offspring variant | `_art/work/enemies/tank_variants/one_eye_minion_tank.png` | `assets/art/approved/enemies/one_eye_minion_tank.png` | **Approved V1 2026-10-06** | Chance to appear from wave 3; tank tuning provisional |
 | ART-049 | Helmeted orange boss variant | `_art/work/enemies/tank_variants/orange_boss_tank.png` | `assets/art/approved/enemies/orange_boss_tank.png` | **Approved V1 2026-10-06** | Eligible only from wave 3 when a boss spawn occurs |
-| ART-050 | Office water dispenser sprite | `_art/work/objects/water_dispenser.png` | `assets/art/approved/objects/water_dispenser.png` | **Candidate V1; awaiting designer review** | Gameplay role TBD |
-| ART-051 | Coffee cup sprite | `_art/work/objects/coffee_cup.png` | `assets/art/approved/objects/coffee_cup.png` | **Candidate V1; awaiting designer review** | Gameplay role TBD |
+| ART-050 | Office water dispenser sprite | `_art/work/objects/water_dispenser.png` | `assets/art/approved/objects/water_dispenser.png` | **Approved V1 2026-10-10; developer handoff requested** | 1–3 per wave except wave 1; water every 10 seconds |
+| ART-051 | Coffee cup sprite | `_art/work/objects/coffee_cup.png` | `assets/art/approved/objects/coffee_cup.png` | **Approved V1 2026-10-10; developer handoff requested** | 10% enemy drop; +50% current speed for 5 seconds |
+| ART-052 | Glass of water sprite | `_art/work/objects/glass_of_water.png` | `assets/art/approved/objects/glass_of_water.png` | **Approved V1 2026-10-10; developer handoff requested** | Heals 3 HP on collection |
+| ART-053 | Strawberry milkshake sprite matching coffee cup style and size | `_art/work/objects/strawberry_milkshake.png` | `assets/art/approved/objects/strawberry_milkshake.png` | **Approved V1 2026-10-10; developer handoff requested** | Uniqueness TBD |
+| ART-054 | Charging paper-shredder enemy visual | `_art/work/enemies/charge_enemy.png` | `assets/art/approved/enemies/charge_enemy.png` | **Approved V1 2026-10-10; developer handoff requested** | Display name and animation method TBD |
+| ART-055 | Home screen illustration with title and space for a centered Play button | `_art/work/ui/home_screen_v6.png` | `assets/art/approved/ui/home_screen.png` | **Approved V6 2026-10-10; developer handoff requested** | Developer places live Play button over open center; designer in-game verification pending |
+| ART-056 | Pizza item icon | `_art/work/items/pizza_v1.png` | `assets/art/approved/items/pizza.png` | **Approved V1 2026-10-11; developer handoff requested** | Uniqueness TBD |
+| ART-057 | Hamburger item icon | `_art/work/items/hamburger_v1.png` | `assets/art/approved/items/hamburger.png` | **Approved V1 2026-10-11; developer handoff requested** | Uniqueness TBD |
+| ART-058 | Team Building clasped-hands item icon | `_art/work/items/team_building_v1.png` | `assets/art/approved/items/team_building.png` | **Approved V1 2026-10-11; developer handoff requested** | Uniqueness TBD |
+| ART-059 | Cup of tea item icon | `_art/work/items/tea_v1.png` | `assets/art/approved/items/tea.png` | **Approved V1 2026-10-11; developer handoff requested** | Uniqueness TBD |
+| ART-060 | Beach straw hat item icon | `_art/work/items/beach_straw_hat_v1.png` | `assets/art/approved/items/beach_straw_hat.png` | **Approved V1 2026-10-11; developer handoff requested** | Uniqueness TBD |
+| ART-061 | Apple item icon | `_art/work/items/apple_v1.png` | `assets/art/approved/items/apple.png` | **Approved V1 2026-10-11; developer handoff requested** | Uniqueness TBD |
 
 ## Art task backlog
 
-### Water dispenser and coffee cup — current review (2026-10-06)
+### Six item icons — approved developer handoff (2026-10-11)
 
-- ART-050 is a transparent front-facing white office water cooler with a blue jug, blue and red taps, and a dark drip tray. Its canvas is 160×104; the visible dispenser is about 35×90 pixels, matching the approved female Jira slime's approximately 90-pixel visible height. ART-051 is a transparent white ceramic coffee mug with brown coffee and a small steam curl on a 48×48 canvas; its visible pixels span about 33×38.
-- V1 candidates and full-resolution `*_concept_v1.png` sources are under `_art/work/objects/`. `objects_review_v1.png` compares them with the female slime at enlarged size, and `objects_game_scale_v1.png` shows native size in the 1280×720 arena. The user has requested visual assets only; their gameplay roles are TBD.
-- Await designer approval before exporting to `assets/art/approved/` or handing them to the developer.
+- ART-056–061 are six separate transparent 128×128 candidate PNGs: pizza, hamburger, Team Building clasped hands, tea, beach straw hat, and apple. Full-resolution source images are `_art/work/items/{slug}_concept_v1.png`; the unified preview is `_art/work/items/six_items_review_v1.png` and the prompts are saved in `_art/work/items/six_items_v1_prompts.md`.
+- The designer approved all six V1 icons for `assets/art/approved/items/{pizza,hamburger,team_building,tea,beach_straw_hat,apple}.png`. Each item has rarity 2 and costs 20 coins. Effects: Pizza +20 max HP; Hamburger +10 movement speed and +10 max HP; Team Building −5 max HP and +2 HP regeneration/s; Tea +15 movement speed and −2 HP regeneration/s; Beach straw hat +5 percentage points critical chance; Apple +0 max HP and +0.05 HP regeneration/s. `_docs/items-db.md` records these exact values and the existing stat semantics. Uniqueness remains TBD.
+
+### Sahar-2, Sepideh, Mania and Hojat teammate icons — approved developer handoff (2026-10-11)
+
+- Designer requested portraits from the matching PNGs in `_art/team-mates-refrence-images/`. Candidates under `_art/work/items/teammates/`: `sahar-2.png`, `sepideh.png`, `mania.png`, and `hojat.png`. All use the existing teammate illustration style and transparent 128×128 square canvas. Full-resolution sources are `{slug}_concept_v1.png`; prompts are in `four_teammates_v1_prompts.md`.
+- **Approved V1 2026-10-11.** Exports are `assets/art/approved/items/teammates/{sahar-2,sepideh,mania,hojat}.png`. Existing item effects remain unchanged. Sahar-2 is distinct from the existing Sahar portrait/item.
+
+### Saeed and Arezoo teammate icons — approved developer handoff (2026-10-11)
+
+- Designer requested both portraits from `_art/team-mates-refrence-images/saeed.png` and `arezoo.png`. Candidates: `_art/work/items/teammates/saeed.png` and `_art/work/items/teammates/arezoo.png`, transparent 128×128 square exports matching the existing teammate icon format. Each full-resolution source is named `{slug}_concept_v1.png`; prompts are in `saeed_arezoo_v1_prompts.md` alongside them.
+- **Approved V1 2026-10-11.** Exports are `assets/art/approved/items/teammates/saeed.png` and `assets/art/approved/items/teammates/arezoo.png`. Existing item effects are unchanged. Saeed's source photo was also used in the approved home-screen illustration.
+
+### Bluetooth headset item icon — approved developer handoff (2026-10-11)
+
+- Designer requested artwork for a Bluetooth headset item. Candidate: `_art/work/items/bluetooth_headset_v1.png`, transparent 128×128 static icon. Full-resolution source: `_art/work/items/bluetooth_headset_concept_v1.png`; generation prompt saved alongside them. Charcoal-and-teal wireless over-ear office headset with padded earcups, microphone boom and blue indicator, matching existing bold cartoon item rendering.
+- **Approved V1 2026-10-11.** Export: `assets/art/approved/items/bluetooth_headset.png`. The designer specified +5 percentage points critical chance, rarity 2, and cost 25 coins; `_docs/items-db.md` records the item. Uniqueness remains TBD.
+
+### Game-over screen — approved developer handoff (2026-10-10)
+
+- ART-015 approved export `assets/art/approved/ui/defeat.png` is the designer-approved V2, a 1280×720 opaque background illustration: Jira ticket piles fill the bottom and sides of a blue corporate office, with Mohsen's tired face and one reaching hand emerging on the right. Maryam is safely above the tickets on the left. Ticket labels use `SFIT-` followed by four digits from 1000–9999. The designer explicitly requested the hand for this illustration; gameplay sprites retain their existing presentation.
+- Keep a centered Play Again control separate in Godot. Candidate leaves the middle clear of focal artwork, with a suggested button-safe rectangle around x=486–794, y=281–439. No title or button is baked into the image; final title/copy remains TBD.
+- Maryam's upper speech bubble says: “We're going to add 3 more boards for tracking our progress of tracker board that's base on strategy tracker tracking..” This speech is part of the illustration; the centered Play Again control remains separate.
+- Full-resolution V2 source: `_art/work/ui/defeat_concept_v2.png`; prompt: `_art/work/ui/defeat_v2_prompt.md`. V1 is preserved at `_art/work/ui/defeat.png` and `_art/work/ui/defeat_concept_v1.png`. Designer approved V2 and requested developer integration on 2026-10-10. No scene/script changes are included in the artist handoff; designer in-game verification remains pending.
+
+### Home screen illustration — approved developer handoff (2026-10-10)
+
+- ART-055 candidate V6 is an opaque 1280×720 image. It retains the exact title “Mohsen Survivors,” Hamidreza in a blue coat, and two neutral-faced Mohsens with hands passing a small pink motorbike/key between them; its rear box bears a white `!`. Sara is a ghost; happy Sahel and Sahar are the QA pair; Pooria and Narges exchange flying Jira tickets; Arsalan holds cash while writing a ledger; poker-faced Behzad and Saeed smoke together. It uses `_art/team-mates-refrence-images/saeed.png` for Saeed, includes Maryam at lower left raising a finger and Milad beside the upper-left group, and shows Hossein looking right with a normal-tone poker face. V5's tired Hossein and V4's simmering Hossein remain available for comparison.
+- `assets/art/approved/ui/home_screen.png` is the approved opaque 1280×720 export. `_art/work/ui/home_screen_v6.png` is the approved candidate, `_art/work/ui/home_screen_concept_v6.png` is the high-resolution source, and `_art/work/ui/home_screen_cast_reference_v2.png` records the earlier portrait references. Earlier versions remain under `_art/work/ui/` for comparison. `_art/work/ui/home_screen_button_guide_v6.png` is a placement guide only, illustrating a 280×76 button centered at (640, 308) in the open area between the title and Mohsens; the approved image contains no button. The developer adds the live Play button in Godot. The designer also requested icons plus text on the starting weapon select screen; use the already approved knife, pistol, and SMG art paths, and include the approved shotgun art if it is currently selectable.
+
+### Charge enemy — approved developer handoff (2026-10-10)
+
+- ART-054 V1 is the approved compact runaway office paper shredder on two caster wheels. Its forward wedge points right, paper strips trail behind it, the slot forms an angry mouth, and a small red lamp and caution stripes mark the front. The transparent approved export is `assets/art/approved/enemies/charge_enemy.png`, 160×112 with about 120×95 visible pixels. `_art/work/enemies/charge_enemy_concept_v1.png` preserves the full-resolution source.
+- `_art/work/enemies/charge_enemy_review_v1.png` shows the enlarged concept; `charge_enemy_game_scale_v1.png` presents illustrative approach, charge, and recovery poses in the 1280×720 office arena. The preview uses simple scaling and a direction arrow; these are not animation exports. The designer has now authorized the developer to implement `_docs/dev-feature-requests/task-charge-enemy.md`: pursue Mohsen, commit to a straight charge toward his captured position, stop for 3 seconds, then pursue again. Final display name and animation method remain TBD; gameplay tuning values are editable provisional choices.
+
+### Strawberry milkshake — approved developer handoff (2026-10-10)
+
+- ART-053 is a transparent 48×48 static PNG matching the coffee cup canvas and bold black-outlined cartoon style: pink milkshake in a clear rounded glass, whipped cream, strawberry garnish, and striped straw. Approved export: `assets/art/approved/objects/strawberry_milkshake.png`; full-resolution source: `_art/work/objects/strawberry_milkshake_concept_v1.png`. Generation prompt is saved alongside the candidate. Renumbered from ART-052 to resolve the concurrent glass-of-water entry's ID.
+- The designer approved promotion and requested developer handoff as a new passive item: name `Strawberry milkshake`, description exactly `item`, +10 HP (max HP in the passive catalog), rarity 1, cost 20 coins. `_docs/items-db.md` records this addition. Uniqueness remains TBD. Earlier object candidates retain their existing status.
+
+### Water dispenser, coffee cup, and glass of water — approved developer handoff (2026-10-10)
+
+- ART-050 is a transparent front-facing white office water cooler with a blue jug, blue and red taps, and a dark drip tray. Its canvas is 160×104; the visible dispenser is about 35×90 pixels, matching the approved female Jira slime's approximately 90-pixel visible height. ART-051 is a transparent white ceramic coffee mug with brown coffee and a small steam curl on a 48×48 canvas; its visible pixels span about 33×38. ART-052 is a clear tumbler filled two-thirds with blue water on a 48×48 canvas; its visible pixels span about 31×36.
+- V1 candidates and full-resolution `*_concept_v1.png` sources are under `_art/work/objects/`. `objects_review_v2.png` compares all three with the female slime at enlarged size, and `objects_game_scale_v2.png` shows native size in the 1280×720 arena.
+- Designer approved all three and requested implementation on 2026-10-10. Approved PNGs are at the exact paths in ART-050–052. Full behavior handoff is `_docs/dev-feature-requests/task-water-and-coffee.md`: 1–3 dispensers per wave except wave 1, animated water drops every 10 seconds, water heals 3 HP, green player-healing numbers, and 10% enemy coffee drops granting +50% current movement speed for 5 seconds. No additional animation frames are required; the developer owns code-driven pickup animation.
 
 ### Helmeted tank enemy variants — approved developer handoff (2026-10-06)
 
@@ -193,6 +245,12 @@ Mohsen should be drawn without hands. He needs idle and walk only, without attac
 
 ## Approval log
 
+2026-10-10: Designer approved ART-015 game-over V2 and requested developer handoff. Approved export: `assets/art/approved/ui/defeat.png` (1280×720). Centered Play Again remains a Godot control; Maryam's speech is baked into the artwork.
+
+2026-10-10: Designer approved ART-050–052 water dispenser, coffee cup, and glass of water V1 and requested developer implementation with the water/healing/coffee behavior in `_docs/dev-feature-requests/task-water-and-coffee.md`. Promoted to their `assets/art/approved/objects/` paths; designer gameplay verification remains pending.
+
+2026-10-10: Designer approved ART-053 Strawberry milkshake V1 and requested developer handoff as a new item with description `item`, +10 HP, rarity 1, cost 20 coins. Approved export: `assets/art/approved/objects/strawberry_milkshake.png` (48×48 transparent PNG).
+
 | Date | Asset ID | Candidate or version | Designer decision | Final path or requested change |
 | --- | --- | --- | --- | --- |
 | 2026-10-03 | ART-001 idle only | Mohsen no-shoes design; 64×64 static export | Designer requested handoff and specified no-shoes version | `assets/art/approved/characters/mohsen_idle.png`; walk pending |
@@ -214,5 +272,10 @@ Mohsen should be drawn without hands. He needs idle and walk only, without attac
 | 2026-10-06 | ART-044–049 | Six tank variants; green bone helmet and female straw-hat V2, other four V1 | Designer approved all and requested developer handoff with wave-3-or-later chance | `assets/art/approved/enemies/{jira_ticket,jira_ticket_female,mail_slime,many_eyes,one_eye_minion,orange_boss}_tank.png` |
 | 2026-10-05 | ART-040–043 | Behzad, Narges, Sahel, Saman teammate portraits V1 | Designer requested developer handoff; approved 128×128 exports | `assets/art/approved/items/teammates/{behzad,narges,sahel,saman}.png` |
 | 2026-10-05 | Item icon batch | YAML V1, Hookah V1, Propranolol pills V1, Heavy Smoker V2 | Designer approved all four PNGs and lifted the hold for developer handoff with database changes | `assets/art/approved/items/devops/yml_file.png`, `assets/art/approved/items/hookah.png`, `assets/art/approved/items/propranolol_pills.png`, `assets/art/approved/items/heavy_smoker.png` |
+| 2026-10-10 | ART-054 | Charging paper-shredder enemy V1 | Designer approved and asked developer to read and implement `_docs/dev-feature-requests/task-charge-enemy.md` | `assets/art/approved/enemies/charge_enemy.png` |
+| 2026-10-10 | ART-055 | Home screen illustration V6 | Designer approved and requested developer handoff, plus weapon-select icons with text | `assets/art/approved/ui/home_screen.png` |
+| 2026-10-11 | Six teammate portraits | Saeed, Arezoo, Sahar-2, Sepideh, Mania, Hojat V1 | Designer approved and requested developer handoff | `assets/art/approved/items/teammates/{saeed,arezoo,sahar-2,sepideh,mania,hojat}.png` |
+| 2026-10-11 | Bluetooth headset | 128×128 transparent V1 | Designer approved and specified +5 percentage points critical chance, rarity 2, cost 25; requested developer handoff | `assets/art/approved/items/bluetooth_headset.png` |
+| 2026-10-11 | ART-056–061 | Six transparent 128×128 item icons V1 | Designer approved all; set rarity 2 and cost 20 for each; specified effects in `_docs/items-db.md` and requested developer handoff | `assets/art/approved/items/{pizza,hamburger,team_building,tea,beach_straw_hat,apple}.png` |
 
 Developer technical note (2026-10-03): ART-008 knife art now needs to read clearly both beside Mohsen and as a rotating thrown projectile for up to 0.5 seconds. Keep pivot and transparent margins suitable for both uses; final visual design remains with the artist and designer.

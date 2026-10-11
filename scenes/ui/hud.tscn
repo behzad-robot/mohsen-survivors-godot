@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/placeholders/coin.svg" id="1_coin"]
+[ext_resource type="Script" path="res://scripts/gameplay/HudDamageEdges.cs" id="2_damage"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_background"]
 bg_color = Color(0.06, 0.06, 0.06, 1)
@@ -20,12 +21,21 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
+[node name="DamageEdges" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("2_damage")
+
 [node name="HpBar" type="ProgressBar" parent="."]
 layout_mode = 0
 offset_left = 18.0
 offset_top = 16.0
 offset_right = 278.0
 offset_bottom = 50.0
+pivot_offset = Vector2(130, 17)
 mouse_filter = 2
 theme_override_styles/background = SubResource("StyleBoxFlat_hp_background")
 theme_override_styles/fill = SubResource("StyleBoxFlat_hp_fill")
@@ -37,6 +47,7 @@ offset_left = 18.0
 offset_top = 16.0
 offset_right = 278.0
 offset_bottom = 50.0
+pivot_offset = Vector2(130, 17)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 3
@@ -51,6 +62,7 @@ offset_left = 18.0
 offset_top = 60.0
 offset_right = 46.0
 offset_bottom = 88.0
+pivot_offset = Vector2(14, 14)
 texture = ExtResource("1_coin")
 expand_mode = 1
 stretch_mode = 5
@@ -61,6 +73,7 @@ offset_left = 53.0
 offset_top = 58.0
 offset_right = 278.0
 offset_bottom = 90.0
+pivot_offset = Vector2(112, 16)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 3
@@ -108,5 +121,22 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 42
 text = "45s"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WaveBeat" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -450.0
+offset_top = 145.0
+offset_right = 450.0
+offset_bottom = 213.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.91, 0.53, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 38
 horizontal_alignment = 1
 vertical_alignment = 1

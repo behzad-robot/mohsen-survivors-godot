@@ -13,6 +13,7 @@ shader_parameter/flash_amount = 0.0
 [node name="ManyEyesEnemy" type="Node2D"]
 script = ExtResource("1")
 BaseHealth = 24.0
+HealthGainPerWave = 13.0
 BaseSpeed = 76.0
 BaseKnockbackResistance = 0.1
 ContactRadius = 32.0

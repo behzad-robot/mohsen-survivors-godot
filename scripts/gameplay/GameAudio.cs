@@ -34,10 +34,15 @@ public partial class GameAudio : Node
     [Export(PropertyHint.Range, "0,0.3,0.01")] public float CoinMinimumInterval { get; set; } = 0.07f;
     [Export(PropertyHint.Range, "0,0.3,0.01")] public float EnemyHitMinimumInterval { get; set; } = 0.05f;
     [Export(PropertyHint.Range, "0,0.3,0.01")] public float EnemyDefeatMinimumInterval { get; set; } = 0.08f;
+    [Export(PropertyHint.Range, "0.1,1,0.05")] public float CoinRhythmGapSeconds { get; set; } = 0.35f;
+    [Export(PropertyHint.Range, "0,0.1,0.005")] public float CoinPitchStep { get; set; } = 0.025f;
+    [Export(PropertyHint.Range, "0,0.3,0.01")] public float CoinPitchMaxBonus { get; set; } = 0.15f;
 
     private readonly List<AudioStreamPlayer> _voices = new();
     private readonly Dictionary<GameSound, double> _lastPlayed = new();
     private readonly RandomNumberGenerator _random = new();
+    private double _lastCoinCollectedAt = -1000.0;
+    private int _coinChain;
 
     public override void _Ready()
     {
@@ -50,7 +55,15 @@ public partial class GameAudio : Node
         }
     }
 
-    public void Play(GameSound cue)
+    public void PlayCoinCollected()
+    {
+        double now = Time.GetTicksMsec() / 1000.0;
+        _coinChain = now - _lastCoinCollectedAt <= CoinRhythmGapSeconds ? Mathf.Min(_coinChain + 1, 12) : 0;
+        _lastCoinCollectedAt = now;
+        Play(GameSound.CoinPickup, Mathf.Min(CoinPitchMaxBonus, _coinChain * CoinPitchStep));
+    }
+
+    public void Play(GameSound cue, float pitchBonus = 0f)
     {
         AudioStream stream = cue switch
         {
@@ -96,7 +109,7 @@ public partial class GameAudio : Node
         _lastPlayed[cue] = now;
         voice.Stream = stream;
         voice.VolumeDb = volume;
-        voice.PitchScale = 1f + _random.RandfRange(-PitchVariation, PitchVariation);
+        voice.PitchScale = 1f + pitchBonus + _random.RandfRange(-PitchVariation, PitchVariation);
         voice.Play();
     }
 }

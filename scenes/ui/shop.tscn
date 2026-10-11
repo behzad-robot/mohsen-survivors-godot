@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/art/approved/characters/hamidreza_shopkeeper.png" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/ui/shop_speech_bubble.tscn" id="2"]
@@ -19,6 +19,42 @@ content_margin_left = 16.0
 content_margin_top = 12.0
 content_margin_right = 16.0
 content_margin_bottom = 12.0
+
+[sub_resource type="StyleBoxFlat" id="RerollNormal"]
+bg_color = Color(0.16, 0.17, 0.19, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.43, 0.46, 0.5, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="RerollHover"]
+bg_color = Color(0.23, 0.24, 0.27, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.65, 0.69, 0.74, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="RerollPressed"]
+bg_color = Color(0.1, 0.11, 0.13, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.73, 0.77, 0.81, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [node name="Shop" type="Control"]
 layout_mode = 3
@@ -75,9 +111,25 @@ vertical_alignment = 1
 layout_mode = 0
 offset_left = 1040.0
 offset_top = 15.0
-offset_right = 1258.0
+offset_right = 1218.0
 offset_bottom = 58.0
-text = "Reroll (5 coins)"
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_styles/normal = SubResource("RerollNormal")
+theme_override_styles/hover = SubResource("RerollHover")
+theme_override_styles/pressed = SubResource("RerollPressed")
+text = "Reroll · 5"
+
+[node name="RerollCoinButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1227.0
+offset_top = 23.0
+offset_right = 1257.0
+offset_bottom = 53.0
+tooltip_text = "Reroll shop"
+icon = ExtResource("3")
+flat = true
 
 [node name="Offers" type="HBoxContainer" parent="."]
 layout_mode = 0

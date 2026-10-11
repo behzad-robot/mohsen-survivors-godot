@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay/ConsumablePickup.cs" id="1"]
+[ext_resource type="Texture2D" path="res://assets/art/approved/objects/glass_of_water.png" id="2"]
+
+[node name="GlassOfWater" type="Node2D"]
+z_index = 2
+script = ExtResource("1")
+VisualScale = 0.65
+ArcHeight = 32.0
+LandingBounceHeight = 7.0
+
+[node name="Visual" type="Sprite2D" parent="."]
+texture = ExtResource("2")

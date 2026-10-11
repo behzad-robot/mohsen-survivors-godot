@@ -1,4 +1,6 @@
-[gd_scene format=3]
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/approved/ui/home_screen.png" id="1_home"]
 
 [node name="Menu" type="Control"]
 layout_mode = 3
@@ -11,31 +13,30 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0, 0, 0, 0.72)
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
 
-[node name="Panel" type="PanelContainer" parent="."]
-layout_mode = 0
-offset_left = 300.0
-offset_top = 170.0
-offset_right = 980.0
-offset_bottom = 430.0
+[node name="Illustration" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("1_home")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="Box" type="VBoxContainer" parent="Panel"]
-layout_mode = 2
-theme_override_constants/separation = 18
-
-[node name="Title" type="Label" parent="Panel/Box"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 36
-text = "MOHSEN SURVIVORS"
-horizontal_alignment = 1
-
-[node name="Subtitle" type="Label" parent="Panel/Box"]
-layout_mode = 2
-text = "A tech lead versus office work"
-horizontal_alignment = 1
-
-[node name="Play" type="Button" parent="Panel/Box"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 56)
+[node name="Play" type="Button" parent="."]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.427778
+anchor_right = 0.5
+anchor_bottom = 0.427778
+offset_left = -140.0
+offset_top = -38.0
+offset_right = 140.0
+offset_bottom = 38.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 30
 text = "Play"

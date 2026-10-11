@@ -4,11 +4,13 @@ public partial class Enemy : Node2D
 {
     [Export] public bool Ranged { get; set; }
     [Export] public float BaseHealth { get; set; } = 18f;
+    [Export(PropertyHint.Range, "0,200,0.25")] public float HealthGainPerWave { get; set; }
     [Export] public float BaseSpeed { get; set; } = 82f;
     [Export(PropertyHint.Range, "0,1,0.05")] public float BaseKnockbackResistance { get; set; }
     [Export] public float FireRange { get; set; } = 260f;
     [Export] public float RetreatDistance { get; set; } = 140f;
     [Export] public float AttackInterval { get; set; } = 2.4f;
+    [Export(PropertyHint.Range, "0,0.8,0.02")] public float RangedTellSeconds { get; set; } = 0.24f;
     [Export] public float ProjectileSpeed { get; set; } = 230f;
     [Export] public float ContactRadius { get; set; } = 27f;
     [Export] public Vector2 HurtboxHalfExtents { get; set; } = Vector2.Zero;
@@ -20,14 +22,19 @@ public partial class Enemy : Node2D
 
     public GameController Game { get; private set; }
     public float Health { get; private set; }
+    public float MaxHealth { get; private set; }
+    public float DamageMultiplier { get; private set; } = 1f;
+    public float ConfiguredSpeedMultiplier { get; private set; } = 1f;
     private float _speed;
     private float _resistance;
     private float _attackTimer;
+    private float _rangedTellRemaining;
+    private Vector2 _rangedTellDirection;
     private float _flashTime;
     private bool _defeated;
     private Sprite2D _sprite;
     private ShaderMaterial _flashMaterial;
-    protected float MovementSpeed => Game?.Mohsen == null ? _speed : Mathf.Min(_speed, Game.Mohsen.EffectiveMovementSpeed * 0.95f);
+    protected float MovementSpeed => _speed;
     protected virtual float HitWallMargin => 48f;
     protected void SetWarningFlash(float amount) => _flashMaterial?.SetShaderParameter("warning_amount", Mathf.Clamp(amount, 0f, 1f));
 
@@ -42,13 +49,21 @@ public partial class Enemy : Node2D
         _sprite.Scale = Vector2.One * VisualScale;
     }
 
-    public void Configure(GameController game, float healthMultiplier, float speedMultiplier, float resistanceAdjustment)
+    public void Configure(GameController game, int waveNumber, float waveDangerLevelHealthMultiplier,
+        float healthMultiplier, float speedMultiplier, float resistanceAdjustment, float damageMultiplier = 1f)
     {
         Game = game;
-        Health = Mathf.Max(1f, BaseHealth * healthMultiplier);
-        _speed = Mathf.Max(1f, BaseSpeed * speedMultiplier);
+        // Keep fractional HP; both damage and health bars already use floats.
+        float waveHealth = BaseHealth + HealthGainPerWave * Mathf.Max(0, waveNumber - 1);
+        MaxHealth = Mathf.Max(1f, waveHealth * Mathf.Max(0.1f, waveDangerLevelHealthMultiplier)
+            * Mathf.Max(0.1f, healthMultiplier));
+        Health = MaxHealth;
+        ConfiguredSpeedMultiplier = Mathf.Max(0.1f, speedMultiplier);
+        _speed = Mathf.Max(1f, BaseSpeed * ConfiguredSpeedMultiplier);
+        DamageMultiplier = Mathf.Max(0.1f, damageMultiplier);
         _resistance = Mathf.Clamp(BaseKnockbackResistance + resistanceAdjustment, 0f, 0.95f);
         _attackTimer = AttackInterval * 0.5f;
+        _rangedTellRemaining = 0f;
     }
 
     public override void _Process(double delta)
@@ -69,7 +84,7 @@ public partial class Enemy : Node2D
         UpdateBehavior(dt, toward, distance);
         float walkPhase = Mathf.Sin((float)Time.GetTicksMsec() / 115f + (float)(GetInstanceId() % 8));
         _sprite.Scale = new Vector2(VisualScale * (1f - WalkSquash * 0.6f * walkPhase), VisualScale * (1f + WalkSquash * walkPhase));
-        if (TouchesPlayer(toward, distance)) Game.Mohsen.Hurt();
+        if (TouchesPlayer(toward, distance)) Game.Mohsen.Hurt(DamageMultiplier);
     }
 
     private bool TouchesPlayer(Vector2 toward, float distance)
@@ -89,13 +104,42 @@ public partial class Enemy : Node2D
         MoveWithinArena(move * MovementSpeed * dt);
         if (Ranged)
         {
+            if (_rangedTellRemaining > 0f)
+            {
+                _rangedTellRemaining = Mathf.Max(0f, _rangedTellRemaining - dt);
+                if (distance > FireRange || distance <= 1f)
+                {
+                    _rangedTellRemaining = 0f;
+                    SetWarningFlash(0f);
+                    return;
+                }
+                if (_rangedTellRemaining > 0f)
+                {
+                    float progress = 1f - _rangedTellRemaining / Mathf.Max(0.001f, RangedTellSeconds);
+                    SetWarningFlash(0.25f + 0.65f * progress);
+                    return;
+                }
+                SetWarningFlash(0f);
+                Vector2 mouth = Position + MouthOffset + _rangedTellDirection * ProjectileMuzzleDistance;
+                Game.SpawnEnemyProjectile(mouth, _rangedTellDirection, ProjectileSpeed, DamageMultiplier);
+                _attackTimer = Mathf.Max(0.2f, AttackInterval - RangedTellSeconds);
+                return;
+            }
             _attackTimer -= dt;
             if (_attackTimer <= 0f && distance <= FireRange && distance > 1f)
             {
-                Vector2 direction = toward.Normalized();
-                Vector2 mouth = Position + MouthOffset + direction * ProjectileMuzzleDistance;
-                Game.SpawnEnemyProjectile(mouth, direction, ProjectileSpeed);
-                _attackTimer = Mathf.Max(0.2f, AttackInterval);
+                _rangedTellDirection = toward.Normalized();
+                if (RangedTellSeconds > 0f)
+                {
+                    _rangedTellRemaining = RangedTellSeconds;
+                    SetWarningFlash(0.25f);
+                }
+                else
+                {
+                    Vector2 mouth = Position + MouthOffset + _rangedTellDirection * ProjectileMuzzleDistance;
+                    Game.SpawnEnemyProjectile(mouth, _rangedTellDirection, ProjectileSpeed, DamageMultiplier);
+                    _attackTimer = Mathf.Max(0.2f, AttackInterval);
+                }
             }
         }
     }

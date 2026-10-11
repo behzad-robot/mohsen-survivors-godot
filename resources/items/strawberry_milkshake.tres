@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ShopItemDefinition" format=3 uid="uid://3ihlweclhgkl"]
+
+[ext_resource type="Script" uid="uid://d14q1jdi7c3tg" path="res://scripts/data/ShopItemDefinition.cs" id="1"]
+[ext_resource type="Script" uid="uid://dntp2sqw2gh2l" path="res://scripts/data/StatModifier.cs" id="2"]
+[ext_resource type="Texture2D" uid="uid://b3075yhafp37m" path="res://assets/art/approved/objects/strawberry_milkshake.png" id="3"]
+
+[sub_resource type="Resource" id="modifier_0"]
+script = ExtResource("2")
+Stat = 0
+Amount = 10.0
+
+[resource]
+script = ExtResource("1")
+DisplayName = "Strawberry milkshake"
+Description = "item"
+Icon = ExtResource("3")
+Price = 20
+Modifiers = Array[ExtResource("2")]([SubResource("modifier_0")])

@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/placeholders/coin.svg" id="1_coin"]
 
 [sub_resource type="StyleBoxFlat" id="CardStyle"]
 bg_color = Color(0.055, 0.063, 0.077, 1)
@@ -61,10 +63,24 @@ bbcode_enabled = true
 scroll_active = false
 autowrap_mode = 3
 
-[node name="Buy" type="Button" parent="Content"]
+[node name="BuyRow" type="HBoxContainer" parent="Content"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Buy" type="Button" parent="Content/BuyRow"]
 layout_mode = 2
 custom_minimum_size = Vector2(0, 42)
+size_flags_horizontal = 3
 text = "Buy"
+
+[node name="CoinIcon" type="TextureRect" parent="Content/BuyRow"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("1_coin")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Lock" type="Button" parent="Content"]
 layout_mode = 2

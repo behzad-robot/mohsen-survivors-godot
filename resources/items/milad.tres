@@ -6,7 +6,7 @@
 
 [sub_resource type="Resource" id="modifier_0"]
 script = ExtResource("2")
-Amount = 7.0
+Amount = 14.0
 
 [resource]
 script = ExtResource("1")

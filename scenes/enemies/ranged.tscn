@@ -12,6 +12,7 @@ shader_parameter/flash_amount = 0.0
 script = ExtResource("1")
 Ranged = true
 BaseHealth = 15.0
+HealthGainPerWave = 2.0
 BaseSpeed = 90.0
 BaseKnockbackResistance = 0.1
 VisualScale = 1.0

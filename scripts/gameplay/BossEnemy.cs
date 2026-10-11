@@ -21,12 +21,32 @@ public partial class BossEnemy : Enemy
     private int _volleysFired;
     private float _aimAngle;
     private float _orbitSign = 1f;
+    private Label _waveNameLabel;
+    private ProgressBar _headHpBar;
     protected override float HitWallMargin => WallMargin;
 
     public override void _Ready()
     {
         base._Ready();
         _orbitSign = (GetInstanceId() & 1UL) == 0UL ? 1f : -1f;
+        _waveNameLabel = GetNode<Label>("WaveName");
+        _headHpBar = GetNode<ProgressBar>("HeadHpBar");
+    }
+
+    public void SetWaveName(string waveName, int waveNumber)
+    {
+        string name = waveName?.Trim() ?? "";
+        _waveNameLabel.Text = string.IsNullOrEmpty(name) ? $"Wave {waveNumber}" : name;
+    }
+
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
+        _headHpBar.MaxValue = Mathf.Max(1f, MaxHealth);
+        _headHpBar.Value = Mathf.Clamp(Health, 0f, MaxHealth);
+        bool alive = Health > 0f;
+        _headHpBar.Visible = alive;
+        _waveNameLabel.Visible = alive;
     }
 
     protected override void UpdateBehavior(float dt, Vector2 toward, float distance)
@@ -90,7 +110,7 @@ public partial class BossEnemy : Enemy
             if (fromAim <= halfGap || fromOpposite <= halfGap) continue;
             float angle = _aimAngle + Mathf.Pi * 2f * i / slots;
             Vector2 direction = Vector2.Right.Rotated(angle);
-            Game.SpawnBossProjectile(Position + direction * ProjectileSpawnDistance, direction, BulletSpeed);
+            Game.SpawnBossProjectile(Position + direction * ProjectileSpawnDistance, direction, BulletSpeed, DamageMultiplier);
         }
     }
 }
