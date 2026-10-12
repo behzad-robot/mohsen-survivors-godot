@@ -64,7 +64,7 @@ public partial class GameController : Node2D
     [Export] public PackedScene ShopScene { get; set; } = GD.Load<PackedScene>("res://scenes/ui/shop.tscn");
     [Export] public PackedScene ShopOfferScene { get; set; } = GD.Load<PackedScene>("res://scenes/ui/shop_offer.tscn");
     [Export] public PackedScene ShopInventoryEntryScene { get; set; } = GD.Load<PackedScene>("res://scenes/ui/shop_inventory_entry.tscn");
-    [Export] public PackedScene FinishScene { get; set; } = GD.Load<PackedScene>("res://scenes/ui/finish.tscn");
+    [Export] public PackedScene VictoryScene { get; set; } = GD.Load<PackedScene>("res://scenes/ui/victory.tscn");
     [Export] public PackedScene DefeatScene { get; set; } = GD.Load<PackedScene>("res://scenes/ui/defeat.tscn");
     [Export] public PackedScene HudScene { get; set; } = GD.Load<PackedScene>("res://scenes/ui/hud.tscn");
     [Export] public PackedScene GameAudioScene { get; set; } = GD.Load<PackedScene>("res://scenes/effects/game_audio.tscn");
@@ -1357,11 +1357,8 @@ public partial class GameController : Node2D
             _screen.GetNode<Button>("PlayAgain").Pressed += ShowMenu;
             return;
         }
-        ShowScreen(FinishScene);
-        _screen.GetNode<Label>("Panel/Box/Title").Text = $"FIRST {Waves.Count} WAVES CLEARED";
-        _screen.GetNode<Label>("Panel/Box/Subtitle").Text = "Current wave set cleared.";
-        _screen.GetNode<TextureRect>("Panel/Box/Illustration").Texture = GD.Load<Texture2D>("res://assets/placeholders/passive.svg");
-        _screen.GetNode<Button>("Panel/Box/PlayAgain").Pressed += ShowMenu;
+        ShowScreen(VictoryScene);
+        _screen.GetNode<Button>("ImageFrame/Content/PlayAgain").Pressed += ShowMenu;
     }
 
     private void ClearWaveObjects()

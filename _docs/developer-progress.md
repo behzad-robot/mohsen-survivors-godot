@@ -6,9 +6,9 @@ The developer may mark **Code written** after files are created or changed and r
 
 ## Current state
 
-- **Last updated:** 2026-10-12, shop max-HP purchase guard changed and statically reviewed.
-- **Current focus:** Designer verification of DEV-114 alongside the recent enemy scaling updates.
-- **Next recommended work:** Designer checks low-current-HP purchases against max HP and verifies Hamidreza's revised rejection message.
+- **Last updated:** 2026-10-12, approved victory screen integrated and statically reviewed.
+- **Current focus:** Designer verification of DEV-116 alongside recent combat and balance changes.
+- **Next recommended work:** Designer checks the victory image and Play Again placement at 1280×720 and resized windows, then confirms completion and restart flow.
 - **Known blocker:** The stack trace proves a shotgun profile load returned null; its underlying Godot loader error was not included. Explicit scene references and a logged fallback are written, but require the designer's run to verify.
 - **Designer test result:** Designer reported a `NullReferenceException` in `WeaponData.Get` at the end of wave 3. DEV-65 is written but unverified. Developer has not run, built, compiled, launched, or tested code.
 
@@ -128,8 +128,10 @@ The developer may mark **Code written** after files are created or changed and r
 | DEV-110 | Use 30% enemy HP growth per wave and refresh estimate | [x] | [ ] | Historical exponential HP curve superseded by DEV-111; tank ratio remains 2.5×. |
 | DEV-111 | Implement per-enemy linear HP and wave danger multiplier | [x] | [ ] | Enemy scenes own base/gain; danger defaults to 1.0. DEV-112 tunes waves 5–10. |
 | DEV-112 | Tune wave danger HP multipliers for waves 5–10 | [x] | [ ] | Values are 1.2, 1.2, 1.5, 2, 2, 3; waves 1–4 retain the 1.0 default. HP and coin estimates updated. |
-| DEV-113 | Add linear enemy damage and independent wave damage danger multiplier | [x] | [ ] | Enemy scenes own contact/projectile base and gain; every wave saves damage danger 1.0; HP danger unchanged. |
+| DEV-113 | Add linear enemy damage and independent wave damage danger multiplier | [x] | [ ] | Enemy scenes own contact/projectile base and gain; initial damage danger was 1.0 in all waves, then DEV-115 tuned waves 7–10. |
 | DEV-114 | Check negative-HP item purchases against max HP only | [x] | [ ] | Current HP no longer blocks a purchase; resulting max HP must remain above zero. |
+| DEV-115 | Tune damage danger for waves 7–10 | [x] | [ ] | Damage danger is 1.2/1.2/2.0/2.2; waves 1–6 remain at 1.0 and HP danger is unchanged. |
+| DEV-116 | Integrate approved ART-014 victory screen | [x] | [ ] | Dedicated aspect-preserving scene with approved image and live lower-center Play Again; completion trigger unchanged. |
 
 ## Update procedure
 
@@ -250,6 +252,8 @@ The developer may mark **Code written** after files are created or changed and r
 | 2026-10-11 | DEV-112 | `resources/waves/wave_05.tres`–`wave_10.tres`; `_docs/prd.md`, `_docs/tech-features.md`, `_docs/wave-dmg-estimate.md`, `_docs/developer-progress.md` | Set the requested wave danger HP multipliers to 1.2, 1.2, 1.5, 2.0, 2.0, and 3.0. Waves 1–4 still inherit 1.0. Updated normal/tank HP examples and rough coin estimates; other wave settings are unchanged. Code written; designer verification pending. Next: designer checks Inspector values and late-wave HP/income in game. |
 | 2026-10-12 | DEV-113 | `scripts/data/WaveDefinition.cs`; `scripts/gameplay/Enemy.cs`, `BossEnemy.cs`, `ManyEyesEnemy.cs`, `GameController.cs`, `Player.cs`; all 13 `scenes/enemies/*.tscn`; `resources/waves/wave_01.tres`–`wave_10.tres`; `_docs/game-design-notes.md`, `_docs/prd.md`, `_docs/tech-features.md`, `_docs/developer-progress.md` | Added separate contact and projectile base/per-wave damage on enemy scenes, plus a new independent wave danger damage field saved at 1.0 in all ten waves. Ordinary hits, red envelopes, boss rings, and many-eyes volleys use their corresponding resolved float damage; offspring inherit only burst tuning before applying their own damage profile. Zero damage no longer triggers a hit. Preserved all HP danger values and existing HP computation. Provisional enemy mapping and no-rounding policy are in tech-features. Code written; designer verification pending. Next: designer checks Inspector values, combat hit sizes, and HP independence in game. |
 | 2026-10-12 | DEV-114 | `scripts/gameplay/GameController.cs`; `_docs/game-design-notes.md`, `_docs/prd.md`, `_docs/tech-features.md`, `_docs/developer-progress.md` | `IsSafeHealthOffer` now checks only resulting max HP after summing all max-HP modifiers. Updated Hamidreza's rejection to name max HP. Current HP still changes and clamps through the existing `Player.ApplyModifier` path after a valid purchase. Code written; designer verification pending. Next: designer checks purchases at low current HP and rejection when resulting max HP is zero or less. |
+| 2026-10-12 | DEV-115 | `resources/waves/wave_07.tres`–`wave_10.tres`; `_docs/game-design-notes.md`, `_docs/prd.md`, `_docs/tech-features.md`, `_docs/developer-progress.md` | Saved designer-requested damage danger multipliers 1.2/1.2/2.0/2.2 for waves 7–10. Waves 1–6 inherit the 1.0 default; no enemy profile or HP danger changes. Code written; designer verification pending. Next: designer checks Inspector values and compares enemy hit damage across waves. |
+| 2026-10-12 | DEV-116 | `scenes/ui/victory.tscn`, `scripts/gameplay/GameController.cs`; `_docs/prd.md`, `_docs/tech-features.md`, `_docs/developer-progress.md` | Replaced the temporary completion UI with approved ART-014 in a dedicated aspect-preserving victory scene. Added live Play Again over lower-center floor (design bounds x=490–790, y=590–660), routed the existing wave-10 success path to it, and retained menu restart. No title/copy invented. Code written; designer verification pending. Next: designer checks image framing, button placement across window sizes, and completion/restart flow in game. |
 
 The latest regeneration request describes carrying a sub-whole-HP amount to later one-second ticks and applying its integer portion. DEV-86 already implements that behavior in `Player.cs`. The existing `max(0, HealthRegenPerSecond)` rule continues to prevent negative regeneration from draining HP or building negative debt; no regeneration code change was needed for this clarification.
 
@@ -441,11 +445,19 @@ In the Inspector, check wave danger HP multipliers of 1.2, 1.2, 1.5, 2.0, 2.0, a
 
 ### Manual check for DEV-113
 
-In the Inspector, confirm every wave has `Wave Danger Level Damage Multiplier` 1.0 and that wave 5–10 HP danger values remain 1.2/1.2/1.5/2/2/3. Check enemy scene contact and projectile base/gain fields against the tech-features table. With no items or burst override, a wave-1 Jira contact hit should remove 1 HP and a wave-2 Jira hit 1.6 HP; a wave-2 mail red envelope should remove 1.75 HP while its contact hit removes 1.6 HP. The red floating number should show that fractional HP loss. Check a boss ring and a many-eyes volley, then verify a one-eye offspring uses its own damage profile. Temporarily change only one wave's damage danger value in the Inspector; damage should change proportionally while enemy max HP does not. Restore the value to 1.0. Designer verification remains unchecked until the run is reported.
+In the Inspector, confirm waves 1–6 have `Wave Danger Level Damage Multiplier` 1.0 and waves 7–10 show DEV-115's values; wave 5–10 HP danger values remain 1.2/1.2/1.5/2/2/3. Check enemy scene contact and projectile base/gain fields against the tech-features table. With no items or burst override, a wave-1 Jira contact hit should remove 1 HP and a wave-2 Jira hit 1.6 HP; a wave-2 mail red envelope should remove 1.75 HP while its contact hit removes 1.6 HP. The red floating number should show that fractional HP loss. Check a boss ring and a many-eyes volley, then verify a one-eye offspring uses its own damage profile. Temporarily change only one wave's damage danger value in the Inspector; damage should change proportionally while enemy max HP does not. Restore its authored value. Designer verification remains unchecked until the run is reported.
 
 ### Manual check for DEV-114
 
 With max HP 10, an item giving −10 max HP should remain visible but fail purchase; Hamidreza should mention **max HP**, and coins should not change. After raising max HP to 20, lower current HP to 3 or less, then buy that same −10 max-HP item with enough coins. It should now succeed, leave max HP at 10, and clamp current HP to at least 1 through the existing item application. Designer verification remains unchecked until the run is reported.
+
+### Manual check for DEV-115
+
+In the Inspector, confirm wave 7/8/9/10 damage danger values are 1.2/1.2/2.0/2.2 and waves 1–6 remain 1.0. With default burst factors, a regular Jira contact hit should deal 5.52 HP in wave 7, 6.24 in wave 8, 11.6 in wave 9, and 14.08 in wave 10 before player defenses or current-HP capping. Raise Mohsen's max HP for observing the later values. Confirm the wave 7–10 HP danger fields remain 1.5/2.0/2.0/3.0. Designer verification remains unchecked until the run is reported.
+
+### Manual check for DEV-116
+
+Use the editor `O` shortcut to reach and clear wave 10, or finish it normally. Confirm the approved victory image fills the 16:9 design frame with Mohsen, the ticket arc, and the three teammates visible. Play Again should sit on the lower-center floor at roughly x=490–790, y=590–660 in a 1280×720 window, open the menu when pressed, and remain over the image floor when the window is resized. The last-wave editor `O` path still opens its final shop first; use Finish there to see victory. No title or subtitle should appear. Designer verification remains unchecked until the run is reported.
 
 Record the designer's test observations here with date and affected work-item ID. The developer uses them to make fixes, then requests another designer test.
 

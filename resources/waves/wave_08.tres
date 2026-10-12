@@ -163,6 +163,7 @@ Groups = Array[ExtResource("3")]([SubResource("g6_melee"), SubResource("g6_range
 script = ExtResource("1")
 WaveNumber = 8
 WaveDangerLevelHealthMultiplier = 2.0
+WaveDangerLevelDamageMultiplier = 1.2
 TankSpawnChance = 0.45
 BossSpawnChance = 0.8
 BossTankChance = 0.7

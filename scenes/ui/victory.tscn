@@ -1,0 +1,54 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/approved/ui/victory.png" id="1_victory"]
+
+[node name="Victory" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="ImageFrame" type="AspectRatioContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+ratio = 1.77778
+
+[node name="Content" type="Control" parent="ImageFrame"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Illustration" type="TextureRect" parent="ImageFrame/Content"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("1_victory")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PlayAgain" type="Button" parent="ImageFrame/Content"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.868056
+anchor_right = 0.5
+anchor_bottom = 0.868056
+offset_left = -150.0
+offset_top = -35.0
+offset_right = 150.0
+offset_bottom = 35.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 26
+text = "Play Again"

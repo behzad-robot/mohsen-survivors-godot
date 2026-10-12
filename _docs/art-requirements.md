@@ -28,7 +28,7 @@ Use transparent PNG for characters, weapons, enemies, pickups, and icons unless 
 | ART-011 | Coin drop | `_art/work/pickups/coin.png` | `assets/art/approved/pickups/coin.png` | Deferred | Size and pickup presentation |
 | ART-012 | Ranged enemy mail-envelope projectile | `_art/work/projectiles/enemy_projectile.png` | `assets/art/approved/projectiles/enemy_projectile.png` | **Approved** | ART-018 shoots it from its mouth |
 | ART-013 | Rectangular arena boundary wall | `_art/work/environment/arena_wall.png` | `assets/art/approved/environment/arena_wall.png` | **Approved** | — |
-| ART-014 | Victory-screen illustration | `_art/work/ui/victory.png` | `assets/art/approved/ui/victory.png` | Deferred | Designer will specify after player and enemy art |
+| ART-014 | Victory-screen illustration: happy Mohsen throwing Jira tickets toward Behzad, Pooria, and Narges | `_art/work/ui/victory_v1.png` | `assets/art/approved/ui/victory.png` | **Approved V1 2026-10-12; developer handoff requested** | Clear lower-center space for a separate Play Again button; final title/copy TBD |
 | ART-015 | Game-over illustration: Mohsen buried in Jira tickets; Maryam announcing more tracking boards | `_art/work/ui/defeat_v2.png` | `assets/art/approved/ui/defeat.png` | **Approved V2 2026-10-10; developer handoff requested** | Final title/copy TBD; centered Play Again added in Godot |
 | ART-016 | Shop lock-state icon | `_art/work/ui/shop_lock.png` | `assets/art/approved/ui/shop_lock.png` | Deferred | Default Godot UI suffices now |
 | ART-017 | Red cross warning shown at each upcoming enemy spawn position | `_art/work/effects/spawn_warning.png` | `assets/art/approved/effects/spawn_warning.png` | Deferred | Final size, opacity, pulse/animation |
@@ -99,6 +99,12 @@ Use transparent PNG for characters, weapons, enemies, pickups, and icons unless 
 - Designer requested artwork for a Bluetooth headset item. Candidate: `_art/work/items/bluetooth_headset_v1.png`, transparent 128×128 static icon. Full-resolution source: `_art/work/items/bluetooth_headset_concept_v1.png`; generation prompt saved alongside them. Charcoal-and-teal wireless over-ear office headset with padded earcups, microphone boom and blue indicator, matching existing bold cartoon item rendering.
 - **Approved V1 2026-10-11.** Export: `assets/art/approved/items/bluetooth_headset.png`. The designer specified +5 percentage points critical chance, rarity 2, and cost 25 coins; `_docs/items-db.md` records the item. Uniqueness remains TBD.
 
+### Victory screen — approved developer handoff (2026-10-12)
+
+- Designer approved ART-014 V1 and requested developer handoff. Approved export: `assets/art/approved/ui/victory.png`, opaque 1672×941 PNG (approximately 16:9), identical to `_art/work/ui/victory_v1.png`.
+- Happy Mohsen throws Jira tickets from the left toward Behzad, Pooria, and Narges on the right. Keep the lower-center floor clear for the separate live Play Again button. Suggested bounds in the 1280×720 design view: x=490–790, y=590–660. Final title/copy remains TBD.
+- Developer task: `_docs/dev-feature-requests/task-victory-screen.md`. Artwork approval is complete; integration and designer in-game verification are pending. Prompt: `_art/work/ui/victory_v1_prompt.md`.
+
 ### Game-over screen — approved developer handoff (2026-10-10)
 
 - ART-015 approved export `assets/art/approved/ui/defeat.png` is the designer-approved V2, a 1280×720 opaque background illustration: Jira ticket piles fill the bottom and sides of a blue corporate office, with Mohsen's tired face and one reaching hand emerging on the right. Maryam is safely above the tickets on the left. Ticket labels use `SFIT-` followed by four digits from 1000–9999. The designer explicitly requested the hand for this illustration; gameplay sprites retain their existing presentation.
@@ -164,7 +170,7 @@ The list stays visible so the developer knows what approved files may arrive, bu
 8. **Gun redesign handed over:** ART-009 pistol and ART-010 Uzi-style SMG V2 are approved at their existing developer paths. The developer was sent the larger texture dimensions and should keep their display footprint close to the previous guns.
 9. **Earlier handoff completed by designer request on 2026-10-03:** Mohsen's no-shoes static idle, both slime enemies, office floor and wall, three floating weapons, red envelope projectile, and pistol/SMG bullets are in `assets/art/approved/` at the paths above. The developer should use the approved files, not `_art/work/` candidates.
 10. **Mohsen animation still open:** `mohsen_idle.png` is the no-shoes 64×64 static export with 60-pixel visible height. No `mohsen_walk.png` exists yet. The developer may show the static idle during movement or add code-driven bobbing until the designer requests walk art. The cutout sheet and separate shoe art remain only in `_art/work/` and are not part of this handoff.
-11. **Later, only when assigned by the designer:** ART-002 initiative enemy; ART-011 coin; ART-017 spawn warning; ART-006/007/016 optional UI icons; ART-014/015 finish illustrations. The first playable shop's sample passive item continues using a developer placeholder.
+11. **Later, only when assigned by the designer:** ART-002 initiative enemy; ART-011 coin; ART-017 spawn warning; ART-006/007/016 optional UI icons. ART-014/015 finish illustrations are now approved; see their handoffs above. The first playable shop's sample passive item continues using a developer placeholder.
 
 ### Approved new enemy set (2026-10-05)
 
@@ -253,6 +259,7 @@ Mohsen should be drawn without hands. He needs idle and walk only, without attac
 
 | Date | Asset ID | Candidate or version | Designer decision | Final path or requested change |
 | --- | --- | --- | --- | --- |
+| 2026-10-12 | ART-014 | Victory V1 | Designer: “good handover to dev” | `assets/art/approved/ui/victory.png`; integration and in-game verification pending |
 | 2026-10-03 | ART-001 idle only | Mohsen no-shoes design; 64×64 static export | Designer requested handoff and specified no-shoes version | `assets/art/approved/characters/mohsen_idle.png`; walk pending |
 | 2026-10-03 | ART-003, ART-018 | Green melee and purple ranged slime | Designer requested handoff | `assets/art/approved/enemies/jira_ticket.png`, `assets/art/approved/enemies/mail_slime.png` |
 | 2026-10-03 | ART-004, ART-013 | Carpet tile and wall atlas | Designer requested handoff | `assets/art/approved/environment/office_floor.png`, `assets/art/approved/environment/arena_wall.png` |

@@ -438,7 +438,7 @@ The shop duplicates each item's existing `StyleBoxFlat` frame when drawing an of
 
 ## Defeat screen artwork (approved ART-015 handoff, 2026-10-10)
 
-`scenes/ui/defeat.tscn` displays the approved opaque 1280×720 `assets/art/approved/ui/defeat.png` as a full-screen aspect-preserving background, with black behind any letterboxing. The separate Godot `PlayAgain` button is centered at design coordinates x=540–740, y=332–388, inside the artist's safe rectangle. `GameController` opens this scene on defeat and connects the button to the existing fresh-run menu path. Maryam's speech is already in the image, so the scene has no speech overlay or provisional title. Victory still uses `finish.tscn`. Final defeat title/copy remains TBD. The developer reviewed files only; designer verification is pending.
+`scenes/ui/defeat.tscn` displays the approved opaque 1280×720 `assets/art/approved/ui/defeat.png` as a full-screen aspect-preserving background, with black behind any letterboxing. The separate Godot `PlayAgain` button is centered at design coordinates x=540–740, y=332–388, inside the artist's safe rectangle. `GameController` opens this scene on defeat and connects the button to the existing fresh-run menu path. Maryam's speech is already in the image, so the scene has no speech overlay or provisional title. DEV-116 later routed victory to its own approved-art scene. Final defeat title/copy remains TBD. The developer reviewed files only; designer verification is pending.
 
 ## Home and starting choice artwork (approved ART-055 handoff, 2026-10-10)
 
@@ -544,7 +544,7 @@ DEV-112 sets `WaveDangerLevelHealthMultiplier` in waves 5–10 to 1.2, 1.2, 1.5,
 
 ## Per-enemy linear incoming damage (2026-10-12)
 
-DEV-113 uses the [community Brotato enemy table](https://brotato.wiki.spellsandguns.com/Enemies) as a balance reference. For an enemy on wave `w`, contact damage is `(BaseDamage + DamagePerWave × max(0, w − 1)) × WaveDangerLevelDamageMultiplier`; projectile attacks use their separate `BaseProjectileDamage` and `ProjectileDamagePerWave` in the same formula. An optional burst damage multiplier applies afterward, so a burst deliberately tuned away from 1.0 can still increase its enemies' damage. Every currently authored burst has its 1.0 default. Direct and warned bosses receive no burst factor. Offspring receive the parent's burst factor, then calculate their own base and per-wave damage. The old wave-level `EnemyDamageMultiplier` is superseded by the new independent danger damage field; every wave resource explicitly saves 1.0, and new waves default to 1.0. The HP danger field and all HP values are unchanged.
+DEV-113 uses the [community Brotato enemy table](https://brotato.wiki.spellsandguns.com/Enemies) as a balance reference. For an enemy on wave `w`, contact damage is `(BaseDamage + DamagePerWave × max(0, w − 1)) × WaveDangerLevelDamageMultiplier`; projectile attacks use their separate `BaseProjectileDamage` and `ProjectileDamagePerWave` in the same formula. An optional burst damage multiplier applies afterward, so a burst deliberately tuned away from 1.0 can still increase its enemies' damage. Every currently authored burst has its 1.0 default. Direct and warned bosses receive no burst factor. Offspring receive the parent's burst factor, then calculate their own base and per-wave damage. The old wave-level `EnemyDamageMultiplier` is superseded by the new independent danger damage field. The initial authored damage danger was 1.0 in every wave; DEV-115 later tuned waves 7–10. New waves default to 1.0. The HP danger field and all HP values are unchanged.
 
 | Office enemy | Provisional reference | Contact base / gain per wave | Projectile base / gain per wave |
 | --- | --- | ---: | ---: |
@@ -560,3 +560,11 @@ Tank variants use the same damage values as their normal counterpart; their prio
 ## Shop max-HP purchase guard (2026-10-12)
 
 DEV-114 changes `GameController.IsSafeHealthOffer` to sum all `MaxHealth` modifiers on the offered item and allow purchase exactly when `Mohsen.MaxHealth + summed change > 0`. It no longer compares against `Mohsen.Health`. This permits a low-current-HP Mohsen to buy a max-HP penalty item if the new max remains positive. `Player.ApplyModifier` still applies the penalty to current HP and clamps current/max HP to at least 1; that existing application behavior is unchanged. A refused purchase retains its offer and coins and gives the revised max-HP explanation. Existing positive/max-neutral items remain eligible.
+
+## Late-wave damage danger tuning (2026-10-12)
+
+DEV-115 sets `WaveDangerLevelDamageMultiplier` to 1.2 in waves 7 and 8, 2.0 in wave 9, and 2.2 in wave 10. Waves 1–6 inherit the 1.0 default from `WaveDefinition`. These values scale the existing linear contact and projectile damage profiles before optional burst factors. `WaveDangerLevelHealthMultiplier` remains 1.5/2.0/2.0/3.0 in waves 7–10. No enemy scene damage profiles or HP values changed.
+
+## Victory screen artwork (approved ART-014 handoff, 2026-10-12)
+
+DEV-116 adds `scenes/ui/victory.tscn` with the approved opaque 1672×941 `assets/art/approved/ui/victory.png`. An `AspectRatioContainer` fits a 16:9 content frame within the available window, with black letterboxing outside it. The image and live Play Again button share that frame, so the button remains over the lower-center floor during resizing. At 1280×720 the button occupies x=490–790, y=590–660. `GameController` still shows completion after the last authored wave (currently wave 10), including its existing editor shortcut path, and Play Again still opens the menu. The previous temporary title, subtitle, and placeholder illustration are not shown; final victory copy is TBD. The old `finish.tscn` is retained as an unused historical scene. Designer in-game verification is pending.
