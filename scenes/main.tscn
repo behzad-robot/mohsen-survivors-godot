@@ -41,7 +41,7 @@
 [ext_resource type="Resource" uid="uid://c3m4i1cjerm0a" path="res://resources/waves/wave_09.tres" id="40"]
 [ext_resource type="Resource" uid="uid://cuiyalggbm2na" path="res://resources/waves/wave_10.tres" id="41"]
 [ext_resource type="Resource" uid="uid://3ihlweclhgkl" path="res://resources/items/strawberry_milkshake.tres" id="42"]
-[ext_resource type="Resource" path="res://resources/items/bluetooth_headset.tres" id="43"]
+[ext_resource type="Resource" uid="uid://dsm1cu178aa8q" path="res://resources/items/bluetooth_headset.tres" id="43"]
 
 [node name="Game" type="Node2D" unique_id=373263198]
 script = ExtResource("1")

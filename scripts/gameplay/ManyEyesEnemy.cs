@@ -59,7 +59,7 @@ public partial class ManyEyesEnemy : Enemy
         {
             Vector2 direction = Vector2.Right.Rotated(start + Mathf.Tau * i / 8f);
             Game.SpawnManyEyesProjectile(VolleyProjectileScene,
-                Position + direction * ProjectileOriginRadius, direction, VolleyProjectileSpeed, DamageMultiplier);
+                Position + direction * ProjectileOriginRadius, direction, VolleyProjectileSpeed, ProjectileDamage);
         }
     }
 
@@ -72,7 +72,7 @@ public partial class ManyEyesEnemy : Enemy
         {
             Vector2 offset = Vector2.Right.Rotated(start + Mathf.Tau * i / count) * OffspringSpawnRadius;
             Game.SpawnEnemyOffspring(OffspringScene, Position + offset,
-                OffspringHealthMultiplier, OffspringSpeedMultiplier * ConfiguredSpeedMultiplier, DamageMultiplier);
+                OffspringHealthMultiplier, OffspringSpeedMultiplier * ConfiguredSpeedMultiplier, BurstDamageMultiplier);
         }
     }
 }

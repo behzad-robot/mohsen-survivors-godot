@@ -55,3 +55,6 @@
 ## New decisions
 
 Add dated decisions here. If an earlier decision changes, say which one it replaces so the PRD can be updated without ambiguity.
+
+- **2026-10-12 — enemy damage scaling:** Give each enemy editable base damage and damage gained per wave. Before player defenses, damage is `(BaseDamage + DamagePerWave × (WaveNumber − 1)) × WaveDangerLevelDamageMultiplier`. Count growth from wave 1 even when an enemy first appears later. Keep the damage danger multiplier separate from the existing HP danger multiplier and initialize damage danger to 1.0 in every authored wave. Preserve separate contact and projectile attack values where they exist. Existing attack types are unchanged. The community Brotato enemy table is a starting reference for provisional mappings, not an approval of specific office-enemy values.
+- **2026-10-12 — shop max-HP safety:** Items with negative max-HP modifiers may appear. At purchase, reject one only if the sum of its max-HP changes would make Mohsen's resulting **max HP** zero or less; current HP does not decide eligibility. Keep the existing current-HP clamping after applying the item.

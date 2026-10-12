@@ -339,8 +339,8 @@ public partial class GameController : Node2D
         var boss = BossScene.Instantiate<BossEnemy>();
         boss.Position = Mohsen.Position + WaveOneBossOffset;
         AddChild(boss);
-        boss.Configure(this, wave.WaveNumber, wave.WaveDangerLevelHealthMultiplier, 1f,
-            wave.EnemySpeedMultiplier, 0f, wave.EnemyDamageMultiplier);
+        boss.Configure(this, wave.WaveNumber, wave.WaveDangerLevelHealthMultiplier,
+            wave.WaveDangerLevelDamageMultiplier, 1f, wave.EnemySpeedMultiplier, 0f);
         boss.SetWaveName(wave.WaveName, wave.WaveNumber);
         Enemies.Add(boss);
     }
@@ -477,9 +477,9 @@ public partial class GameController : Node2D
             enemy.Position = entry.position;
             AddChild(enemy);
             WaveDefinition wave = Waves[_waveIndex];
-            enemy.Configure(this, wave.WaveNumber, wave.WaveDangerLevelHealthMultiplier, entry.hp,
-                Mathf.Max(.1f, entry.speed * wave.EnemySpeedMultiplier), entry.resistance,
-                Mathf.Max(.1f, entry.damage * wave.EnemyDamageMultiplier));
+            enemy.Configure(this, wave.WaveNumber, wave.WaveDangerLevelHealthMultiplier,
+                wave.WaveDangerLevelDamageMultiplier, entry.hp,
+                Mathf.Max(.1f, entry.speed * wave.EnemySpeedMultiplier), entry.resistance, entry.damage);
             if (enemy is BossEnemy boss) boss.SetWaveName(Waves[_waveIndex].WaveName, Waves[_waveIndex].WaveNumber);
             Enemies.Add(enemy);
         }
@@ -658,7 +658,8 @@ public partial class GameController : Node2D
         AddChild(offspring);
         WaveDefinition wave = Waves[_waveIndex];
         offspring.Configure(this, wave.WaveNumber, wave.WaveDangerLevelHealthMultiplier,
-            healthMultiplier, Mathf.Max(0.1f, speedMultiplier), 0f, damageMultiplier);
+            wave.WaveDangerLevelDamageMultiplier, healthMultiplier,
+            Mathf.Max(0.1f, speedMultiplier), 0f, damageMultiplier);
         Enemies.Add(offspring);
     }
 
@@ -732,7 +733,7 @@ public partial class GameController : Node2D
         projectile.Direction = direction;
         projectile.Speed = speed;
         projectile.RemainingDistance = 3000f;
-        projectile.Damage = Mathf.Max(0.1f, damage);
+        projectile.Damage = Mathf.Max(0f, damage);
         AddChild(projectile);
         _projectiles.Add(projectile);
     }
@@ -971,8 +972,7 @@ public partial class GameController : Node2D
         if (item == null) return false;
         float healthChange = item.Modifiers.Where(modifier => modifier != null && modifier.Stat == PlayerStat.MaxHealth)
             .Sum(modifier => modifier.Amount);
-        return healthChange >= 0f ||
-               (Mohsen.Health + healthChange > 0f && Mohsen.MaxHealth + healthChange > 0f);
+        return Mohsen.MaxHealth + healthChange > 0f;
     }
 
     private void ReplaceIneligibleOffers()
@@ -1271,7 +1271,7 @@ public partial class GameController : Node2D
         }
         if (offer.Item != null && !IsSafeHealthOffer(offer.Item))
         {
-            SetShopMessage("You can't buy that item. It would drop your HP to 0 or below.");
+            SetShopMessage("You can't buy that item. It would drop your max HP to 0 or below.");
             ShowShop();
             return;
         }

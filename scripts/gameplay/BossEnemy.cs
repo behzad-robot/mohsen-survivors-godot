@@ -110,7 +110,7 @@ public partial class BossEnemy : Enemy
             if (fromAim <= halfGap || fromOpposite <= halfGap) continue;
             float angle = _aimAngle + Mathf.Pi * 2f * i / slots;
             Vector2 direction = Vector2.Right.Rotated(angle);
-            Game.SpawnBossProjectile(Position + direction * ProjectileSpawnDistance, direction, BulletSpeed, DamageMultiplier);
+            Game.SpawnBossProjectile(Position + direction * ProjectileSpawnDistance, direction, BulletSpeed, ProjectileDamage);
         }
     }
 }

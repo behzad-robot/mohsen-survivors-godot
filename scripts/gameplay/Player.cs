@@ -223,7 +223,7 @@ public partial class Player : Node2D
 
     public void Hurt(float damage = 1f)
     {
-        if (!Active || _invulnerable > 0f || _dying) return;
+        if (!Active || _invulnerable > 0f || _dying || damage <= 0f) return;
         Game?.PlaySound(GameSound.MohsenHit);
         float before = Health;
         Health = Mathf.Max(0f, Health - damage);
