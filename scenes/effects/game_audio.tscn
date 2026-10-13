@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3]
 
-[ext_resource type="Script" path="res://scripts/gameplay/GameAudio.cs" id="1"]
+[ext_resource type="Script" path="res://scripts/gameplay/GameAudio.gd" id="1"]
 [ext_resource type="AudioStream" path="res://assets/placeholders/audio/knife_shot.wav" id="2"]
 [ext_resource type="AudioStream" path="res://assets/placeholders/audio/pistol_shot.wav" id="3"]
 [ext_resource type="AudioStream" path="res://assets/placeholders/audio/smg_shot.wav" id="4"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" path="res://scripts/gameplay/Projectile.cs" id="1"]
+[ext_resource type="Script" path="res://scripts/gameplay/Projectile.gd" id="1"]
 [ext_resource type="SpriteFrames" path="res://resources/projectiles/player_bullet_frames.tres" id="2"]
 
 [node name="PistolBullet" type="Node2D"]

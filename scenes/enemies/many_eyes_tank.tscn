@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3]
 
-[ext_resource type="Script" path="res://scripts/gameplay/ManyEyesEnemy.cs" id="1"]
+[ext_resource type="Script" path="res://scripts/gameplay/ManyEyesEnemy.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/art/approved/enemies/many_eyes_tank.png" id="2"]
 [ext_resource type="Shader" path="res://shaders/enemy_hit_flash.gdshader" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/one_eye_minion.tscn" id="4"]

@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/placeholders/coin.svg" id="1_coin"]
-[ext_resource type="Script" path="res://scripts/gameplay/HudDamageEdges.cs" id="2_damage"]
+[ext_resource type="Script" path="res://scripts/gameplay/HudDamageEdges.gd" id="2_damage"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_background"]
 bg_color = Color(0.06, 0.06, 0.06, 1)

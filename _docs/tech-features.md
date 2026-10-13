@@ -6,20 +6,26 @@ Track implementation status and designer verification separately in `developer-p
 
 ## Existing project context
 
-- A Godot project already exists at the repository root, with a C# project file and solution. Inspect actual project files before choosing scene or script conventions.
+- This checkout is the separate `mohsen-survivors-godot-gdscript` port on `feat/gdscript-port`. Its scripts are GDScript; .NET project/solution files and the unused C# template script have been removed. The sibling C# project remains untouched.
 - The designer runs and tests the project. The developer writes code and supplies concise manual test steps for the designer, without running, building, compiling, or launching it.
-- C# is the default scripting language. Use GDScript only after identifying a required capability unavailable in the Godot C# API; document that limitation here before adding a GDScript file. Editor tooling should also use C# where supported.
+- GDScript is the scripting language in this checkout, explicitly requested by the designer on 2026-10-13 to enable HTML5/Web export. Older C# implementation entries below are historical; current script paths use `.gd` with the same filenames.
 
 ## Platform direction
 
-The current target is native desktop using the existing Godot 4.6 project and predominantly C# scripts. Web export is deferred by the designer and does not block implementation. If the web goal returns, revisit compatibility: [Godot 4.6's feature list](https://docs.godotengine.org/en/4.6/about/list_of_features.html) says Godot 4 C# projects cannot export to web, and [its renderer documentation](https://docs.godotengine.org/en/4.6/tutorials/rendering/renderers.html) says web requires the Compatibility renderer. The current project uses the Mobile renderer. Do not change the engine, language, or renderer solely for a deferred web goal.
+The designer explicitly activated HTML5/Web as a target on 2026-10-13 and requested conversion of the entire project only in this sibling checkout. Godot 4 C# projects currently cannot export to Web, and Web requires Compatibility rendering ([official export documentation](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_web.html)). This is a platform/export limitation, rather than a missing individual C# gameplay API.
+
+All 28 game/resource scripts are ported to GDScript. The serialized PascalCase Inspector properties, enum numeric order, script UIDs, approved asset paths, wave resources, and item resources are preserved. Native Godot API calls use GDScript names. Weapon stats and transient spawn/shop records use dictionaries; `GiveWeapon` returns its weapon and merge flag explicitly instead of a C# `out` parameter. Static shotgun profile caching and the null-load fallback remain.
+
+`project.godot` now selects `gl_compatibility` and has no .NET feature/assembly configuration. `export_presets.cfg` adds a single-threaded Web preset at `build/web/index.html`, without extensions or PWA, using the default HTML shell and adaptive canvas sizing. Existing desktop presets now write beneath this checkout's `build/` directory to avoid sharing C# build destinations. All presets exclude drafts/docs/exports; `build/` is ignored. The existing canvas-item hit shader requires no renderer-specific rewrite.
+
+No game code has been run, compiled, launched, built, or tested. Export success, GDScript parser acceptance in Godot, visuals, audio, gameplay parity, and browser performance require designer verification. See `gdscript-port.md` for the manual handoff. Historical designer verification of C# features does not verify this port.
 
 ## Planned project layout
 
 | Path | Use |
 | --- | --- |
 | `scenes/` | Godot scenes, grouped by gameplay area or UI once implementation begins |
-| `scripts/` | C# scripts, grouped by feature once implementation begins |
+| `scripts/` | GDScript scripts grouped by gameplay and data |
 | `resources/` | Godot data resources when needed |
 | `assets/placeholders/` | Developer-made temporary visuals for missing art |
 | `assets/art/approved/` | Designer-approved art listed in `art-requirements.md` |

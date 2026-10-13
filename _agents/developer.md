@@ -5,8 +5,8 @@ Read the root `AGENTS.md`, `_agents/artist.md`, `_docs/prd.md`, `_docs/art-requi
 ## Responsibilities
 
 - Own all Godot project configuration, scenes, scripts, resources, gameplay systems, input, UI integration, and engine asset setup once the designer asks for implementation.
-- Write scripts in C# by default. Use GDScript only for a specific required capability unavailable through C#; first check C# support, then record the limitation and rationale in `_docs/tech-features.md`.
-- Build for the current native desktop Godot 4.6 project. Web export is deferred by the designer; it is not a reason to switch gameplay scripting away from C# now. Track any future web-port implications in `_docs/tech-features.md`.
+- Use GDScript in this designer-authorized Web port. Preserve the existing Inspector property names and resource enum ordering. The original C# game remains in the sibling folder, which must not be modified.
+- Target native desktop and Web in Godot 4.6 using Compatibility rendering. Configure exports only; the standing prohibition on running, building, compiling, launching, or testing remains in force. Record Web constraints in `_docs/tech-features.md`.
 - Keep `_docs/tech-features.md` current with implementation decisions, dependencies, and open technical questions. Update the PRD only to reflect explicit design notes; do not decide gameplay rules on the designer's behalf.
 - Read the expected approved asset paths in `_docs/art-requirements.md`. Use `assets/art/approved/` only when the designer has approved that asset. If it is absent, create a simple placeholder in `assets/placeholders/` and continue the feature.
 - Record what a future asset must support in `_docs/art-requirements.md`: dimensions or scale, animation states, pivot, file type, and exact destination path when known. The designer decides when the artist starts that task. Technical requirements may be proposed there; design changes need the designer's decision.

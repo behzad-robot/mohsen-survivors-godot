@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" path="res://scripts/gameplay/ShopSpeechBubble.cs" id="1_script"]
+[ext_resource type="Script" path="res://scripts/gameplay/ShopSpeechBubble.gd" id="1_script"]
 
 [sub_resource type="StyleBoxFlat" id="BubbleStyle"]
 bg_color = Color(0.99, 0.96, 0.86, 1)

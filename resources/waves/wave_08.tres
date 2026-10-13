@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="WaveDefinition" format=3 uid="uid://dd2qmrxv6aifj"]
 
-[ext_resource type="Script" uid="uid://djjecvhcf2i6j" path="res://scripts/data/WaveDefinition.cs" id="1"]
-[ext_resource type="Script" uid="uid://yjh6hhequnxc" path="res://scripts/data/SpawnBurstDefinition.cs" id="2"]
-[ext_resource type="Script" uid="uid://crrsyd0maxlv" path="res://scripts/data/EnemySpawnGroupDefinition.cs" id="3"]
+[ext_resource type="Script" uid="uid://djjecvhcf2i6j" path="res://scripts/data/WaveDefinition.gd" id="1"]
+[ext_resource type="Script" uid="uid://yjh6hhequnxc" path="res://scripts/data/SpawnBurstDefinition.gd" id="2"]
+[ext_resource type="Script" uid="uid://crrsyd0maxlv" path="res://scripts/data/EnemySpawnGroupDefinition.gd" id="3"]
 [ext_resource type="PackedScene" uid="uid://s1wu55a6flee" path="res://scenes/enemies/melee.tscn" id="4"]
 [ext_resource type="PackedScene" uid="uid://sjso7kf854eg" path="res://scenes/enemies/ranged.tscn" id="5"]
 [ext_resource type="PackedScene" uid="uid://b4hjn27a2p23i" path="res://scenes/enemies/melee_female.tscn" id="6"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3]
 
-[ext_resource type="Script" path="res://scripts/gameplay/Arena.cs" id="1"]
+[ext_resource type="Script" path="res://scripts/gameplay/Arena.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/art/approved/environment/office_floor.png" id="2"]
 [ext_resource type="Texture2D" path="res://assets/art/approved/environment/arena_wall.png" id="3"]
 

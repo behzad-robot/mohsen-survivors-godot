@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://scripts/gameplay/DamageNumber.cs" id="1"]
+[ext_resource type="Script" path="res://scripts/gameplay/DamageNumber.gd" id="1"]
 
 [node name="DamageNumber" type="Node2D"]
 z_index = 20

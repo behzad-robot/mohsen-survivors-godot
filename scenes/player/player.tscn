@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://khpnxecx8yfi"]
 
-[ext_resource type="Script" uid="uid://ch3ggycii6mc8" path="res://scripts/gameplay/Player.cs" id="1"]
+[ext_resource type="Script" uid="uid://ch3ggycii6mc8" path="res://scripts/gameplay/Player.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://c66c12mwi6a2e" path="res://assets/art/approved/characters/mohsen_idle.png" id="2"]
-[ext_resource type="Script" uid="uid://dj7r0ok5d17c4" path="res://scripts/gameplay/CoffeeSpeedParticles.cs" id="3"]
+[ext_resource type="Script" uid="uid://dj7r0ok5d17c4" path="res://scripts/gameplay/CoffeeSpeedParticles.gd" id="3"]
 
 [sub_resource type="StyleBoxFlat" id="HpBarBackground"]
 bg_color = Color(0.04, 0.04, 0.04, 1)

@@ -6,11 +6,36 @@ The developer may mark **Code written** after files are created or changed and r
 
 ## Current state
 
-- **Last updated:** 2026-10-12, approved victory screen integrated and statically reviewed.
-- **Current focus:** Designer verification of DEV-116 alongside recent combat and balance changes.
-- **Next recommended work:** Designer checks the victory image and Play Again placement at 1280×720 and resized windows, then confirms completion and restart flow.
-- **Known blocker:** The stack trace proves a shotgun profile load returned null; its underlying Godot loader error was not included. Explicit scene references and a logged fallback are written, but require the designer's run to verify.
-- **Designer test result:** Designer reported a `NullReferenceException` in `WeaponData.Get` at the end of wave 3. DEV-65 is written but unverified. Developer has not run, built, compiled, launched, or tested code.
+- **Last updated:** 2026-10-13, full GDScript port written in `mohsen-survivors-godot-gdscript` on `feat/gdscript-port`.
+- **Current focus:** Designer verification of the GDScript port and HTML5/Web export.
+- **Written:** All 28 game/resource scripts converted, scenes/resources rewired with original script UIDs and serialized properties, .NET files removed from this checkout, Compatibility renderer selected, Web preset configured, branch-specific guides updated.
+- **Static review:** Original script method names and exported property names are accounted for; all 371 inspected literal resource references resolve on disk. No active `.cs` scene/resource references or .NET project configuration remain. This is source inspection, not engine parsing or execution.
+- **Next step:** Designer opens this folder's `project.godot` with Godot 4.6, allows import, reports any parser errors, then checks gameplay and the Web preset. See `gdscript-port.md`.
+- **Designer verified:** Pending for the entire port. Developer has not run, built, compiled, launched, or tested code.
+- **Prior C# issue:** A previously reported shotgun profile null-load failure prompted the existing fallback; that cache/fallback behavior is retained in `WeaponData.gd`. Previous C# runs do not establish GDScript parity.
+
+## Web build hosting — 2026-10-13
+
+Added `build/web/Dockerfile` using `nginx:stable-alpine` to serve the exported directory on port 80. Its `.dockerignore` excludes Docker metadata and Godot import sidecars. Git tracks these two configuration files while continuing to ignore generated exports. Build from `build/web` with `docker build -t mohsen-web .`, then serve with `docker run --rm -p 8080:80 mohsen-web`. Docker was not built or run; designer verification is pending.
+
+## Web image publisher — 2026-10-13
+
+Added executable `build/web/publish-images.sh`, modeled on the designer-provided Match3PVP publisher. It publishes `deadcat.ir:8500/behzad-sf/mohsen-survivors-gd-nginx:<tag>` via direct Buildx registry output, defaulting to a 12-character Git commit tag, `linux/amd64`, and explicit insecure-registry support. Optional tag argument and `REGISTRY`, `TARGET_PLATFORM`, and `REGISTRY_INSECURE` overrides are supported. It checks required Web export files before building. The publishing script is tracked and excluded from the image. It has not been executed; no image has been built or pushed.
+
+## VM deployment script — 2026-10-13
+
+Added executable `build/web/deploy.sh` based on the designer's supplied VM script. Requires one validated tag, pulls `deadcat.ir:8500/behzad-sf/mohsen-survivors-gd-nginx:<tag>` before stopping/replacing `mohsen_survivors_gd_nginx`, and publishes VM port 3100 to nginx port 80. Preserves `unless-stopped`, read-only root filesystem, nginx writable tmpfs directories, init, shutdown timeout, and rotating logs. `REGISTRY` can override the registry. The script is tracked and excluded from the published image. It has not been executed; no VM/container was changed.
+
+## GDScript migration milestone
+
+| Work | Code written | Designer verified |
+| --- | --- | --- |
+| Player, weapons, projectiles, all enemy variants, drops, pickups, VFX, audio, wave/shop/UI controller | [x] | [ ] |
+| Custom resource classes, enum values, Inspector defaults, existing scenes/resources and UIDs | [x] | [ ] |
+| Remove C#/.NET dependency in this checkout; configure Compatibility and Web export | [x] | [ ] |
+| Desktop playthrough and browser export/playthrough | [ ] | [ ] |
+
+The remaining entries below describe implementation history inherited from the C# branch. Script filenames in that history may still use `.cs`; their current equivalents use `.gd`. Verification marks in the historical tables do not apply to this migration.
 
 ## First playable checklist
 

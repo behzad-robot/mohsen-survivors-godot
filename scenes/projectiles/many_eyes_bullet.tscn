@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" path="res://scripts/gameplay/Projectile.cs" id="1"]
+[ext_resource type="Script" path="res://scripts/gameplay/Projectile.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/placeholders/many_eyes_bullet.svg" id="2"]
 
 [node name="ManyEyesBullet" type="Node2D"]

@@ -6,9 +6,9 @@ This is a Godot survivors game with Brotato as the main gameplay reference and V
 
 Do not run, build, compile, launch, or test project code. The game designer runs and tests the game and reports results. Agents may inspect files and write files for their assigned work. Do not start feature implementation from this setup request; wait for a task in the relevant agent conversation.
 
-The developer should write most scripts in C#. Use GDScript only when a required feature cannot be implemented through Godot's C# API, and document the specific limitation and why GDScript is needed in `_docs/tech-features.md`. Do not assume editor tools require GDScript; check C# support first.
+This folder is the designer-authorized GDScript/Web port (2026-10-13), on `feat/gdscript-port`. Use GDScript for all project scripting here. Godot 4.6 C# cannot export to Web; this platform limitation and migration are recorded in `_docs/tech-features.md`. The sibling `mohsen-survivors-godot` C# folder must not be changed from this conversation.
 
-The immediate target is the current native desktop Godot 4.6 project. Web export is a deferred goal and does not block C# gameplay implementation. If web export becomes a requirement later, revisit the engine/language compatibility before promising a web build.
+The target for this folder is Godot 4.6 using GDScript and the Compatibility renderer, with native desktop and HTML5/Web exports. Keep gameplay and approved art consistent with the existing game. A Web preset is configured; builds and runtime verification remain the designer's responsibility.
 
 ## Choose a role in each Codex conversation
 

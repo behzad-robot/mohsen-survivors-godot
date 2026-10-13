@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3]
 
-[ext_resource type="Script" path="res://scripts/gameplay/BossEnemy.cs" id="1"]
+[ext_resource type="Script" path="res://scripts/gameplay/BossEnemy.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/art/approved/enemies/orange_boss_tank.png" id="2"]
 [ext_resource type="Shader" path="res://shaders/enemy_hit_flash.gdshader" id="3"]
 

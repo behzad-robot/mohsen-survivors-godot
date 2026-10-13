@@ -1,3 +1,12 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Branch-local exports
+/build/*
+!/build/web/
+/build/web/*
+!/build/web/Dockerfile
+!/build/web/.dockerignore
+!/build/web/publish-images.sh
+!/build/web/deploy.sh

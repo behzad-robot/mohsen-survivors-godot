@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://7bduge22nrgm"]
 
-[ext_resource type="Script" uid="uid://cwtaj2cfamtf3" path="res://scripts/gameplay/ConsumablePickup.cs" id="1"]
+[ext_resource type="Script" uid="uid://cwtaj2cfamtf3" path="res://scripts/gameplay/ConsumablePickup.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://c4dqhevtxoydn" path="res://assets/art/approved/objects/coffee_cup.png" id="2"]
 
 [node name="CoffeeCup" type="Node2D" unique_id=2131575229]

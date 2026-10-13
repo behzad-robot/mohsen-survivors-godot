@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="ShopItemDefinition" format=3 uid="uid://ceixuf8aqo3dg"]
 
-[ext_resource type="Script" uid="uid://d14q1jdi7c3tg" path="res://scripts/data/ShopItemDefinition.cs" id="1"]
-[ext_resource type="Script" uid="uid://dntp2sqw2gh2l" path="res://scripts/data/StatModifier.cs" id="2"]
+[ext_resource type="Script" uid="uid://d14q1jdi7c3tg" path="res://scripts/data/ShopItemDefinition.gd" id="1"]
+[ext_resource type="Script" uid="uid://dntp2sqw2gh2l" path="res://scripts/data/StatModifier.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://dw2ceo1lwyk5e" path="res://assets/art/approved/items/propranolol_pills.png" id="3"]
 
 [sub_resource type="Resource" id="movement_speed"]

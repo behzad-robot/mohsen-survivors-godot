@@ -2,6 +2,10 @@
 
 **Status:** initial draft, derived from `game-design-notes.md`. **Audience:** developer and artist. This document states the currently approved design brief; **TBD** entries are open design questions, not instructions to invent a rule.
 
+## Platform decision for this checkout — 2026-10-13
+
+The designer requested a complete GDScript conversion in `mohsen-survivors-godot-gdscript` on its separate branch to support HTML5/Web, with no changes allowed in the sibling C# project. This explicitly supersedes earlier C#-default and deferred-Web statements for this checkout only. Native desktop remains supported. Gameplay, balance, art approval, and the designer-only run/build/test rule remain unchanged. Migration handoff: `gdscript-port.md`.
+
 ## Product concept
 
 Create a survivors-like game centered on Mohsen, a tech lead facing corporate work as enemies inside a corporate office world. Brotato is the main gameplay reference, with Vampire Survivors as a secondary reference. Reference games guide discussion; specific behavior must be stated in these project docs before it becomes a requirement.
